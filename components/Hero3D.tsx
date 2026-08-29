@@ -288,8 +288,8 @@ function CyberBugdroid() {
         </mesh>
 
         {/* Cyber Core Reactor on Chest */}
-        <mesh ref={coreRef} position={[0, 0.1, 0.83]} material={androidGreenEmissive}>
-          <cylinderGeometry args={[0.15, 0.15, 0.06, 24]} rotation={[Math.PI / 2, 0, 0]} />
+        <mesh ref={coreRef} position={[0, 0.1, 0.83]} rotation={[Math.PI / 2, 0, 0]} material={androidGreenEmissive}>
+          <cylinderGeometry args={[0.15, 0.15, 0.06, 24]} />
         </mesh>
         {/* Core Ring Bezel */}
         <mesh position={[0, 0.1, 0.82]} material={cyanEmissive} rotation={[Math.PI / 2, 0, 0]}>
