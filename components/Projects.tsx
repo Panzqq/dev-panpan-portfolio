@@ -1,188 +1,160 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ExternalLink, Github, Terminal, Sparkles, Star } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
-interface Project {
-  id: string;
-  title: string;
-  category: string;
-  status: string;
-  statusColor: string;
-  description: string;
-  tech: string[];
-  github: string;
-  live: string;
-  highlight: string;
-  cardColor: string;
-  shadowColor: string;
-}
-
-const PROJECTS: Project[] = [
+const PROJECTS_DATA = [
   {
-    id: "PRJ_01",
-    title: "NEXUSMART ENGINE",
-    category: "FULL_STACK_ECOMMERCE",
-    status: "PRODUCTION_LIVE",
-    statusColor: "bg-brutal-lime text-black",
+    num: "01",
+    title: "Modern Point of Sales (POS)",
     description:
-      "Enterprise e-commerce platform built for high volume. Features real-time stock sync with Supabase, automated Stripe webhooks, and sub-100ms page transitions.",
-    tech: ["Next.js 14", "TypeScript", "Supabase", "Stripe API", "Tailwind CSS"],
-    github: "https://github.com/Panzqq",
-    live: "https://nexusmart.devpanpan.dev",
-    highlight: "99.9% Checkout Success Rate",
-    cardColor: "border-brutal-cyan",
-    shadowColor: "shadow-brutal-cyan",
+      "A high-performance cashier and inventory management platform featuring master data organization and real-time transaction reporting.",
+    tags: ["Next.js", "TypeScript", "Tailwind CSS", "Prisma"],
+    link: "https://github.com/Panzqq",
   },
   {
-    id: "PRJ_02",
-    title: "COLLABBOARD WORKSPACE",
-    category: "REAL_TIME_COLLAB",
-    status: "STABLE_RELEASE",
-    statusColor: "bg-brutal-cyan text-black",
+    num: "02",
+    title: "Automated Business Dashboard",
     description:
-      "Multiplayer collaborative workspace with live cursor tracking, instant block synchronization via WebSockets, markdown exporting, and encrypted team rooms.",
-    tech: ["React 18", "Node.js", "Socket.io", "MongoDB", "Framer Motion"],
-    github: "https://github.com/Panzqq",
-    live: "https://collab.devpanpan.dev",
-    highlight: "< 15ms Broadcast Latency",
-    cardColor: "border-brutal-lime",
-    shadowColor: "shadow-brutal-lime",
-  },
-  {
-    id: "PRJ_03",
-    title: "AIINSIGHT ANALYTICS",
-    category: "AI_INTELLIGENCE",
-    status: "V2.0_DEPLOYED",
-    statusColor: "bg-brutal-yellow text-black",
-    description:
-      "Intelligent analytics dashboard that ingests raw telemetry data and outputs automated natural language executive summaries powered by GPT-4 and interactive charts.",
-    tech: ["Next.js 14", "OpenAI API", "PostgreSQL", "Prisma", "Recharts"],
-    github: "https://github.com/Panzqq",
-    live: "https://aiinsight.devpanpan.dev",
-    highlight: "Automated Data Synthesis",
-    cardColor: "border-brutal-yellow",
-    shadowColor: "shadow-brutal-yellow",
-  },
-  {
-    id: "PRJ_04",
-    title: "PORTFOLIOCMS ENGINE",
-    category: "HEADLESS_CMS",
-    status: "OPEN_SOURCE",
-    statusColor: "bg-brutal-pink text-white",
-    description:
-      "Ultra-minimal, developer-first headless content management system with automatic GraphQL endpoint generation, edge caching, and Instant Vercel Deploy.",
-    tech: ["TypeScript", "GraphQL", "Prisma ORM", "SQLite", "TipTap"],
-    github: "https://github.com/Panzqq",
-    live: "https://cms.devpanpan.dev",
-    highlight: "Sub-50ms Response Times",
-    cardColor: "border-brutal-pink",
-    shadowColor: "shadow-brutal-pink",
+      "Integrated web application with Supabase database for seamless operational workflows and dynamic data visualization.",
+    tags: ["React", "Supabase", "Node.js", "Recharts"],
+    link: "https://github.com/Panzqq",
   },
 ];
 
 export default function Projects() {
   return (
-    <section id="projects" className="py-24 px-4 md:px-6 relative">
-      <div className="max-w-5xl mx-auto">
-        {/* Section Header */}
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-4 h-4 bg-brutal-pink border-2 border-black shadow-brutal-sm" />
-          <span className="font-mono text-sm tracking-widest uppercase text-brutal-pink font-bold">
-            05. ARCHIVED_DEPLOYMENTS // PROJECTS
-          </span>
-        </div>
+    <section id="projects" className="py-20 px-6 relative">
+      <div className="max-w-6xl mx-auto">
+        {/* Section Heading matching reference */}
+        <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight mb-8">
+          Project Section
+        </h2>
 
-        <div className="flex flex-wrap items-end justify-between gap-4 mb-12">
-          <div>
-            <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight mb-2">
-              FEATURED <span className="bg-brutal-cyan text-black px-2 border-2 border-black">WORKS</span>
-            </h2>
-            <p className="text-white/60 font-sans text-sm md:text-base">
-              Real software solutions deployed to production. Inspect codebases and live previews.
-            </p>
+        <div className="grid lg:grid-cols-12 gap-8 items-center">
+          {/* Left Column: Numbered List Layout matching reference */}
+          <div className="lg:col-span-7 space-y-6">
+            {PROJECTS_DATA.map((project, idx) => (
+              <motion.div
+                key={project.num}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.6, delay: idx * 0.15 }}
+                className="glass-card rounded-2xl p-6 md:p-8 flex items-start gap-5 group cursor-pointer"
+                onClick={() => window.open(project.link, "_blank")}
+              >
+                {/* Number Badge with Emerald Glow */}
+                <div className="w-10 h-10 rounded-full bg-emerald-500/10 border border-[#00FFA3]/40 text-[#00FFA3] flex items-center justify-center font-mono font-bold text-sm shrink-0 shadow-[0_0_15px_rgba(0,255,163,0.15)] group-hover:scale-110 group-hover:border-[#00FFA3] transition-all">
+                  {project.num}
+                </div>
+
+                {/* Content */}
+                <div className="flex-1">
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <h3 className="text-lg md:text-xl font-bold text-white tracking-tight group-hover:text-[#00FFA3] transition-colors">
+                      {project.title}
+                    </h3>
+                    <ArrowUpRight
+                      size={18}
+                      className="text-gray-500 group-hover:text-[#00FFA3] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0"
+                    />
+                  </div>
+
+                  <p className="text-gray-400 text-sm leading-relaxed mb-4 font-normal">
+                    {project.description}
+                  </p>
+
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-2">
+                    {project.tags.map((t) => (
+                      <span
+                        key={t}
+                        className="text-xs px-2.5 py-1 rounded-md bg-white/[0.04] text-gray-300 border border-white/[0.06] font-mono"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
 
-          <a
-            href="https://github.com/Panzqq"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-brutal bg-brutal-surface border-2 border-black px-4 py-2 font-mono font-bold text-xs text-white hover:bg-brutal-yellow hover:text-black shadow-brutal-sm flex items-center gap-2"
+          {/* Right Column: Mini Dark Emerald Analytics Chart Preview Card matching reference */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.8 }}
+            className="lg:col-span-5 glass-card rounded-2xl p-6 border border-white/[0.08] relative overflow-hidden"
           >
-            <Github size={14} />
-            VIEW_ALL_REPOSITORIES
-          </a>
-        </div>
-
-        {/* Projects Grid */}
-        <div className="grid md:grid-cols-2 gap-8">
-          {PROJECTS.map((project) => (
-            <div
-              key={project.id}
-              className={`bg-brutal-surface border-4 border-black p-6 shadow-brutal-lg card-brutal flex flex-col justify-between relative group`}
-            >
-              {/* Top metadata row */}
-              <div>
-                <div className="flex items-center justify-between gap-2 mb-4 pb-3 border-b-2 border-white/10 font-mono text-xs">
-                  <span className="font-black text-white/50">{project.id}</span>
-                  <span className="text-white/70 font-bold uppercase">{project.category}</span>
-                  <span className={`px-2 py-0.5 border border-black font-extrabold shadow-[1px_1px_0px_#000] text-[10px] ${project.statusColor}`}>
-                    {project.status}
-                  </span>
-                </div>
-
-                {/* Project Title */}
-                <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight text-white mb-2 group-hover:text-brutal-cyan transition-colors">
-                  {project.title}
-                </h3>
-
-                {/* Highlight banner */}
-                <div className="inline-block bg-brutal-card border border-white/20 px-2.5 py-1 font-mono text-xs text-brutal-yellow font-bold mb-4">
-                  ⚡ {project.highlight}
-                </div>
-
-                {/* Description */}
-                <p className="text-xs md:text-sm text-white/70 font-sans leading-relaxed mb-6">
-                  {project.description}
-                </p>
-
-                {/* Tech Chips */}
-                <div className="flex flex-wrap gap-2 mb-8 font-mono text-xs">
-                  {project.tech.map((t) => (
-                    <span
-                      key={t}
-                      className="bg-black border border-white/20 px-2.5 py-1 text-white/80 font-bold shadow-[2px_2px_0px_#000]"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
+            {/* Top dots / window header */}
+            <div className="flex items-center justify-between pb-4 mb-4 border-b border-white/[0.06]">
+              <div className="flex items-center gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/40" />
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/20" />
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/10" />
               </div>
-
-              {/* Action Buttons */}
-              <div className="pt-4 border-t-2 border-white/10 flex items-center justify-between gap-3 font-mono text-xs">
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-brutal flex-1 text-center bg-brutal-card border-2 border-black py-2 text-white font-bold hover:bg-white hover:text-black shadow-brutal-sm flex items-center justify-center gap-1.5"
-                >
-                  <Github size={14} />
-                  <span>SOURCE_CODE</span>
-                </a>
-
-                <a
-                  href={project.live}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-brutal flex-1 text-center bg-brutal-lime border-2 border-black py-2 text-black font-black hover:bg-brutal-yellow shadow-brutal-sm flex items-center justify-center gap-1.5"
-                >
-                  <ExternalLink size={14} />
-                  <span>LAUNCH_DEMO</span>
-                </a>
-              </div>
+              <span className="text-xs font-mono text-gray-500">Live Analytics</span>
             </div>
-          ))}
+
+            {/* Glowing SVG Curve Graph */}
+            <div className="relative h-44 w-full flex items-center justify-center">
+              <svg
+                viewBox="0 0 320 140"
+                className="w-full h-full overflow-visible"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                {/* Gradient area below curve */}
+                <defs>
+                  <linearGradient id="emeraldGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#00FFA3" stopOpacity="0.25" />
+                    <stop offset="100%" stopColor="#00FFA3" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+
+                <path
+                  d="M 10 110 C 60 110, 80 40, 130 50 C 180 60, 200 100, 240 70 C 270 50, 290 30, 310 25 L 310 140 L 10 140 Z"
+                  fill="url(#emeraldGrad)"
+                />
+
+                {/* Main Glowing Emerald Curve */}
+                <path
+                  d="M 10 110 C 60 110, 80 40, 130 50 C 180 60, 200 100, 240 70 C 270 50, 290 30, 310 25"
+                  stroke="#00FFA3"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  className="drop-shadow-[0_0_8px_rgba(0,255,163,0.8)]"
+                />
+
+                {/* Glowing Apex Indicator Point */}
+                <circle
+                  cx="240"
+                  cy="70"
+                  r="5"
+                  fill="#00FFA3"
+                  className="animate-ping"
+                  opacity="0.75"
+                />
+                <circle
+                  cx="240"
+                  cy="70"
+                  r="5"
+                  fill="#00FFA3"
+                  stroke="#050C0A"
+                  strokeWidth="2"
+                />
+              </svg>
+            </div>
+
+            {/* Bottom mini stats indicator */}
+            <div className="flex items-center justify-between pt-4 border-t border-white/[0.06] text-xs font-mono text-gray-400">
+              <span>99.98% System Uptime</span>
+              <span className="text-[#00FFA3] font-semibold">+34.8% Throughput</span>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>
