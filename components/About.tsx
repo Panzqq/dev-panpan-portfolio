@@ -13,14 +13,14 @@ export default function About() {
           transition={{ duration: 0.7 }}
           className="glass-card rounded-2xl p-8 md:p-10 border border-white/[0.08]"
         >
-          {/* Section Heading matching reference */}
+          {/* Section Heading */}
           <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight mb-4">
             About Me
           </h2>
 
-          {/* Bio text matching prompt specification */}
-          <p className="text-gray-400 text-base md:text-lg leading-relaxed max-w-3xl font-normal">
-            High-level software developer with a passion for transforming complex ideas into elegant digital solutions. Proficient in building high-performance web applications and seamless API integrations.
+          {/* Authentic Bio Text */}
+          <p className="text-gray-300 text-base md:text-lg leading-relaxed max-w-4xl font-normal">
+            Saya adalah seorang developer (kelas 11 SMA) dengan pengalaman coding lebih dari 3 tahun. Saya memiliki ketertarikan mendalam pada rekayasa perangkat lunak, berfokus pada pengembangan aplikasi web interaktif, merancang otomatisasi API, dan mengelola database untuk menciptakan ekosistem digital yang efisien.
           </p>
         </motion.div>
       </div>
