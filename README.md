@@ -1,59 +1,33 @@
-# 🌿 Dev Panpan | Full Stack Developer Portfolio 🚀
+# 🌿 Dev Panpan | Full Stack Developer
 
-A modern, high-performance developer portfolio featuring an **Interactive 3D Metallic Dark Emerald Android Bugdroid Mascot**, smooth **MathUtils.damp** physics, and a **Dark Emerald Glassmorphism** design system.
-
-Built with **Next.js 14 (App Router)**, **React 18**, **Three.js / @react-three/fiber / @react-three/drei**, **Tailwind CSS**, and **Framer Motion**.
+Building Practical Digital Solutions. Full Stack Developer based in Purbalingga, Indonesia with 3+ years of coding experience. Specializing in Node.js, Web Automation, and Modern UI.
 
 ---
 
-## 🌟 Highlights & Features
+## 🚀 Profile Overview
 
-### 🤖 1. Metallic Dark Emerald Android Bugdroid (`components/Hero3D.tsx`)
-- **Refined Matte Metallic Finish**: Deep emerald metallic green base with subtle highlights.
-- **Neon Glow Accents**: Emissive glowing cyan & emerald green on eyes, neck ring, and antenna tips.
-- **Ultra-Smooth Mouse Tracking**: Uses `THREE.MathUtils.damp` for organic, frame-rate-independent head orientation.
-- **4 Orbiting Glassmorphic Tech Badges**: `<JS>`, `<Node>`, `<Supabase>`, and `<Vercel>` slowly orbiting around the Bugdroid mascot.
-- **Mobile & Performance Optimized**: `dpr={[1, 2]}`, low-overhead lighting, and pure Three.js primitive geometries for 100% reliable loading.
-
-### 🎨 2. Dark Emerald Glassmorphism Design System
-- **Background**: Deep obsidian-emerald `#050C0A` with subtle radial gradient illumination.
-- **Typography**: Clean white headings (`text-white`) with muted gray secondary text (`text-gray-400`).
-- **Cards**: `glass-card` with `backdrop-blur-md` and thin translucent borders `border-white/[0.08]`.
-- **CTA Button**: Pill-shaped `rounded-full` with glowing neon emerald border and text.
-
-### 📋 3. Professional Sections
-- **Header**: Minimalist transparent navigation (`Dev Panpan | Full Stack Developer`).
-- **Hero**: Split desktop layout with large bold title and 3D Canvas.
-- **About Me**: Professional summary.
-- **Skills Grid**: 3-column glassmorphism cards.
-- **Projects List**: Numbered list (`01`, `02`) + mini dark emerald analytics chart preview.
-- **Footer**: Left/right clean layout with emerald accent tagline.
+- **Author**: Dev Panpan (Panpan)
+- **Location**: Purbalingga, Central Java, Indonesia
+- **Experience**: 3+ Years of Active Software Development (Kelas 11 SMA)
+- **Focus**: Web Application Engineering, Node.js Automation, Web Scraping, API Architecture, and Modern UI
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Technical Stack
 
-| Layer | Technology |
-|---|---|
-| Framework | **Next.js 14** (App Router) |
-| 3D Engine | **Three.js**, **@react-three/fiber**, **@react-three/drei** |
-| Language | **TypeScript 5** (Strict Mode) |
-| Styling | **Tailwind CSS v3** |
-| Animations | **Framer Motion v11** |
-| Deployment | **Vercel** (1-Click Ready) |
+- **Frontend**: React, Next.js (80%), Tailwind CSS (90%), Framer Motion, Three.js
+- **Backend & Automation**: Node.js (90%), JavaScript (95%), Web Scraping & API Integration
+- **Database & Cloud**: Supabase, Vercel, PostgreSQL, External APIs
+- **GitHub**: [https://github.com/Panzqq](https://github.com/Panzqq)
 
 ---
 
-## 🚀 Quick Start
+## 📦 Featured Projects
 
-```bash
-cd dev-panpan-portfolio
-npm install
-npm run dev
-```
-
-Buka **http://localhost:3000** di browser.
+1. **01 | WhatsApp Bot & Automation**: Membangun arsitektur bot WhatsApp berbasis Node.js yang dilengkapi fitur web scraping dan integrasi API eksternal untuk otomatisasi tugas kompleks.
+2. **02 | Modern Point of Sales (POS) System**: Eksplorasi dan perancangan alur sistem kasir digital yang mencakup manajemen master data, inventaris ritel, dan alur pelaporan transaksi.
+3. **03 | Scalable Web Architecture**: Mengonfigurasi dan men-deploy aplikasi web modern menggunakan Vercel, terintegrasi langsung dengan ekosistem Supabase untuk manajemen database dan penyimpanan cloud.
 
 ---
 
-Made with 💚 by **Dev Panpan**
+Crafted by Panpan | Purbalingga, Central Java.
