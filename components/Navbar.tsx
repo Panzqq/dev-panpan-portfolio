@@ -1,135 +1,93 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Terminal, Menu, X, Code2, Sparkles } from "lucide-react";
-
-const navLinks = [
-  { label: "CONSOLE", href: "#terminal", color: "hover:bg-brutal-cyan" },
-  { label: "DOSSIER", href: "#about", color: "hover:bg-brutal-lime" },
-  { label: "TECH_STACK", href: "#skills", color: "hover:bg-brutal-yellow" },
-  { label: "PROJECTS", href: "#projects", color: "hover:bg-brutal-pink" },
-  { label: "CONTACT", href: "#contact", color: "hover:bg-brutal-purple" },
-];
+import { Menu, X } from "lucide-react";
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const handleNavClick = (href: string) => {
+  const handleNavClick = (id: string) => {
     setMobileOpen(false);
-    const id = href.replace("#", "");
     const el = document.getElementById(id);
     if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      el.scrollIntoView({ behavior: "smooth" });
     }
   };
 
   return (
-    <>
-      <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled ? "py-2 bg-brutal-bg/95 backdrop-blur-md border-b-4 border-black" : "py-4 bg-transparent"
-        }`}
-      >
-        <div className="max-w-6xl mx-auto px-4 md:px-6">
-          <div className="bg-brutal-surface border-4 border-black p-2 md:p-3 shadow-brutal-cyan flex items-center justify-between">
-            {/* Logo / Brand */}
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-              className="flex items-center gap-2 group btn-brutal bg-brutal-card border-2 border-black px-3 py-1.5 shadow-brutal-sm hover:bg-brutal-yellow hover:text-black transition-colors"
-            >
-              <div className="w-6 h-6 bg-brutal-cyan border-2 border-black flex items-center justify-center font-mono font-bold text-black text-xs">
-                &gt;_
-              </div>
-              <span className="font-mono font-black text-sm md:text-base tracking-wider uppercase">
-                DEV_PANPAN
-              </span>
-            </a>
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[#050C0A]/80 backdrop-blur-md border-b border-white/[0.05] transition-all duration-300">
+      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        {/* Brand Name Matching Reference: "Dev Panpan | Full Stack Developer" */}
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          className="text-sm md:text-base font-semibold tracking-tight text-white hover:opacity-80 transition-opacity"
+        >
+          Dev Panpan <span className="text-gray-400 font-normal">| Full Stack Developer</span>
+        </a>
 
-            {/* Live Status Indicator (Desktop) */}
-            <div className="hidden lg:flex items-center gap-2 bg-brutal-bg border-2 border-black px-3 py-1 text-xs font-mono shadow-brutal-sm">
-              <span className="w-2 h-2 rounded-full bg-brutal-lime animate-pulse" />
-              <span className="text-white/80 font-bold">STATUS: READY_TO_BUILD</span>
-            </div>
+        {/* Minimalist Hamburger Menu Button */}
+        <button
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label="Toggle Navigation Menu"
+          className="p-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-white/[0.05] transition-colors"
+        >
+          {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
+      </div>
 
-            {/* Desktop Navigation Links */}
-            <nav className="hidden md:flex items-center gap-2 font-mono text-xs font-bold">
-              {navLinks.map((link) => (
-                <button
-                  key={link.href}
-                  onClick={() => handleNavClick(link.href)}
-                  className={`btn-brutal bg-brutal-card border-2 border-black px-3 py-1.5 text-white/90 hover:text-black ${link.color} shadow-brutal-sm transition-all`}
-                >
-                  {link.label}
-                </button>
-              ))}
-
-              <a
-                href="#contact"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavClick("#contact");
-                }}
-                className="btn-brutal bg-brutal-lime border-2 border-black px-4 py-1.5 text-black font-extrabold shadow-brutal-sm hover:bg-brutal-yellow transition-all"
-              >
-                HIRE_ME 🚀
-              </a>
-            </nav>
-
-            {/* Mobile Toggle Button */}
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              aria-label="Toggle navigation"
-              className="md:hidden btn-brutal bg-brutal-yellow border-2 border-black p-2 text-black shadow-brutal-sm"
-            >
-              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* Mobile Navigation Drawer */}
+      {/* Slide-out / Dropdown Menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed top-24 left-4 right-4 z-40 bg-brutal-surface border-4 border-black p-4 shadow-brutal-xl md:hidden font-mono"
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="absolute top-full left-0 right-0 bg-[#050C0A]/95 backdrop-blur-xl border-b border-white/[0.08] px-6 py-6 shadow-2xl"
           >
-            <div className="flex flex-col gap-2">
-              {navLinks.map((link) => (
+            <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-4 justify-between items-start md:items-center font-medium text-sm">
+              <div className="flex flex-col md:flex-row gap-4 md:gap-8 text-gray-300">
                 <button
-                  key={link.href}
-                  onClick={() => handleNavClick(link.href)}
-                  className={`text-left border-2 border-black p-3 bg-brutal-card font-bold text-sm text-white/90 hover:text-black ${link.color} shadow-brutal-sm transition-colors`}
+                  onClick={() => handleNavClick("about")}
+                  className="text-left hover:text-[#00FFA3] transition-colors"
                 >
-                  {link.label}
+                  About
                 </button>
-              ))}
+                <button
+                  onClick={() => handleNavClick("skills")}
+                  className="text-left hover:text-[#00FFA3] transition-colors"
+                >
+                  Skills
+                </button>
+                <button
+                  onClick={() => handleNavClick("projects")}
+                  className="text-left hover:text-[#00FFA3] transition-colors"
+                >
+                  Projects
+                </button>
+                <button
+                  onClick={() => handleNavClick("contact")}
+                  className="text-left hover:text-[#00FFA3] transition-colors"
+                >
+                  Contact
+                </button>
+              </div>
+
               <button
-                onClick={() => handleNavClick("#contact")}
-                className="mt-2 text-center border-2 border-black p-3 bg-brutal-lime text-black font-extrabold text-sm shadow-brutal-sm hover:bg-brutal-yellow transition-colors"
+                onClick={() => handleNavClick("contact")}
+                className="btn-emerald-pill px-5 py-2 rounded-full text-xs font-semibold"
               >
-                HIRE_ME 🚀
+                Get In Touch
               </button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </header>
   );
 }
