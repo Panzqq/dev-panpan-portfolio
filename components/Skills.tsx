@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
-import { Code2, Server, GitCommit, Zap, Layers, Sparkles, Activity, CheckCircle2 } from "lucide-react";
+import { Code2, Server, GitCommit, Zap, Sparkles, Database, CheckCircle2 } from "lucide-react";
 
-// Color-coded progress bar item
 interface SkillProgress {
   name: string;
   percentage: number;
@@ -16,104 +15,93 @@ interface SkillProgress {
 
 const FRONTEND_SKILLS: SkillProgress[] = [
   {
-    name: "Next.js / React 18",
-    percentage: 95,
+    name: "Tailwind CSS",
+    percentage: 90,
+    color: "#00FFA3",
+    glowColor: "rgba(0, 255, 163, 0.4)",
+    barGradient: "from-[#00FFA3] to-[#10B981]",
+    tag: "Responsive & Modern UI",
+  },
+  {
+    name: "React / Next.js",
+    percentage: 80,
     color: "#00F0FF",
     glowColor: "rgba(0, 240, 255, 0.4)",
     barGradient: "from-[#00F0FF] to-[#38BDF8]",
-    tag: "Server Components & App Router",
+    tag: "Component-Driven & SSR",
   },
   {
-    name: "JavaScript (ESNext)",
-    percentage: 92,
-    color: "#FFE600",
-    glowColor: "rgba(255, 230, 0, 0.4)",
-    barGradient: "from-[#FFE600] to-[#F59E0B]",
-    tag: "Modern V8 & Event Loop",
-  },
-  {
-    name: "TypeScript",
-    percentage: 90,
-    color: "#38BDF8",
-    glowColor: "rgba(56, 189, 248, 0.4)",
-    barGradient: "from-[#38BDF8] to-[#2563EB]",
-    tag: "Strict Type Architecture",
-  },
-  {
-    name: "Three.js / 3D Web",
-    percentage: 84,
+    name: "Interactive UI & 3D",
+    percentage: 82,
     color: "#A855F7",
     glowColor: "rgba(168, 85, 247, 0.4)",
     barGradient: "from-[#C084FC] to-[#A855F7]",
-    tag: "R3F & Shaders",
+    tag: "Framer Motion & Three.js",
   },
 ];
 
 const BACKEND_SKILLS: SkillProgress[] = [
   {
-    name: "Node.js / Express",
-    percentage: 88,
+    name: "JavaScript",
+    percentage: 95,
+    color: "#FFE600",
+    glowColor: "rgba(255, 230, 0, 0.4)",
+    barGradient: "from-[#FFE600] to-[#F59E0B]",
+    tag: "Core Logic, Async & ESNext",
+  },
+  {
+    name: "Node.js",
+    percentage: 90,
     color: "#22C55E",
     glowColor: "rgba(34, 197, 94, 0.4)",
     barGradient: "from-[#4ADE80] to-[#22C55E]",
-    tag: "REST, WebSockets & Microservices",
+    tag: "Backend & Web Automation",
   },
   {
-    name: "Supabase & PostgreSQL",
-    percentage: 91,
+    name: "Web Scraping & APIs",
+    percentage: 92,
     color: "#00FFA3",
     glowColor: "rgba(0, 255, 163, 0.4)",
     barGradient: "from-[#00FFA3] to-[#10B981]",
-    tag: "RLS, Indexing & Real-time",
-  },
-  {
-    name: "Prisma ORM & DB Schema",
-    percentage: 87,
-    color: "#06B6D4",
-    glowColor: "rgba(6, 182, 212, 0.4)",
-    barGradient: "from-[#22D3EE] to-[#0891B2]",
-    tag: "Type-Safe Migrations",
-  },
-  {
-    name: "DevOps & Vercel Edge",
-    percentage: 89,
-    color: "#FFFFFF",
-    glowColor: "rgba(255, 255, 255, 0.3)",
-    barGradient: "from-white to-gray-400",
-    tag: "CI/CD & Serverless Functions",
+    tag: "Puppeteer & Custom Integrations",
   },
 ];
 
-// Tech stack items for Infinite Marquee
+const TOOLS_LIST = [
+  { name: "Supabase", desc: "Database, Auth & Realtime", icon: "⚡" },
+  { name: "Vercel", desc: "Edge Deployment & CI/CD", icon: "▲" },
+  { name: "External APIs", desc: "REST & Webhook Automation", icon: "🔗" },
+  { name: "Git & GitHub", desc: "Version Control & Workflow", icon: "🐙" },
+];
+
 const MARQUEE_TECH = [
-  "Next.js 14",
-  "React 18",
-  "TypeScript",
   "JavaScript",
   "Node.js",
-  "Supabase",
-  "PostgreSQL",
-  "Three.js",
+  "React",
+  "Next.js",
   "Tailwind CSS",
+  "Supabase",
+  "Vercel",
+  "External APIs",
+  "Web Automation",
+  "Web Scraping",
+  "PostgreSQL",
   "Framer Motion",
-  "Prisma ORM",
-  "Docker",
-  "GraphQL",
-  "Vercel Edge",
+  "Three.js",
+  "Git",
 ];
 
-// Generate 18 weeks of realistic GitHub contribution dummy heatmap (7 rows per week)
+// Generate 20 weeks of GitHub activity heatmap
 const HEATMAP_WEEKS = 20;
 const HEATMAP_DATA: number[][] = Array.from({ length: HEATMAP_WEEKS }, (_, weekIndex) =>
   Array.from({ length: 7 }, (_, dayIndex) => {
-    // Generate realistic distribution of commit intensities (0, 1, 2, 3, 4)
     const seed = (weekIndex * 7 + dayIndex) % 13;
-    if (seed === 0 || seed === 6) return Math.random() > 0.4 ? 1 : 0; // weekends
+    if (seed === 0 || seed === 6) return Math.random() > 0.4 ? 1 : 0;
     const rand = Math.random();
-    if (rand < 0.15) return 0;
-    if (rand < 0.45) return 1;
-    if (rand < 0.75) return 2;
-    if (rand < 0.92) return 3;
+    if (rand < 0.12) return 0;
+    if (rand < 0.42) return 1;
+    if (rand < 0.72) return 2;
+    if (rand < 0.9) return 3;
     return 4;
   })
 );
@@ -133,7 +121,6 @@ function getHeatmapColor(level: number): string {
   }
 }
 
-// Single Animated Progress Bar
 function SkillBarItem({ skill, delay }: { skill: SkillProgress; delay: number }) {
   return (
     <div className="space-y-1.5 group">
@@ -150,7 +137,6 @@ function SkillBarItem({ skill, delay }: { skill: SkillProgress; delay: number })
         </span>
       </div>
 
-      {/* Progress Track */}
       <div className="h-2 w-full bg-black/60 rounded-full overflow-hidden border border-white/[0.06] p-0.5 relative">
         <motion.div
           initial={{ width: 0 }}
@@ -162,7 +148,6 @@ function SkillBarItem({ skill, delay }: { skill: SkillProgress; delay: number })
             boxShadow: `0 0 10px ${skill.glowColor}`,
           }}
         >
-          {/* Subtle moving highlight shimmer */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-60 rounded-full" />
         </motion.div>
       </div>
@@ -175,8 +160,6 @@ function SkillBarItem({ skill, delay }: { skill: SkillProgress; delay: number })
 }
 
 export default function Skills() {
-  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
-
   return (
     <section id="skills" className="py-24 px-6 relative">
       <div className="max-w-6xl mx-auto space-y-10">
@@ -188,19 +171,17 @@ export default function Skills() {
               <span>SKILLS_&_CAPABILITIES</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
-              Technical Arsenal
+              Technical Stack & Mastery
             </h2>
           </div>
           <p className="text-gray-400 text-sm max-w-md font-normal leading-relaxed">
-            Engineered with deep architectural mastery across the full spectrum of modern web development.
+            Berfokus pada ekosistem JavaScript modern, otomatisasi backend yang efisien, dan antarmuka web yang intuitif.
           </p>
         </div>
 
-        {/* ========================================================================= */}
-        {/* BENTO BOX GRID LAYOUT */}
-        {/* ========================================================================= */}
+        {/* Bento Box Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
-          {/* BENTO 1: Frontend Systems (Span 6 columns on desktop) */}
+          {/* BENTO 1: Frontend (React/Next.js 80%, Tailwind CSS 90%) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -209,7 +190,6 @@ export default function Skills() {
             whileHover={{ y: -4 }}
             className="lg:col-span-6 glass-card rounded-3xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden group transition-all duration-300 hover:border-[#00F0FF]/30 hover:shadow-[0_0_30px_rgba(0,240,255,0.12)]"
           >
-            {/* Ambient Corner Glow */}
             <div className="absolute top-0 right-0 w-36 h-36 bg-[#00F0FF]/5 rounded-full blur-2xl pointer-events-none" />
 
             <div>
@@ -220,19 +200,18 @@ export default function Skills() {
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-white tracking-tight">
-                      Frontend Architecture
+                      Frontend Development
                     </h3>
                     <span className="text-xs text-gray-400 font-mono">
-                      Component-Driven & 3D Web
+                      Responsive & Interactive UI
                     </span>
                   </div>
                 </div>
                 <span className="px-2.5 py-1 rounded-full bg-[#00F0FF]/10 text-[#00F0FF] text-[11px] font-mono font-semibold border border-[#00F0FF]/20">
-                  Tier 1
+                  Modern Web
                 </span>
               </div>
 
-              {/* Progress Bars List */}
               <div className="space-y-4">
                 {FRONTEND_SKILLS.map((skill, i) => (
                   <SkillBarItem key={skill.name} skill={skill} delay={i * 0.1} />
@@ -241,44 +220,42 @@ export default function Skills() {
             </div>
 
             <div className="mt-6 pt-4 border-t border-white/[0.06] flex items-center justify-between text-xs text-gray-500 font-mono">
-              <span>Lighthouse 98+ Score</span>
-              <span className="text-[#00F0FF]">High Interactivity</span>
+              <span>Tailwind CSS Architecture</span>
+              <span className="text-[#00F0FF]">Clean & Modular</span>
             </div>
           </motion.div>
 
-          {/* BENTO 2: Backend & Database Engine (Span 6 columns on desktop) */}
+          {/* BENTO 2: Backend & Automation (Node.js 90%, JavaScript 95%) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.6, delay: 0.1 }}
             whileHover={{ y: -4 }}
-            className="lg:col-span-6 glass-card rounded-3xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden group transition-all duration-300 hover:border-[#00FFA3]/30 hover:shadow-[0_0_30px_rgba(0,255,163,0.12)]"
+            className="lg:col-span-6 glass-card rounded-3xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden group transition-all duration-300 hover:border-[#22C55E]/30 hover:shadow-[0_0_30px_rgba(34,197,94,0.12)]"
           >
-            {/* Ambient Corner Glow */}
-            <div className="absolute top-0 right-0 w-36 h-36 bg-[#00FFA3]/5 rounded-full blur-2xl pointer-events-none" />
+            <div className="absolute top-0 right-0 w-36 h-36 bg-[#22C55E]/5 rounded-full blur-2xl pointer-events-none" />
 
             <div>
               <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/[0.06]">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-[#00FFA3]/10 border border-[#00FFA3]/30 text-[#00FFA3] flex items-center justify-center shadow-[0_0_15px_rgba(0,255,163,0.2)]">
+                  <div className="w-10 h-10 rounded-2xl bg-[#22C55E]/10 border border-[#22C55E]/30 text-[#22C55E] flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.2)]">
                     <Server size={20} />
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-white tracking-tight">
-                      Backend & Database
+                      Backend & Automation
                     </h3>
                     <span className="text-xs text-gray-400 font-mono">
-                      APIs, Schemas & Edge Storage
+                      APIs, Scraping & Bot Engines
                     </span>
                   </div>
                 </div>
-                <span className="px-2.5 py-1 rounded-full bg-[#00FFA3]/10 text-[#00FFA3] text-[11px] font-mono font-semibold border border-[#00FFA3]/20">
-                  Scalable
+                <span className="px-2.5 py-1 rounded-full bg-[#22C55E]/10 text-[#22C55E] text-[11px] font-mono font-semibold border border-[#22C55E]/20">
+                  High Efficiency
                 </span>
               </div>
 
-              {/* Progress Bars List */}
               <div className="space-y-4">
                 {BACKEND_SKILLS.map((skill, i) => (
                   <SkillBarItem key={skill.name} skill={skill} delay={i * 0.1 + 0.1} />
@@ -287,12 +264,12 @@ export default function Skills() {
             </div>
 
             <div className="mt-6 pt-4 border-t border-white/[0.06] flex items-center justify-between text-xs text-gray-500 font-mono">
-              <span>PostgreSQL & RLS Compliant</span>
-              <span className="text-[#00FFA3]">Sub-50ms Latency</span>
+              <span>Node.js Web Automation</span>
+              <span className="text-[#22C55E]">Automated Workflows</span>
             </div>
           </motion.div>
 
-          {/* BENTO 3: GitHub Activity Heatmap Card (Span 7 columns on desktop) */}
+          {/* BENTO 3: GitHub Activity Heatmap (Span 7) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -309,11 +286,11 @@ export default function Skills() {
                   </div>
                   <div>
                     <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2">
-                      Continuous Shipping Matrix
+                      Continuous Coding Activity
                       <span className="inline-block w-2 h-2 rounded-full bg-[#00FFA3] animate-pulse" />
                     </h3>
                     <span className="text-xs text-gray-400 font-mono">
-                      1,480+ Contributions in the last year
+                      3+ Tahun Pengalaman Coding Aktif
                     </span>
                   </div>
                 </div>
@@ -328,7 +305,6 @@ export default function Skills() {
                 </div>
               </div>
 
-              {/* Interactive GitHub Activity Heatmap Grid */}
               <div className="overflow-x-auto pb-2 scrollbar-none">
                 <div className="flex gap-1.5 min-w-[420px]">
                   {HEATMAP_DATA.map((week, wIndex) => (
@@ -336,7 +312,7 @@ export default function Skills() {
                       {week.map((level, dIndex) => (
                         <div
                           key={dIndex}
-                          title={`Contributions level: ${level}`}
+                          title={`Activity level: ${level}`}
                           className={`w-full aspect-square rounded-[3px] transition-all duration-200 cursor-pointer ${getHeatmapColor(
                             level
                           )}`}
@@ -350,73 +326,69 @@ export default function Skills() {
 
             <div className="mt-4 pt-3 border-t border-white/[0.04] flex items-center justify-between text-xs font-mono text-gray-400">
               <span className="text-[#00FFA3] font-semibold flex items-center gap-1.5">
-                <CheckCircle2 size={13} /> High Commit Velocity
+                <CheckCircle2 size={13} /> Active Project Building
               </span>
-              <span>Streak: 48 Days Active</span>
+              <span>github.com/Panzqq</span>
             </div>
           </motion.div>
 
-          {/* BENTO 4: Core Engineering Philosophy / Performance (Span 5 columns on desktop) */}
+          {/* BENTO 4: Database & Tools (Supabase, Vercel, External APIs) (Span 5) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.6, delay: 0.3 }}
             whileHover={{ y: -4 }}
-            className="lg:col-span-5 glass-card rounded-3xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden group hover:border-[#FFE600]/30 hover:shadow-[0_0_30px_rgba(255,230,0,0.1)]"
+            className="lg:col-span-5 glass-card rounded-3xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden group hover:border-[#00FFA3]/30 hover:shadow-[0_0_30px_rgba(0,255,163,0.1)]"
           >
-            <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/[0.06]">
-              <div className="w-10 h-10 rounded-2xl bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 flex items-center justify-center">
-                <Zap size={20} />
+            <div>
+              <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/[0.06]">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 border border-[#00FFA3]/30 text-[#00FFA3] flex items-center justify-center">
+                  <Database size={20} />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white tracking-tight">
+                    Database & Cloud Tools
+                  </h3>
+                  <span className="text-xs text-gray-400 font-mono">
+                    Integrated Stack
+                  </span>
+                </div>
               </div>
-              <div>
-                <h3 className="text-base font-bold text-white tracking-tight">
-                  Performance Metrics
-                </h3>
-                <span className="text-xs text-gray-400 font-mono">
-                  Benchmark Standards
-                </span>
-              </div>
-            </div>
 
-            {/* Quick Metrics */}
-            <div className="grid grid-cols-2 gap-3 my-2">
-              <div className="bg-white/[0.02] border border-white/[0.05] rounded-2xl p-3.5">
-                <div className="text-xs text-gray-400 font-mono mb-1">SSR Render</div>
-                <div className="text-xl font-bold text-[#00FFA3] font-mono">&lt; 85ms</div>
-              </div>
-              <div className="bg-white/[0.02] border border-white/[0.05] rounded-2xl p-3.5">
-                <div className="text-xs text-gray-400 font-mono mb-1">Type Safety</div>
-                <div className="text-xl font-bold text-white font-mono">100% Strict</div>
-              </div>
-              <div className="bg-white/[0.02] border border-white/[0.05] rounded-2xl p-3.5">
-                <div className="text-xs text-gray-400 font-mono mb-1">SEO / A11y</div>
-                <div className="text-xl font-bold text-yellow-400 font-mono">100 / 100</div>
-              </div>
-              <div className="bg-white/[0.02] border border-white/[0.05] rounded-2xl p-3.5">
-                <div className="text-xs text-gray-400 font-mono mb-1">Architecture</div>
-                <div className="text-xl font-bold text-[#00F0FF] font-mono">Modular</div>
+              <div className="grid grid-cols-2 gap-3 my-2">
+                {TOOLS_LIST.map((tool) => (
+                  <div
+                    key={tool.name}
+                    className="bg-white/[0.02] border border-white/[0.05] hover:border-[#00FFA3]/30 rounded-2xl p-3.5 transition-colors"
+                  >
+                    <div className="text-sm font-bold text-white flex items-center gap-1.5 mb-0.5">
+                      <span>{tool.icon}</span>
+                      <span>{tool.name}</span>
+                    </div>
+                    <div className="text-[11px] text-gray-400 font-mono leading-tight">
+                      {tool.desc}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
             <div className="mt-3 pt-3 border-t border-white/[0.04] text-[11px] font-mono text-gray-500">
-              Clean code without technical debt.
+              Supabase, Vercel & API integrations ready.
             </div>
           </motion.div>
         </div>
 
-        {/* ========================================================================= */}
-        {/* INFINITE TECH STACK MARQUEE STRIP */}
-        {/* ========================================================================= */}
+        {/* Infinite Tech Marquee Strip */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="pt-4"
+          className="pt-2"
         >
           <div className="relative w-full overflow-hidden py-3 glass-card rounded-2xl border border-white/[0.06]">
-            {/* Fade edges */}
             <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#050C0A] to-transparent z-10 pointer-events-none" />
             <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#050C0A] to-transparent z-10 pointer-events-none" />
 
