@@ -9,21 +9,22 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "DEV_PANPAN // Full-Stack Software Engineer & Digital Architect",
+  title: "Dev Panpan | Full Stack Developer",
   description:
-    "Cyberpunk Neobrutalist Portfolio of Dev panpan — Full-Stack Developer specializing in Next.js 14, TypeScript, Supabase, and Framer Motion.",
+    "Portfolio of Dev Panpan — Crafting Seamless Digital Experiences. Specializing in Node.js, React, and Scalable Architectures.",
   keywords: [
-    "Dev panpan",
+    "Dev Panpan",
     "Full Stack Developer",
     "Next.js Developer",
-    "Neobrutalism Portfolio",
-    "React Developer",
+    "React",
+    "Node.js",
+    "Three.js",
     "TypeScript",
   ],
-  authors: [{ name: "Dev panpan" }],
+  authors: [{ name: "Dev Panpan" }],
   openGraph: {
-    title: "DEV_PANPAN // Full-Stack Software Engineer",
-    description: "Cyberpunk Neobrutalist Developer Portfolio & Interactive Terminal.",
+    title: "Dev Panpan | Full Stack Developer",
+    description: "Crafting Seamless Digital Experiences.",
     type: "website",
   },
 };
@@ -35,7 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth dark">
-      <body className={`${inter.variable} font-sans bg-brutal-bg text-white antialiased`}>
+      <body className={`${inter.variable} font-sans bg-[#050C0A] text-white antialiased`}>
         {children}
       </body>
     </html>
