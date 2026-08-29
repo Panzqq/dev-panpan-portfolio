@@ -34,6 +34,7 @@ const config: Config = {
       animation: {
         "float-slow": "floatSlow 6s ease-in-out infinite",
         "pulse-slow": "pulseSlow 4s ease-in-out infinite",
+        "marquee": "marquee 28s linear infinite",
       },
       keyframes: {
         floatSlow: {
@@ -43,6 +44,10 @@ const config: Config = {
         pulseSlow: {
           "0%, 100%": { opacity: "0.4" },
           "50%": { opacity: "0.8" },
+        },
+        marquee: {
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-50%)" },
         },
       },
     },
