@@ -3,13 +3,9 @@
 @tailwind utilities;
 
 :root {
-  --bg-primary: #0a0b10;
-  --bg-secondary: #12141f;
-  --border-color: #272a3d;
-  --neon-cyan: #00f0ff;
-  --neon-lime: #a3e635;
-  --neon-pink: #ff2a85;
-  --neon-yellow: #ffe600;
+  --bg-dark: #050C0A;
+  --emerald-neon: #00FFA3;
+  --emerald-accent: #10B981;
 }
 
 * {
@@ -24,111 +20,71 @@ html {
 }
 
 body {
-  background-color: var(--bg-primary);
-  color: #f8fafc;
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  background-color: var(--bg-dark);
+  color: #ffffff;
   overflow-x: hidden;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
-/* Retro Brutalist Dot Grid */
-.bg-brutal-grid {
-  background-size: 32px 32px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+/* Subtle Dark Emerald Radial Ambient Background */
+.bg-emerald-radial {
+  background: 
+    radial-gradient(circle at 65% 25%, rgba(0, 255, 163, 0.07) 0%, transparent 50%),
+    radial-gradient(circle at 20% 70%, rgba(16, 185, 129, 0.05) 0%, transparent 45%),
+    #050C0A;
 }
 
-.bg-dot-pattern {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
-  background-size: 20px 20px;
+/* Dark Glassmorphism */
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Neobrutal button tactile click */
-.btn-brutal {
-  transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.12s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.btn-brutal:hover {
-  transform: translate(-3px, -3px);
-}
-.btn-brutal:active {
-  transform: translate(2px, 2px);
-  box-shadow: 0px 0px 0px 0px #000 !important;
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(0, 255, 163, 0.25);
+  box-shadow: 0 0 20px rgba(0, 255, 163, 0.1);
 }
 
-/* Card hover lift */
-.card-brutal {
-  transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.18s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.card-brutal:hover {
-  transform: translate(-4px, -4px);
+/* Pill CTA Button */
+.btn-emerald-pill {
+  background: rgba(0, 255, 163, 0.03);
+  border: 1.5px solid #00FFA3;
+  color: #00FFA3;
+  transition: all 0.3s ease;
 }
 
-/* Custom Brutal Scrollbar */
+.btn-emerald-pill:hover {
+  background: rgba(0, 255, 163, 0.12);
+  box-shadow: 0 0 25px rgba(0, 255, 163, 0.35);
+  transform: translateY(-2px);
+}
+
+.btn-emerald-pill:active {
+  transform: translateY(0px);
+}
+
+/* Custom Minimalist Emerald Scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a0b10;
-  border-left: 2px solid #272a3d;
+  background: #050C0A;
 }
 ::-webkit-scrollbar-thumb {
-  background: #00f0ff;
-  border: 2px solid #000;
-  box-shadow: inset 1px 1px 0px #fff;
+  background: rgba(0, 255, 163, 0.4);
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #a3e635;
+  background: #00FFA3;
 }
 
-/* Selection Color */
+/* Text selection */
 ::selection {
-  background: #ffe600;
-  color: #000;
-}
-
-/* Terminal Scanline Effect */
-.scanlines {
-  position: relative;
-  overflow: hidden;
-}
-.scanlines::before {
-  content: " ";
-  display: block;
-  position: absolute;
-  top: 0; left: 0; bottom: 0; right: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
-  background-size: 100% 4px;
-  z-index: 10;
-  pointer-events: none;
-  opacity: 0.6;
-}
-
-/* Caution Bar Strips */
-.caution-bar {
-  background: repeating-linear-gradient(
-    -45deg,
-    #ffe600,
-    #ffe600 12px,
-    #000000 12px,
-    #000000 24px
-  );
-}
-
-/* Neon Text Glows */
-.text-neon-cyan {
-  color: #00f0ff;
-  text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
-}
-.text-neon-lime {
-  color: #a3e635;
-  text-shadow: 0 0 10px rgba(163, 230, 53, 0.6);
-}
-.text-neon-pink {
-  color: #ff2a85;
-  text-shadow: 0 0 10px rgba(255, 42, 133, 0.6);
-}
-.text-neon-yellow {
-  color: #ffe600;
-  text-shadow: 0 0 10px rgba(255, 230, 0, 0.6);
+  background: #00FFA3;
+  color: #050C0A;
 }
