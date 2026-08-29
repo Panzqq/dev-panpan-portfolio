@@ -1,173 +1,151 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
+import { Code2, Server, Wrench, Sparkles, Database, Layers } from "lucide-react";
 
-const techStack = [
-  { name: "JavaScript", emoji: "🟨" },
-  { name: "TypeScript", emoji: "🔷" },
-  { name: "React", emoji: "⚛️" },
-  { name: "Next.js", emoji: "▲" },
-  { name: "Node.js", emoji: "🟩" },
-  { name: "Tailwind CSS", emoji: "🎨" },
-  { name: "Supabase", emoji: "🔋" },
-  { name: "PostgreSQL", emoji: "🐘" },
-  { name: "Prisma", emoji: "💎" },
-  { name: "Docker", emoji: "🐳" },
-  { name: "Git", emoji: "🔀" },
-  { name: "Figma", emoji: "🎯" },
-  { name: "REST API", emoji: "🔗" },
-  { name: "GraphQL", emoji: "🔺" },
-  { name: "Framer Motion", emoji: "🎭" },
-  { name: "Vercel", emoji: "🚀" },
+const TECH_ITEMS_1 = [
+  "NEXT.JS 14", "TYPESCRIPT", "REACT 18", "TAILWIND CSS", 
+  "FRAMER MOTION", "NODE.JS", "SUPABASE", "POSTGRESQL", 
+  "PRISMA ORM", "DOCKER", "GRAPHQL", "VERCEL"
 ];
 
-const skillCategories = [
+const TECH_ITEMS_2 = [
+  "REST APIS", "ZUSTAND", "REDUX TOOLKIT", "SOCKET.IO", 
+  "FIGMA UI/UX", "GIT & GITHUB", "TURBOREPO", "VITEST", 
+  "EDGE FUNCTIONS", "RADIX UI", "SHADCN/UI", "NEOBRUTALISM"
+];
+
+const SKILL_MATRIX = [
   {
-    category: "Frontend",
-    color: "from-cyan-500 to-blue-500",
+    category: "FRONTEND_SYSTEMS",
+    icon: Code2,
+    badge: "bg-brutal-cyan text-black",
     skills: [
-      { name: "React / Next.js", level: 92 },
-      { name: "TypeScript", level: 88 },
-      { name: "Tailwind CSS", level: 95 },
-      { name: "Framer Motion", level: 80 },
+      { name: "Next.js (App Router / Server Components)", val: 95 },
+      { name: "TypeScript / Strict Type Architectures", val: 92 },
+      { name: "Tailwind CSS & Neobrutal Design Systems", val: 98 },
+      { name: "Framer Motion & Micro-Interactions", val: 90 },
     ],
   },
   {
-    category: "Backend",
-    color: "from-purple-500 to-pink-500",
+    category: "BACKEND_&_DATABASES",
+    icon: Server,
+    badge: "bg-brutal-lime text-black",
     skills: [
-      { name: "Node.js / Express", level: 85 },
-      { name: "PostgreSQL", level: 80 },
-      { name: "Supabase", level: 82 },
-      { name: "REST / GraphQL", level: 78 },
+      { name: "Node.js / Express / Next API Handlers", val: 88 },
+      { name: "PostgreSQL & Supabase Architecture", val: 86 },
+      { name: "Prisma ORM & Schema Design", val: 85 },
+      { name: "RESTful & GraphQL API Integrations", val: 90 },
     ],
   },
   {
-    category: "Tools & DevOps",
-    color: "from-emerald-500 to-cyan-500",
+    category: "DEVOPS_&_TOOLING",
+    icon: Wrench,
+    badge: "bg-brutal-yellow text-black",
     skills: [
-      { name: "Git / GitHub", level: 90 },
-      { name: "Docker", level: 70 },
-      { name: "Vercel / CI-CD", level: 85 },
-      { name: "Figma", level: 75 },
+      { name: "Vercel / Edge Deployment / CI-CD", val: 94 },
+      { name: "Git & Collaborative GitHub Workflows", val: 92 },
+      { name: "Docker Containerization", val: 78 },
+      { name: "Performance Optimization & SEO Audit", val: 95 },
     ],
   },
 ];
-
-// Duplicate for seamless infinite scroll
-const marqueeItems = [...techStack, ...techStack];
-
-function SkillBar({ name, level, color }: { name: string; level: number; color: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-50px" });
-
-  return (
-    <div ref={ref} className="mb-4 last:mb-0">
-      <div className="flex justify-between mb-1.5">
-        <span className="text-sm text-white/70 font-medium">{name}</span>
-        <span className="text-xs text-white/40 font-mono">{level}%</span>
-      </div>
-      <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
-        <motion.div
-          className={`h-full bg-gradient-to-r ${color} rounded-full`}
-          initial={{ width: 0 }}
-          animate={{ width: inView ? `${level}%` : 0 }}
-          transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
-        />
-      </div>
-    </div>
-  );
-}
 
 export default function Skills() {
-  const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
-
-  const containerVariants = {
-    hidden: {},
-    visible: { transition: { staggerChildren: 0.12 } },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1] } },
-  };
-
   return (
-    <section id="skills" ref={ref} className="py-28 px-6">
-      <div className="max-w-5xl mx-auto">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-        >
-          {/* Section label */}
-          <motion.div variants={itemVariants} className="flex items-center gap-3 mb-4">
-            <span className="text-cyan-400 font-mono text-sm">02.</span>
-            <span className="text-white/40 text-sm uppercase tracking-widest font-mono">Tech Stack</span>
-            <div className="flex-1 h-px bg-gradient-to-r from-cyan-400/30 to-transparent" />
-          </motion.div>
+    <section id="skills" className="py-24 px-4 md:px-6 relative overflow-hidden">
+      <div className="max-w-5xl mx-auto mb-12">
+        {/* Section Header */}
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-4 h-4 bg-brutal-yellow border-2 border-black shadow-brutal-sm" />
+          <span className="font-mono text-sm tracking-widest uppercase text-brutal-yellow font-bold">
+            04. TECH_ARSENAL // STACK_INVENTORY
+          </span>
+        </div>
 
-          <motion.h2
-            variants={itemVariants}
-            className="text-4xl md:text-5xl font-bold mb-4"
-          >
-            Tools I{" "}
-            <span className="gradient-text">love & use</span>
-          </motion.h2>
+        <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight mb-4">
+          TECHNOLOGY <span className="bg-brutal-pink text-white px-2 border-2 border-black">CAPABILITIES</span>
+        </h2>
+        <p className="text-white/60 font-sans text-sm md:text-base max-w-xl">
+          Tested, benchmarked, and production-proven tech stacks used to build high-converting software.
+        </p>
+      </div>
 
-          <motion.p
-            variants={itemVariants}
-            className="text-white/50 text-base mb-14 max-w-lg"
-          >
-            A curated set of technologies I&apos;ve mastered — from crafting pixel-perfect UIs
-            to building scalable backends.
-          </motion.p>
+      {/* Infinite Marquee Tape 1 */}
+      <div className="w-full bg-brutal-surface border-y-4 border-black py-3 mb-3 overflow-hidden select-none">
+        <div className="flex gap-4 whitespace-nowrap animate-marquee">
+          {TECH_ITEMS_1.concat(TECH_ITEMS_1).map((tech, idx) => (
+            <span
+              key={idx}
+              className="inline-flex items-center gap-2 bg-brutal-card border-2 border-black px-3 py-1 font-mono font-black text-xs md:text-sm text-brutal-cyan shadow-brutal-sm"
+            >
+              ✦ {tech}
+            </span>
+          ))}
+        </div>
+      </div>
 
-          {/* Infinite Marquee */}
-          <motion.div
-            variants={itemVariants}
-            className="marquee-container relative mb-14 overflow-hidden"
-          >
-            {/* Fade edges */}
-            <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#050A14] to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#050A14] to-transparent z-10 pointer-events-none" />
+      {/* Infinite Marquee Tape 2 (Reverse) */}
+      <div className="w-full bg-brutal-surface border-b-4 border-black py-3 mb-16 overflow-hidden select-none">
+        <div className="flex gap-4 whitespace-nowrap animate-marquee-reverse">
+          {TECH_ITEMS_2.concat(TECH_ITEMS_2).map((tech, idx) => (
+            <span
+              key={idx}
+              className="inline-flex items-center gap-2 bg-brutal-card border-2 border-black px-3 py-1 font-mono font-black text-xs md:text-sm text-brutal-lime shadow-brutal-sm"
+            >
+              ⚡ {tech}
+            </span>
+          ))}
+        </div>
+      </div>
 
-            <div className="flex gap-3 marquee-track" style={{ animation: "marquee 30s linear infinite" }}>
-              {marqueeItems.map((tech, i) => (
-                <div
-                  key={`${tech.name}-${i}`}
-                  className="flex-shrink-0 flex items-center gap-2 glass px-4 py-2.5 rounded-xl border border-white/5 hover:border-cyan-400/30 hover:bg-cyan-400/5 transition-all duration-300 cursor-default"
-                >
-                  <span className="text-base">{tech.emoji}</span>
-                  <span className="text-sm text-white/70 font-medium whitespace-nowrap">{tech.name}</span>
+      {/* Skill Gauges Grid */}
+      <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-6">
+        {SKILL_MATRIX.map((matrix) => {
+          const Icon = matrix.icon;
+          return (
+            <div
+              key={matrix.category}
+              className="bg-brutal-surface border-4 border-black p-6 shadow-brutal card-brutal flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-6 pb-3 border-b-2 border-white/10">
+                  <div className="flex items-center gap-2">
+                    <Icon size={18} className="text-white" />
+                    <span className="font-mono font-black text-xs uppercase text-white">
+                      {matrix.category}
+                    </span>
+                  </div>
+                  <span className={`text-[10px] font-mono font-extrabold px-2 py-0.5 border border-black shadow-[1px_1px_0px_#000] ${matrix.badge}`}>
+                    VERIFIED
+                  </span>
                 </div>
-              ))}
+
+                <div className="space-y-4 font-mono text-xs">
+                  {matrix.skills.map((skill) => (
+                    <div key={skill.name}>
+                      <div className="flex justify-between mb-1 text-white/80 font-bold">
+                        <span>{skill.name}</span>
+                        <span className="text-brutal-cyan">{skill.val}%</span>
+                      </div>
+                      <div className="w-full h-3 bg-black border-2 border-white/20 p-0.5">
+                        <div
+                          className="h-full bg-brutal-cyan border border-black"
+                          style={{ width: `${skill.val}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between font-mono text-[11px] text-white/40">
+                <span>STATUS: ACTIVE</span>
+                <span className="text-brutal-lime">100% RELIABLE</span>
+              </div>
             </div>
-          </motion.div>
-
-          {/* Skill bars grid */}
-          <div className="grid md:grid-cols-3 gap-6">
-            {skillCategories.map((cat, i) => (
-              <motion.div
-                key={cat.category}
-                variants={itemVariants}
-                className="glass rounded-2xl p-6 border border-white/5 hover:border-white/10 transition-all duration-300"
-                whileHover={{ scale: 1.02, y: -2 }}
-                transition={{ delay: i * 0.05 }}
-              >
-                <div className="flex items-center gap-2 mb-5">
-                  <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${cat.color}`} />
-                  <h3 className="font-semibold text-white text-sm">{cat.category}</h3>
-                </div>
-                {cat.skills.map((skill) => (
-                  <SkillBar key={skill.name} {...skill} color={cat.color} />
-                ))}
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+          );
+        })}
       </div>
     </section>
   );
