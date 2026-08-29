@@ -6,11 +6,9 @@ import { motion } from "framer-motion";
 export default function CustomCursor() {
   const [mousePos, setMousePos] = useState({ x: -100, y: -100 });
   const [isHovered, setIsHovered] = useState(false);
-  const [isClicking, setIsClicking] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(true);
 
   useEffect(() => {
-    // Check if the user is on a touch device
     const isTouch =
       "ontouchstart" in window ||
       navigator.maxTouchPoints > 0 ||
@@ -23,29 +21,19 @@ export default function CustomCursor() {
       setMousePos({ x: e.clientX, y: e.clientY });
     };
 
-    const handleMouseDown = () => setIsClicking(true);
-    const handleMouseUp = () => setIsClicking(false);
-
-    // Detect hover over interactive elements
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
       if (!target) return;
 
-      const interactive = target.closest(
-        "button, a, input, textarea, select, [role='button'], .btn-brutal, .card-brutal"
-      );
+      const interactive = target.closest("button, a, input, textarea, select, [role='button'], .glass-card");
       setIsHovered(!!interactive);
     };
 
     window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mousedown", handleMouseDown);
-    window.addEventListener("mouseup", handleMouseUp);
     document.addEventListener("mouseover", handleMouseOver);
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mousedown", handleMouseDown);
-      window.removeEventListener("mouseup", handleMouseUp);
       document.removeEventListener("mouseover", handleMouseOver);
     };
   }, []);
@@ -56,40 +44,38 @@ export default function CustomCursor() {
     <div className="pointer-events-none fixed inset-0 z-[99999] overflow-hidden">
       {/* Outer Follower Ring */}
       <motion.div
-        className="fixed top-0 left-0 rounded-full border-2 border-brutal-cyan"
+        className="fixed top-0 left-0 rounded-full border border-[#00FFA3]/60"
         style={{
           boxShadow: isHovered
-            ? "0 0 20px #00F0FF, 0 0 40px #FF2A85"
-            : "0 0 10px #00F0FF",
-          backgroundColor: isHovered ? "rgba(0, 240, 255, 0.15)" : "transparent",
+            ? "0 0 20px rgba(0, 255, 163, 0.4)"
+            : "0 0 8px rgba(0, 255, 163, 0.2)",
+          backgroundColor: isHovered ? "rgba(0, 255, 163, 0.08)" : "transparent",
         }}
         animate={{
-          x: mousePos.x - (isHovered ? 24 : 16),
-          y: mousePos.y - (isHovered ? 24 : 16),
-          width: isHovered ? 48 : 32,
-          height: isHovered ? 48 : 32,
-          scale: isClicking ? 0.8 : 1,
-          borderColor: isHovered ? "#FFE600" : "#00F0FF",
+          x: mousePos.x - (isHovered ? 20 : 12),
+          y: mousePos.y - (isHovered ? 20 : 12),
+          width: isHovered ? 40 : 24,
+          height: isHovered ? 40 : 24,
         }}
         transition={{
           type: "spring",
-          stiffness: 400,
+          stiffness: 450,
           damping: 28,
-          mass: 0.5,
+          mass: 0.4,
         }}
       />
 
-      {/* Inner Dot */}
+      {/* Inner Emerald Dot */}
       <motion.div
-        className="fixed top-0 left-0 w-2 h-2 rounded-full bg-brutal-pink"
+        className="fixed top-0 left-0 w-1.5 h-1.5 rounded-full bg-[#00FFA3]"
         animate={{
-          x: mousePos.x - 4,
-          y: mousePos.y - 4,
-          scale: isClicking ? 1.5 : isHovered ? 0 : 1,
+          x: mousePos.x - 3,
+          y: mousePos.y - 3,
+          scale: isHovered ? 0 : 1,
         }}
         transition={{
           type: "spring",
-          stiffness: 800,
+          stiffness: 850,
           damping: 35,
         }}
       />
