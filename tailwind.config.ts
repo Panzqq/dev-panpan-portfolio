@@ -10,58 +10,39 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
-        mono: ["var(--font-mono)", "JetBrains Mono", "Courier New", "monospace"],
+        sans: ["var(--font-inter)", "Poppins", "system-ui", "sans-serif"],
+        mono: ["var(--font-mono)", "JetBrains Mono", "monospace"],
       },
       colors: {
-        brutal: {
-          bg: "#0c0d14",
-          surface: "#141622",
-          card: "#191c2c",
-          border: "#2d324d",
-          cyan: "#00F0FF",
-          lime: "#A3E635",
-          pink: "#FF2A85",
-          yellow: "#FFE600",
-          purple: "#A855F7",
-          orange: "#FF6B00",
+        dark: {
+          bg: "#050C0A",
+          card: "rgba(255, 255, 255, 0.03)",
+          border: "rgba(255, 255, 255, 0.08)",
+        },
+        emerald: {
+          neon: "#00FFA3",
+          accent: "#10B981",
+          dark: "#064E3B",
+          glow: "rgba(0, 255, 163, 0.25)",
         },
       },
       boxShadow: {
-        "brutal-sm": "2px 2px 0px 0px #000000",
-        "brutal": "4px 4px 0px 0px #000000",
-        "brutal-lg": "6px 6px 0px 0px #000000",
-        "brutal-xl": "8px 8px 0px 0px #000000",
-        "brutal-cyan": "4px 4px 0px 0px #00F0FF",
-        "brutal-lime": "4px 4px 0px 0px #A3E635",
-        "brutal-pink": "4px 4px 0px 0px #FF2A85",
-        "brutal-yellow": "4px 4px 0px 0px #FFE600",
-        "brutal-purple": "4px 4px 0px 0px #A855F7",
+        "emerald-glow": "0 0 25px rgba(0, 255, 163, 0.35)",
+        "emerald-glow-sm": "0 0 15px rgba(0, 255, 163, 0.2)",
+        "glass": "0 8px 32px 0 rgba(0, 0, 0, 0.37)",
       },
       animation: {
-        "marquee": "marquee 20s linear infinite",
-        "marquee-reverse": "marquee-reverse 20s linear infinite",
-        "blink": "blink 1s step-start infinite",
-        "scanline": "scanline 8s linear infinite",
-        "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        "glitch": "glitch 1s linear infinite",
+        "float-slow": "floatSlow 6s ease-in-out infinite",
+        "pulse-slow": "pulseSlow 4s ease-in-out infinite",
       },
       keyframes: {
-        marquee: {
-          "0%": { transform: "translateX(0%)" },
-          "100%": { transform: "translateX(-50%)" },
+        floatSlow: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-10px)" },
         },
-        "marquee-reverse": {
-          "0%": { transform: "translateX(-50%)" },
-          "100%": { transform: "translateX(0%)" },
-        },
-        blink: {
-          "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0" },
-        },
-        scanline: {
-          "0%": { transform: "translateY(-100%)" },
-          "100%": { transform: "translateY(1000%)" },
+        pulseSlow: {
+          "0%, 100%": { opacity: "0.4" },
+          "50%": { opacity: "0.8" },
         },
       },
     },
