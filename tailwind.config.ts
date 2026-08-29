@@ -6,47 +6,63 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: "class",
   theme: {
     extend: {
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
-        mono: ["var(--font-mono)", "monospace"],
+        mono: ["var(--font-mono)", "JetBrains Mono", "Courier New", "monospace"],
       },
       colors: {
-        cyan: {
-          400: "#22d3ee",
-          500: "#06b6d4",
-        },
-        purple: {
-          400: "#c084fc",
-          500: "#a855f7",
-          600: "#9333ea",
+        brutal: {
+          bg: "#0c0d14",
+          surface: "#141622",
+          card: "#191c2c",
+          border: "#2d324d",
+          cyan: "#00F0FF",
+          lime: "#A3E635",
+          pink: "#FF2A85",
+          yellow: "#FFE600",
+          purple: "#A855F7",
+          orange: "#FF6B00",
         },
       },
+      boxShadow: {
+        "brutal-sm": "2px 2px 0px 0px #000000",
+        "brutal": "4px 4px 0px 0px #000000",
+        "brutal-lg": "6px 6px 0px 0px #000000",
+        "brutal-xl": "8px 8px 0px 0px #000000",
+        "brutal-cyan": "4px 4px 0px 0px #00F0FF",
+        "brutal-lime": "4px 4px 0px 0px #A3E635",
+        "brutal-pink": "4px 4px 0px 0px #FF2A85",
+        "brutal-yellow": "4px 4px 0px 0px #FFE600",
+        "brutal-purple": "4px 4px 0px 0px #A855F7",
+      },
       animation: {
-        "marquee": "marquee 25s linear infinite",
-        "marquee2": "marquee2 25s linear infinite",
-        "pulse-slow": "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        "float": "float 6s ease-in-out infinite",
+        "marquee": "marquee 20s linear infinite",
+        "marquee-reverse": "marquee-reverse 20s linear infinite",
+        "blink": "blink 1s step-start infinite",
+        "scanline": "scanline 8s linear infinite",
+        "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "glitch": "glitch 1s linear infinite",
       },
       keyframes: {
         marquee: {
           "0%": { transform: "translateX(0%)" },
-          "100%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(-50%)" },
         },
-        marquee2: {
-          "0%": { transform: "translateX(100%)" },
+        "marquee-reverse": {
+          "0%": { transform: "translateX(-50%)" },
           "100%": { transform: "translateX(0%)" },
         },
-        float: {
-          "0%, 100%": { transform: "translateY(0px)" },
-          "50%": { transform: "translateY(-20px)" },
+        blink: {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0" },
         },
-      },
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        scanline: {
+          "0%": { transform: "translateY(-100%)" },
+          "100%": { transform: "translateY(1000%)" },
+        },
       },
     },
   },
