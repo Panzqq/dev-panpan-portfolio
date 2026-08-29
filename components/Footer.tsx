@@ -1,6 +1,6 @@
 "use client";
 
-import { Twitter, Instagram, Github } from "lucide-react";
+import { Github, Globe, Mail } from "lucide-react";
 
 export default function Footer() {
   const scrollTo = (id: string) => {
@@ -46,57 +46,41 @@ export default function Footer() {
             </button>
           </nav>
 
-          {/* Right Social Icons */}
+          {/* Right Social Channels */}
           <div className="flex items-center gap-4 text-gray-400">
-            <a
-              href="https://twitter.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Twitter"
-              className="p-2 hover:text-[#00FFA3] transition-colors"
-            >
-              <Twitter size={18} />
-            </a>
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Instagram"
-              className="p-2 hover:text-[#00FFA3] transition-colors"
-            >
-              <Instagram size={18} />
-            </a>
             <a
               href="https://github.com/Panzqq"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="GitHub"
+              aria-label="GitHub Profile"
               className="p-2 hover:text-[#00FFA3] transition-colors"
             >
               <Github size={18} />
             </a>
+            <a
+              href="mailto:hello@devpanpan.dev"
+              aria-label="Email"
+              className="p-2 hover:text-[#00FFA3] transition-colors"
+            >
+              <Mail size={18} />
+            </a>
           </div>
         </div>
 
-        {/* Bottom Row: Accent Text Left, Last Commit Right matching reference */}
+        {/* Bottom Row: Strict minimal text without emojis */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-white/[0.04] text-xs font-mono text-gray-500">
-          <div className="text-[#00FFA3] font-medium flex items-center gap-1.5">
-            <span>Dev Panpan: Build something amazing 💚</span>
+          <div className="text-gray-300 font-medium">
+            Crafted by Panpan | Purbalingga, Central Java.
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-gray-400">Last Commit:</span>
-            <span className="text-gray-300">Optimized 3D model for mobile</span>
-            <span className="text-gray-600">|</span>
-            <span className="text-gray-400">1m ago</span>
-            <span className="text-gray-600">|</span>
             <a
-              href="https://github.com/Panzqq/dev-panpan-portfolio"
+              href="https://github.com/Panzqq"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#00FFA3] hover:underline flex items-center gap-1"
+              className="text-[#00FFA3] hover:underline"
             >
-              View 📦
+              github.com/Panzqq
             </a>
           </div>
         </div>
