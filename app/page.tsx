@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import Terminal from "@/components/Terminal";
 import About from "@/components/About";
 import Skills from "@/components/Skills";
 import Projects from "@/components/Projects";
@@ -7,18 +8,15 @@ import Contact from "@/components/Contact";
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen noise grid-bg">
-      {/* Ambient background blobs */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-5%] w-[600px] h-[600px] rounded-full bg-cyan-500/10 blur-[120px] animate-blob" />
-        <div className="absolute top-[40%] right-[-10%] w-[500px] h-[500px] rounded-full bg-purple-500/10 blur-[120px] animate-blob animation-delay-2000" />
-        <div className="absolute bottom-[10%] left-[30%] w-[400px] h-[400px] rounded-full bg-cyan-400/5 blur-[100px] animate-blob animation-delay-4000" />
-      </div>
+    <main className="relative min-h-screen bg-brutal-bg bg-brutal-grid text-white overflow-x-hidden selection:bg-brutal-yellow selection:text-black">
+      {/* Top ambient glow */}
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-brutal-cyan/5 blur-[120px] pointer-events-none z-0" />
 
-      {/* Content */}
+      {/* Main page content stack */}
       <div className="relative z-10">
         <Navbar />
         <Hero />
+        <Terminal />
         <About />
         <Skills />
         <Projects />
