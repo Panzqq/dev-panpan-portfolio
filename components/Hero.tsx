@@ -27,25 +27,25 @@ export default function Hero() {
   return (
     <section className="relative min-h-[92vh] flex flex-col justify-center items-center pt-28 pb-16 px-6 overflow-hidden">
       <div className="max-w-6xl mx-auto w-full grid md:grid-cols-12 gap-8 items-center">
-        {/* Left Column: Heading, Subtitle, and Pill CTA */}
+        {/* Left Column: Heading, Real Subtitle, and Pill CTA */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="md:col-span-7 flex flex-col items-start text-left"
         >
-          {/* Main Title matching reference image */}
+          {/* Main Tagline */}
           <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white leading-[1.08] mb-6">
-            Crafting Seamless <br />
-            Digital Experiences.
+            Building Practical <br />
+            Digital Solutions.
           </h1>
 
-          {/* Subtitle */}
-          <p className="text-base sm:text-lg text-gray-400 font-normal leading-relaxed max-w-lg mb-8">
-            Specializing in Node.js, React, and Scalable Architectures.
+          {/* Subtitle with Authentic Background */}
+          <p className="text-base sm:text-lg text-gray-400 font-normal leading-relaxed max-w-xl mb-8">
+            Full Stack Developer based in Purbalingga, Indonesia with 3+ years of coding experience. Specializing in Node.js, Web Automation, and Modern UI.
           </p>
 
-          {/* Pill CTA Button matching reference image */}
+          {/* Pill CTA Button */}
           <motion.button
             onClick={handleScrollToProjects}
             className="btn-emerald-pill rounded-full px-8 py-3.5 text-sm font-semibold tracking-wide"
