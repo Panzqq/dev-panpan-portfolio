@@ -11,23 +11,19 @@ interface LyricLine {
 
 const lyricsData: LyricLine[] = [
   { time: 0.0, text: "> initializing audio_stream..." },
-  { time: 0.8, text: "And the toughest part is that we both know" },
-  { time: 3.8, text: "what happened to you, why you're out on your own" },
-  { time: 7.8, text: "Merry Christmas, please don't call" },
-  { time: 11.5, text: "> system_pause: instrumental_break..." },
-  { time: 22.8, text: "You're in debt and you're online kid" },
-  { time: 25.8, text: "moaning 'bout your baggage" },
-  { time: 28.5, text: "You know I'm not your father" },
-  { time: 31.0, text: "So welcome to your rough time" },
-  { time: 33.5, text: "lone wolf cause I guess you like the image" },
-  { time: 36.5, text: "Oh golden boy, shine a light on your own" },
-  { time: 41.5, text: "And at your best, you're magic I suppose" },
-  { time: 45.8, text: "Don't tell 'em what you told me" },
-  { time: 48.0, text: "Don't even tell 'em that you told me" },
-  { time: 50.8, text: "I would rather..." },
-  { time: 53.5, text: "You should know that I passed out" },
-  { time: 56.0, text: "running through the halls of your haunted house" },
-  { time: 59.0, text: "> track_complete. connection_terminated." }
+  { time: 0.8, text: "Oh, golden boy, you shined a light on your home" },
+  { time: 5.5, text: "And at your best, you were magic, we were sold" },
+  { time: 8.5, text: "But don't tell 'em what you told me" },
+  { time: 10.5, text: "Don't even tell 'em that you know me" },
+  { time: 13.5, text: "I would rather burn forever" },
+  { time: 16.5, text: "But you should know that I died slow" },
+  { time: 19.0, text: "Running through the halls of your haunted home" },
+  { time: 22.0, text: "> system_pause: instrumental_break..." },
+  { time: 24.5, text: "And the toughest part is that we both know" },
+  { time: 29.0, text: "What happened to you" },
+  { time: 31.0, text: "Why you're out on your own" },
+  { time: 34.0, text: "Merry Christmas, please don't call." },
+  { time: 38.0, text: "> track_complete. connection_terminated." }
 ];
 
 function formatTime(seconds: number): string {
@@ -141,10 +137,10 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
       whileHover={{ y: -4 }}
       className={`glass-card bg-[#0A0A0A] rounded-3xl p-6 md:p-7 border border-white/10 hover:border-emerald-500/30 transition-all duration-300 relative overflow-hidden font-mono flex flex-col justify-between shadow-2xl group ${className}`}
     >
-      {/* Hidden HTML5 Audio Element */}
+      {/* Hidden HTML5 Audio Element with .mpeg source */}
       <audio
         ref={audioRef}
-        src="/pan.mp3"
+        src="/pan.mpeg"
         preload="metadata"
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
@@ -198,7 +194,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
         <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,0.4)_51%)] bg-[length:100%_4px] pointer-events-none opacity-30" />
 
         {/* Fixed Height Lyrics Window (Prevents layout shift / jumping) */}
-        <div className="relative z-10 h-36 md:h-40 overflow-hidden flex flex-col justify-start gap-2.5">
+        <div className="relative z-10 h-40 md:h-44 overflow-hidden flex flex-col justify-start gap-2.5">
           <AnimatePresence mode="popLayout" initial={false}>
             {visibleLyrics.map((lyric, idx) => {
               const originalIndex = startIdx + idx;
