@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { Terminal as TerminalIcon, Send, RefreshCw } from "lucide-react";
+import { Terminal as TerminalIcon, Send, RefreshCw, ShieldCheck } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 interface GuestbookEntry {
@@ -14,6 +14,18 @@ interface GuestbookEntry {
 interface TerminalGuestbookProps {
   className?: string;
 }
+
+// Basic Anti-XSS Sanitizer
+const sanitizeInput = (str: string): string => {
+  const escapeMap: Record<string, string> = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  };
+  return str.replace(/[&<>"']/g, (match) => escapeMap[match] || match);
+};
 
 export default function TerminalGuestbook({ className = "" }: TerminalGuestbookProps) {
   const [entries, setEntries] = useState<GuestbookEntry[]>([
@@ -29,6 +41,18 @@ export default function TerminalGuestbook({ className = "" }: TerminalGuestbookP
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [statusNotice, setStatusNotice] = useState<string | null>(null);
+
+  // Anti-Spam Submit Cooldown (in seconds)
+  const [cooldown, setCooldown] = useState<number>(0);
+
+  // Cooldown countdown timer
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const interval = setInterval(() => {
+      setCooldown((prev) => Math.max(0, prev - 1));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [cooldown]);
 
   // Fetch guestbook messages from Supabase
   const fetchEntries = useCallback(async () => {
@@ -56,21 +80,25 @@ export default function TerminalGuestbook({ className = "" }: TerminalGuestbookP
     fetchEntries();
   }, [fetchEntries]);
 
-  // Submit new entry to Supabase guestbook with anonymous fallback
+  // Submit new entry with anti-spam cooldown and XSS sanitization
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!message.trim() || isSubmitting) return;
+    if (!message.trim() || isSubmitting || cooldown > 0) return;
 
     setIsSubmitting(true);
     setStatusNotice("POSTING_TO_DATABASE...");
 
     // Fallback: If name is empty, automatically assign 'anonymous'
-    const finalName = name.trim() === "" ? "anonymous" : name.trim();
+    const rawName = name.trim() === "" ? "anonymous" : name.trim();
+
+    // Anti-XSS Sanitization
+    const finalName = sanitizeInput(rawName);
+    const finalMessage = sanitizeInput(message.trim());
 
     try {
       const newEntry = {
         name: finalName,
-        message: message.trim(),
+        message: finalMessage,
       };
 
       const { data, error } = await supabase
@@ -84,6 +112,8 @@ export default function TerminalGuestbook({ className = "" }: TerminalGuestbookP
 
       setStatusNotice("MESSAGE_RECORDED_SUCCESSFULLY");
       setMessage("");
+      setCooldown(60); // 60 seconds cooldown to prevent spam
+
       if (data && data.length > 0) {
         setEntries((prev) => [data[0], ...prev]);
       } else {
@@ -96,12 +126,13 @@ export default function TerminalGuestbook({ className = "" }: TerminalGuestbookP
       const optimisticEntry: GuestbookEntry = {
         id: Date.now(),
         name: finalName,
-        message: message.trim(),
+        message: finalMessage,
         created_at: new Date().toISOString(),
       };
       setEntries((prev) => [optimisticEntry, ...prev]);
       setMessage("");
-      setStatusNotice("LOCAL_STREAM_OK (DATABASE_SYNCING)");
+      setCooldown(60);
+      setStatusNotice("LOCAL_STREAM_OK (COOLDOWN_ACTIVE)");
       setTimeout(() => setStatusNotice(null), 4000);
     } finally {
       setIsSubmitting(false);
@@ -147,8 +178,13 @@ export default function TerminalGuestbook({ className = "" }: TerminalGuestbookP
           </div>
         </div>
 
-        {/* Live Status & Refresh */}
-        <div className="flex items-center gap-3">
+        {/* Live Status, Security Badge & Refresh */}
+        <div className="flex items-center gap-2.5">
+          <div className="hidden sm:flex items-center gap-1 text-[10px] text-emerald-500/60 font-mono select-none">
+            <ShieldCheck size={12} />
+            <span>SECURE_IO</span>
+          </div>
+
           <button
             type="button"
             onClick={fetchEntries}
@@ -220,7 +256,7 @@ export default function TerminalGuestbook({ className = "" }: TerminalGuestbookP
         </div>
       )}
 
-      {/* 3. Input Form Area (Optional Name + Required Message Prompts) */}
+      {/* 3. Input Form Area with Anti-Spam Cooldown Indicator */}
       <form onSubmit={handleSubmit} className="relative z-20 pt-1 shrink-0 space-y-1.5">
         <div className="grid grid-cols-1 sm:grid-cols-12 gap-2">
           {/* Visitor Name Input (Optional) */}
@@ -230,15 +266,16 @@ export default function TerminalGuestbook({ className = "" }: TerminalGuestbookP
             </span>
             <input
               type="text"
+              disabled={cooldown > 0 || isSubmitting}
               maxLength={30}
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Name / Username (Optional)..."
-              className="w-full bg-transparent text-xs font-mono text-emerald-300 placeholder-gray-600 outline-none border-none p-0"
+              className="w-full bg-transparent text-xs font-mono text-emerald-300 placeholder-gray-600 outline-none border-none p-0 disabled:opacity-50"
             />
           </div>
 
-          {/* Visitor Message Input (Required) */}
+          {/* Visitor Message Input (Required + Cooldown Protected) */}
           <div className="sm:col-span-8 flex items-center gap-1.5 bg-black/80 border border-white/[0.08] focus-within:border-emerald-400/50 rounded-xl px-3 py-2 transition-all">
             <span className="text-emerald-400 font-mono font-bold text-xs select-none shrink-0">
               &gt;
@@ -246,19 +283,26 @@ export default function TerminalGuestbook({ className = "" }: TerminalGuestbookP
             <input
               type="text"
               required
+              disabled={cooldown > 0 || isSubmitting}
               maxLength={140}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder="type your message here..."
-              className="w-full bg-transparent text-xs font-mono text-white placeholder-gray-600 outline-none border-none p-0 flex-1"
+              placeholder={
+                cooldown > 0
+                  ? `[SYSTEM] Please wait ${cooldown}s before sending again...`
+                  : "type your message here..."
+              }
+              className={`w-full bg-transparent text-xs font-mono text-white placeholder-gray-600 outline-none border-none p-0 flex-1 ${
+                cooldown > 0 ? "opacity-60 cursor-not-allowed text-yellow-400/90" : ""
+              }`}
             />
             <button
               type="submit"
-              disabled={isSubmitting || !message.trim()}
+              disabled={isSubmitting || !message.trim() || cooldown > 0}
               className="px-2.5 py-1 rounded-lg bg-emerald-950/60 border border-emerald-800/60 text-emerald-400 hover:text-white hover:bg-emerald-800/80 transition-all font-mono text-[11px] font-bold flex items-center gap-1 shrink-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <Send size={11} />
-              <span>POST</span>
+              <span>{cooldown > 0 ? `WAIT ${cooldown}s` : "POST"}</span>
             </button>
           </div>
         </div>
