@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Pause, Volume2, VolumeX, Terminal as TerminalIcon, Eye, Monitor } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX, Terminal as TerminalIcon, Monitor } from "lucide-react";
 
 interface LyricLine {
   time: number;
@@ -38,76 +38,105 @@ interface TerminalAudioPlayerProps {
 }
 
 export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPlayerProps) {
-  const mediaRef = useRef<HTMLVideoElement | null>(null);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [currentTime, setCurrentTime] = useState<number>(0);
-  const [duration, setDuration] = useState<number>(0);
-  const [isMuted, setIsMuted] = useState<boolean>(false);
+  // Step 1: Two completely isolated media references
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  // Active mode state
   const [isVideoMode, setIsVideoMode] = useState<boolean>(false);
 
-  // Synchronize media playback state
-  const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
-    const media = e.currentTarget;
-    setCurrentTime(media.currentTime);
-    if (media.duration && !isNaN(media.duration) && duration === 0) {
-      setDuration(media.duration);
-    }
-  };
+  // Step 1: Isolated time and playback states
+  const [audioTime, setAudioTime] = useState<number>(0);
+  const [audioDuration, setAudioDuration] = useState<number>(0);
+  const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
 
-  const handleLoadedMetadata = (e: React.SyntheticEvent<HTMLVideoElement>) => {
-    const dur = e.currentTarget.duration;
-    if (dur && !isNaN(dur)) {
-      setDuration(dur);
-    }
-  };
+  const [videoTime, setVideoTime] = useState<number>(0);
+  const [videoDuration, setVideoDuration] = useState<number>(0);
+  const [isVideoPlaying, setIsVideoPlaying] = useState<boolean>(false);
 
-  const handleEnded = () => {
-    setIsPlaying(false);
-    if (mediaRef.current && duration > 0) {
-      setCurrentTime(duration);
-    }
-  };
+  const [isMuted, setIsMuted] = useState<boolean>(false);
 
-  const togglePlay = useCallback(() => {
-    if (!mediaRef.current) return;
-    if (isPlaying) {
-      mediaRef.current.pause();
-      setIsPlaying(false);
+  // Step 2: Anti-Clash Mode Toggle Logic
+  const handleToggleMode = () => {
+    if (isVideoMode) {
+      // Switching from Video to Terminal: Pause video
+      videoRef.current?.pause();
+      setIsVideoPlaying(false);
+      setIsVideoMode(false);
     } else {
-      // If media finished, restart from 0
-      if (duration > 0 && currentTime >= duration - 0.5) {
-        mediaRef.current.currentTime = 0;
-        setCurrentTime(0);
-      }
-      mediaRef.current
-        .play()
-        .then(() => setIsPlaying(true))
-        .catch((err) => {
-          console.warn("Media play was interrupted or blocked:", err);
-          setIsPlaying(false);
-        });
+      // Switching from Terminal to Video: Pause audio
+      audioRef.current?.pause();
+      setIsAudioPlaying(false);
+      setIsVideoMode(true);
     }
-  }, [isPlaying, currentTime, duration]);
+  };
+
+  // Step 3: Dynamic Play/Pause Logic for Active Media
+  const togglePlay = useCallback(() => {
+    if (isVideoMode) {
+      if (!videoRef.current) return;
+      if (isVideoPlaying) {
+        videoRef.current.pause();
+        setIsVideoPlaying(false);
+      } else {
+        if (videoDuration > 0 && videoTime >= videoDuration - 0.5) {
+          videoRef.current.currentTime = 0;
+          setVideoTime(0);
+        }
+        videoRef.current
+          .play()
+          .then(() => setIsVideoPlaying(true))
+          .catch((err) => {
+            console.warn("Video playback error:", err);
+            setIsVideoPlaying(false);
+          });
+      }
+    } else {
+      if (!audioRef.current) return;
+      if (isAudioPlaying) {
+        audioRef.current.pause();
+        setIsAudioPlaying(false);
+      } else {
+        if (audioDuration > 0 && audioTime >= audioDuration - 0.5) {
+          audioRef.current.currentTime = 0;
+          setAudioTime(0);
+        }
+        audioRef.current
+          .play()
+          .then(() => setIsAudioPlaying(true))
+          .catch((err) => {
+            console.warn("Audio playback error:", err);
+            setIsAudioPlaying(false);
+          });
+      }
+    }
+  }, [isVideoMode, isVideoPlaying, isAudioPlaying, videoDuration, videoTime, audioDuration, audioTime]);
 
   const toggleMute = () => {
-    if (!mediaRef.current) return;
     const newMuted = !isMuted;
-    mediaRef.current.muted = newMuted;
+    if (audioRef.current) audioRef.current.muted = newMuted;
+    if (videoRef.current) videoRef.current.muted = newMuted;
     setIsMuted(newMuted);
   };
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const seekTime = parseFloat(e.target.value);
-    setCurrentTime(seekTime);
-    if (mediaRef.current) {
-      mediaRef.current.currentTime = seekTime;
+    if (isVideoMode) {
+      setVideoTime(seekTime);
+      if (videoRef.current) {
+        videoRef.current.currentTime = seekTime;
+      }
+    } else {
+      setAudioTime(seekTime);
+      if (audioRef.current) {
+        audioRef.current.currentTime = seekTime;
+      }
     }
   };
 
   // Keyboard shortcut listener: 'p' or 'P' to toggle play/pause
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't trigger if user is focused on an input/textarea
       const target = e.target as HTMLElement;
       if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") return;
 
@@ -121,17 +150,21 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [togglePlay]);
 
-  // Determine active lyric index
+  // Step 1: Lyrics in terminal ONLY read from audioTime
   let activeIndex = 0;
   for (let i = 0; i < lyricsData.length; i++) {
-    if (currentTime >= lyricsData[i].time) {
+    if (audioTime >= lyricsData[i].time) {
       activeIndex = i;
     } else {
       break;
     }
   }
 
-  // Sliding window to show 3-4 lyric lines simultaneously
+  // Active states for current mode display
+  const activeIsPlaying = isVideoMode ? isVideoPlaying : isAudioPlaying;
+  const activeTime = isVideoMode ? videoTime : audioTime;
+  const activeDuration = isVideoMode ? videoDuration : audioDuration;
+
   const maxLines = 4;
   const startIdx = Math.max(0, Math.min(activeIndex - 1, lyricsData.length - maxLines));
   const visibleLyrics = lyricsData.slice(startIdx, startIdx + maxLines);
@@ -143,14 +176,41 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.6 }}
       whileHover={{ y: -4 }}
-      className={`glass-card bg-[#0A0A0A] rounded-3xl p-5 md:p-6 border border-white/10 hover:border-emerald-500/30 transition-all duration-300 relative font-mono flex flex-col justify-between w-full h-auto min-h-[320px] shadow-2xl group ${className}`}
+      className={`glass-card bg-[#0A0A0A] rounded-3xl p-5 md:p-6 border border-white/10 hover:border-emerald-500/30 transition-all duration-300 relative font-mono flex flex-col justify-between w-full h-auto min-h-[360px] shadow-2xl group ${className}`}
     >
+      {/* Step 1: Isolated Hidden HTML5 Audio Element (/pan.mp3) */}
+      <audio
+        ref={audioRef}
+        src="/pan.mp3"
+        preload="metadata"
+        onTimeUpdate={(e) => setAudioTime(e.currentTarget.currentTime)}
+        onLoadedMetadata={(e) => {
+          if (e.currentTarget.duration && !isNaN(e.currentTarget.duration)) {
+            setAudioDuration(e.currentTarget.duration);
+          }
+        }}
+        onDurationChange={(e) => {
+          if (e.currentTarget.duration && !isNaN(e.currentTarget.duration)) {
+            setAudioDuration(e.currentTarget.duration);
+          }
+        }}
+        onEnded={() => {
+          setIsAudioPlaying(false);
+          if (audioRef.current && audioDuration > 0) {
+            setAudioTime(audioDuration);
+          }
+        }}
+        onPlay={() => setIsAudioPlaying(true)}
+        onPause={() => setIsAudioPlaying(false)}
+        className="hidden"
+      />
+
       {/* Ambient background glow effect */}
       <div className="absolute -top-12 -right-12 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-[#00FFA3]/5 rounded-full blur-2xl pointer-events-none" />
 
       {/* 1. Terminal Window Header (macOS style dots + title + Mode Switcher) */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 mb-2 border-b border-white/[0.08] relative z-20 shrink-0">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/[0.08] relative z-20 shrink-0">
         <div className="flex items-center gap-3">
           {/* macOS Traffic Light Buttons */}
           <div className="flex items-center gap-1.5">
@@ -165,17 +225,17 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
               dev-panpan@terminal:
             </span>
             <span className="text-emerald-400/80">
-              {isVideoMode ? "~/video_stream.mp4" : "~/music_player.sh"}
+              {isVideoMode ? "~/video_stream.mp4" : "~/lyrics_stream.sh"}
             </span>
           </div>
         </div>
 
         {/* Header Right Actions: Mode Switcher & Volume Mute */}
         <div className="flex items-center gap-2.5">
-          {/* Transparent Switch Mode Button */}
+          {/* Step 2: Anti-Clash Switch Mode Button */}
           <button
             type="button"
-            onClick={() => setIsVideoMode(!isVideoMode)}
+            onClick={handleToggleMode}
             className="px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 hover:text-white border border-emerald-500/30 transition-all font-mono text-[11px] font-semibold flex items-center gap-1.5 active:scale-95 shadow-[0_0_10px_rgba(0,255,163,0.1)] cursor-pointer"
             title="Switch between Terminal Lyrics and Video Player"
           >
@@ -206,53 +266,66 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
           <div className="hidden sm:flex items-center gap-1.5 pl-1">
             <span
               className={`w-2 h-2 rounded-full ${
-                isPlaying
+                activeIsPlaying
                   ? "bg-emerald-400 shadow-[0_0_8px_#00FFA3] animate-pulse"
                   : "bg-gray-600"
               }`}
             />
             <span className="text-[11px] font-mono text-emerald-400/90 font-medium tracking-wide uppercase">
-              {isPlaying ? "LIVE" : "STANDBY"}
+              {activeIsPlaying ? "PLAYING" : "STANDBY"}
             </span>
           </div>
         </div>
       </div>
 
-      {/* 2. Central Screen: Dual Mode (Continuous Video & Terminal Lyrics Crossfade) */}
-      <div className="bg-black/80 rounded-2xl border border-white/[0.06] relative overflow-hidden flex flex-col justify-between my-2 h-[150px] shadow-inner">
-        {/* Continuous HTML5 Video Element (Always Mounted in DOM to ensure zero playback interruption) */}
+      {/* Step 4: Responsive Central Media Area (h-[180px] md:h-[260px]) */}
+      <div className="relative w-full h-[180px] md:h-[260px] overflow-hidden flex flex-col justify-end mt-4 mb-4 rounded-xl bg-black/80 border border-white/[0.06] shadow-inner">
+        {/* Isolated HTML5 Video Element (/pan-video.mp4) */}
         <video
-          ref={mediaRef}
+          ref={videoRef}
           src="/pan-video.mp4"
           playsInline
           preload="metadata"
-          onTimeUpdate={handleTimeUpdate}
-          onLoadedMetadata={handleLoadedMetadata}
-          onDurationChange={handleLoadedMetadata}
-          onEnded={handleEnded}
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
-          className={`absolute inset-0 w-full h-full object-cover rounded-2xl transition-opacity duration-500 ${
+          onTimeUpdate={(e) => setVideoTime(e.currentTarget.currentTime)}
+          onLoadedMetadata={(e) => {
+            if (e.currentTarget.duration && !isNaN(e.currentTarget.duration)) {
+              setVideoDuration(e.currentTarget.duration);
+            }
+          }}
+          onDurationChange={(e) => {
+            if (e.currentTarget.duration && !isNaN(e.currentTarget.duration)) {
+              setVideoDuration(e.currentTarget.duration);
+            }
+          }}
+          onEnded={() => {
+            setIsVideoPlaying(false);
+            if (videoRef.current && videoDuration > 0) {
+              setVideoTime(videoDuration);
+            }
+          }}
+          onPlay={() => setIsVideoPlaying(true)}
+          onPause={() => setIsVideoPlaying(false)}
+          className={`w-full h-full object-cover object-center rounded-xl absolute inset-0 transition-opacity duration-500 ${
             isVideoMode ? "opacity-90 z-10 pointer-events-auto" : "opacity-0 pointer-events-none -z-10"
           }`}
         />
 
-        {/* Video Dark Emerald Blend Overlay */}
+        {/* Video Dark Emerald Theme Filter Overlay */}
         {isVideoMode && (
-          <div className="absolute inset-0 bg-emerald-950/30 mix-blend-overlay pointer-events-none z-10 rounded-2xl" />
+          <div className="absolute inset-0 bg-emerald-950/30 mix-blend-overlay pointer-events-none z-10 rounded-xl" />
         )}
 
         {/* Terminal subtle scanline grid overlay */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,0.4)_51%)] bg-[length:100%_4px] pointer-events-none opacity-25 rounded-2xl z-10" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,0.4)_51%)] bg-[length:100%_4px] pointer-events-none opacity-25 rounded-xl z-10" />
 
         {/* Mode A: Terminal Lyrics View */}
         <div
-          className={`relative z-20 w-full h-full p-3 md:p-3.5 flex flex-col justify-between transition-opacity duration-300 ${
+          className={`relative z-20 w-full h-full p-3.5 md:p-5 flex flex-col justify-between transition-opacity duration-300 ${
             isVideoMode ? "opacity-0 pointer-events-none invisible" : "opacity-100 visible"
           }`}
         >
-          {/* Isolated Lyrics Window */}
-          <div className="relative w-full h-[90px] overflow-hidden flex flex-col justify-start gap-1.5">
+          {/* Terminal Lyrics Container */}
+          <div className="relative w-full h-[115px] md:h-[180px] overflow-hidden flex flex-col justify-start gap-2">
             <AnimatePresence mode="popLayout" initial={false}>
               {visibleLyrics.map((lyric, idx) => {
                 const originalIndex = startIdx + idx;
@@ -325,14 +398,14 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
           </div>
 
           {/* Audio Equalizer Visualizer Bars & Time in Terminal Mode */}
-          <div className="relative z-10 pt-2 border-t border-white/[0.04] flex items-center justify-between shrink-0">
+          <div className="relative z-10 pt-2.5 border-t border-white/[0.04] flex items-center justify-between shrink-0">
             <div className="flex items-center gap-2">
               <div className="h-5 flex items-end gap-1 overflow-hidden">
                 {[40, 75, 55, 90, 65, 30, 80, 50, 95, 60, 45, 70].map((height, i) => (
                   <motion.span
                     key={i}
                     animate={
-                      isPlaying
+                      isAudioPlaying
                         ? {
                             height: [
                               `${Math.max(3, height * 0.14)}px`,
@@ -344,7 +417,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
                         : { height: "3px" }
                     }
                     transition={
-                      isPlaying
+                      isAudioPlaying
                         ? {
                             repeat: Infinity,
                             duration: 0.6 + (i % 4) * 0.15,
@@ -353,7 +426,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
                         : { duration: 0.3 }
                     }
                     className={`w-1 rounded-full transition-colors ${
-                      isPlaying
+                      isAudioPlaying
                         ? "bg-emerald-400 shadow-[0_0_6px_rgba(0,255,163,0.5)]"
                         : "bg-emerald-900/40"
                     }`}
@@ -366,59 +439,59 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
             </div>
 
             <div className="text-[11px] font-mono text-gray-400 select-none flex items-center gap-1">
-              <span className="text-emerald-400 font-semibold">{formatTime(currentTime)}</span>
+              <span className="text-emerald-400 font-semibold">{formatTime(audioTime)}</span>
               <span className="text-gray-600">/</span>
-              <span>{formatTime(duration)}</span>
+              <span>{formatTime(audioDuration)}</span>
             </div>
           </div>
         </div>
 
-        {/* Mode B: Video Overlay Info Banner */}
+        {/* Mode B: Video Floating Info Banner */}
         {isVideoMode && (
-          <div className="absolute bottom-2 left-3 right-3 z-20 flex items-center justify-between bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/[0.08] text-[11px] font-mono shadow-md">
-            <div className="flex items-center gap-1.5 text-emerald-400">
+          <div className="absolute bottom-3 left-3.5 right-3.5 z-20 flex items-center justify-between bg-black/65 backdrop-blur-md px-3.5 py-2 rounded-xl border border-white/[0.08] text-[11px] font-mono shadow-lg">
+            <div className="flex items-center gap-2 text-emerald-400">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               <span className="font-semibold truncate">Merry Christmas, Please Don&apos;t Call</span>
             </div>
             <div className="text-gray-400 shrink-0 ml-2">
-              <span className="text-emerald-400 font-semibold">{formatTime(currentTime)}</span>
+              <span className="text-emerald-400 font-semibold">{formatTime(videoTime)}</span>
               <span className="text-gray-600 mx-0.5">/</span>
-              <span>{formatTime(duration)}</span>
+              <span>{formatTime(videoDuration)}</span>
             </div>
           </div>
         )}
       </div>
 
-      {/* 3. Audio / Video Progress Bar & Interactive Click/Drag Scrubber */}
+      {/* 3. Media Progress Bar & Interactive Scrubber for Active Mode */}
       <div className="py-2 relative z-10 shrink-0">
         <div className="relative w-full h-2 bg-black/80 rounded-full overflow-hidden border border-white/[0.08] p-0.5">
           <div
             className="h-full bg-gradient-to-r from-emerald-500 via-[#00FFA3] to-[#00FFA3] rounded-full shadow-[0_0_10px_#00FFA3] transition-[width] duration-100 ease-linear"
             style={{
-              width: duration > 0 ? `${Math.min(100, (currentTime / duration) * 100)}%` : "0%",
+              width: activeDuration > 0 ? `${Math.min(100, (activeTime / activeDuration) * 100)}%` : "0%",
             }}
           />
         </div>
-        {/* Transparent range slider on top for precise scrubbing */}
+        {/* Transparent range slider for scrubbing active media */}
         <input
           type="range"
           min="0"
-          max={duration > 0 ? duration : 100}
+          max={activeDuration > 0 ? activeDuration : 100}
           step="0.05"
-          value={currentTime}
+          value={activeTime}
           onChange={handleSeek}
           aria-label="Media scrubber"
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
         />
       </div>
 
-      {/* 4. Clickable Play / Pause Button (Dynamic text for Audio vs Video Mode) */}
+      {/* Step 3: Dynamic Play/Pause Button for Active Mode */}
       <button
         onClick={togglePlay}
         type="button"
         className="w-full mt-auto py-3 bg-emerald-950/40 border border-emerald-800/50 rounded-xl text-emerald-400 font-mono font-bold hover:bg-emerald-900/60 hover:border-emerald-500/50 hover:text-[#00FFA3] transition-all cursor-pointer relative z-10 flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,255,163,0.1)] active:scale-[0.99] select-none"
       >
-        {isPlaying ? (
+        {activeIsPlaying ? (
           <>
             <Pause size={15} className="fill-emerald-400 text-emerald-400" />
             <span>{isVideoMode ? "[ PAUSE VIDEO ]" : "[ PAUSE STREAM ]"}</span>
