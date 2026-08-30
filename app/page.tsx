@@ -7,7 +7,7 @@ import Hero from "@/components/Hero";
 import About from "@/components/About";
 import TerminalQuote from "@/components/TerminalQuote";
 import Skills from "@/components/Skills";
-import Projects from "@/components/Projects";
+import ProjectShowcase from "@/components/ProjectShowcase";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
@@ -28,7 +28,7 @@ export default function Home() {
           <About />
           <TerminalQuote />
           <Skills />
-          <Projects />
+          <ProjectShowcase />
           <Contact />
           <Footer />
         </div>
