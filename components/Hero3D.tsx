@@ -5,14 +5,14 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Float, Html, Sparkles } from "@react-three/drei";
 import * as THREE from "three";
 
-// 4 High-Resolution Tech Stack items orbiting the Android Bugdroid
+// 4 High-Resolution Tech Stack items orbiting tightly around the Android Bugdroid
 const ORBITING_TECHS = [
   {
     id: "js",
     label: "JS",
     color: "#FFE600",
     border: "rgba(255, 230, 0, 0.45)",
-    radius: 2.1,
+    radius: 1.45,
     speed: 0.35,
     offset: 0,
     iconSvg: (
@@ -26,7 +26,7 @@ const ORBITING_TECHS = [
     label: "Node",
     color: "#22C55E",
     border: "rgba(34, 197, 94, 0.45)",
-    radius: 2.2,
+    radius: 1.55,
     speed: 0.35,
     offset: Math.PI * 0.5,
     iconSvg: (
@@ -40,7 +40,7 @@ const ORBITING_TECHS = [
     label: "⚡",
     color: "#00FFA3",
     border: "rgba(0, 255, 163, 0.45)",
-    radius: 2.1,
+    radius: 1.45,
     speed: 0.35,
     offset: Math.PI * 1.0,
     iconSvg: (
@@ -58,7 +58,7 @@ const ORBITING_TECHS = [
     label: "▲",
     color: "#FFFFFF",
     border: "rgba(255, 255, 255, 0.4)",
-    radius: 2.2,
+    radius: 1.55,
     speed: 0.35,
     offset: Math.PI * 1.5,
     iconSvg: (
@@ -88,7 +88,7 @@ function OrbitingBadge({ tech }: { tech: (typeof ORBITING_TECHS)[0] }) {
 
   return (
     <group ref={ref}>
-      <Html center distanceFactor={5.0} transform position={[0, 0, 0]}>
+      <Html center distanceFactor={4.8} transform position={[0, 0, 0]}>
         <div
           style={{
             borderColor: tech.border,
@@ -105,7 +105,7 @@ function OrbitingBadge({ tech }: { tech: (typeof ORBITING_TECHS)[0] }) {
   );
 }
 
-// Metallic Dark Emerald Android Bugdroid Model with cleanly floating legs (NO platform/base)
+// Massive Metallic Dark Emerald Android Bugdroid Model with Scaled Up Size
 function DarkEmeraldBugdroid() {
   const robotRef = useRef<THREE.Group>(null);
   const headRef = useRef<THREE.Group>(null);
@@ -176,7 +176,7 @@ function DarkEmeraldBugdroid() {
 
     // Floating breathing animation
     if (robotRef.current) {
-      robotRef.current.position.y = 0.08 + Math.sin(t * 1.2) * 0.08;
+      robotRef.current.position.y = 0.06 + Math.sin(t * 1.2) * 0.08;
 
       robotRef.current.rotation.y = THREE.MathUtils.damp(
         robotRef.current.rotation.y,
@@ -236,11 +236,11 @@ function DarkEmeraldBugdroid() {
   });
 
   return (
-    <group ref={robotRef} position={[0, 0.08, 0]}>
-      {/* Orbital Plane Ring */}
+    <group ref={robotRef} position={[0, 0.06, 0]} scale={[1.25, 1.25, 1.25]}>
+      {/* Orbital Plane Ring tightly hugging the robot */}
       <group ref={orbitRingRef} position={[0, 0.05, 0]}>
         <mesh material={ringMaterial} rotation={[Math.PI / 2.3, 0, 0]}>
-          <torusGeometry args={[2.15, 0.012, 16, 64]} />
+          <torusGeometry args={[1.5, 0.01, 16, 64]} />
         </mesh>
       </group>
 
@@ -357,7 +357,7 @@ function DarkEmeraldBugdroid() {
         </mesh>
       </group>
 
-      {/* 4 Orbiting Badges */}
+      {/* 4 Orbiting Badges tightly around scaled robot */}
       {ORBITING_TECHS.map((tech) => (
         <OrbitingBadge key={tech.id} tech={tech} />
       ))}
@@ -365,7 +365,7 @@ function DarkEmeraldBugdroid() {
   );
 }
 
-// Main 3D Canvas Scene - Borderless with Extended Width (No Mask Image Clipping)
+// Main 3D Canvas Scene - Scaled Up Robot with Tight Orbit and Absolute Breakout Width
 export default function Hero3D() {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -379,8 +379,8 @@ export default function Hero3D() {
   }, []);
 
   return (
-    <div className="relative w-[110%] -ml-[5%] md:w-[130%] md:-ml-[15%] h-[400px] sm:h-[480px] md:h-[520px] select-none flex items-center justify-center overflow-visible bg-transparent">
-      {/* 3D Canvas Container - 100% borderless, transparent, no mask-image clipping */}
+    <div className="relative w-[120%] -ml-[10%] md:w-[140%] md:-ml-[20%] h-[400px] sm:h-[480px] md:h-[520px] z-10 select-none flex items-center justify-center overflow-visible bg-transparent">
+      {/* 3D Canvas Container - 100% borderless, transparent, no mask clipping */}
       <Canvas
         camera={{ position: [0, 0, 4.8], fov: isMobile ? 50 : 42 }}
         dpr={[1, 2]}
