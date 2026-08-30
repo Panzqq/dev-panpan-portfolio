@@ -105,7 +105,7 @@ function OrbitingBadge({ tech }: { tech: (typeof ORBITING_TECHS)[0] }) {
   );
 }
 
-// Metallic Dark Emerald Android Bugdroid Model
+// Metallic Dark Emerald Android Bugdroid Model with cleanly floating legs (NO platform/base)
 function DarkEmeraldBugdroid() {
   const robotRef = useRef<THREE.Group>(null);
   const headRef = useRef<THREE.Group>(null);
@@ -176,7 +176,7 @@ function DarkEmeraldBugdroid() {
 
     // Floating breathing animation
     if (robotRef.current) {
-      robotRef.current.position.y = Math.sin(t * 1.2) * 0.08;
+      robotRef.current.position.y = 0.1 + Math.sin(t * 1.2) * 0.08;
 
       robotRef.current.rotation.y = THREE.MathUtils.damp(
         robotRef.current.rotation.y,
@@ -236,7 +236,7 @@ function DarkEmeraldBugdroid() {
   });
 
   return (
-    <group ref={robotRef} position={[0, -0.15, 0]}>
+    <group ref={robotRef} position={[0, 0.1, 0]}>
       {/* Orbital Plane Ring */}
       <group ref={orbitRingRef} position={[0, 0.05, 0]}>
         <mesh material={ringMaterial} rotation={[Math.PI / 2.3, 0, 0]}>
@@ -292,61 +292,68 @@ function DarkEmeraldBugdroid() {
         <torusGeometry args={[0.45, 0.025, 24, 64]} />
       </mesh>
 
-      {/* ==================== BUGDROID TORSO ==================== */}
-      <group position={[0, 0.05, 0]}>
+      {/* ==================== BUGDROID TORSO (Clean flat bottom, NO platform) ==================== */}
+      <group position={[0, 0.1, 0]}>
         <mesh material={darkEmeraldMetallic}>
-          <cylinderGeometry args={[0.82, 0.82, 1.05, 48]} />
+          <cylinderGeometry args={[0.82, 0.82, 0.95, 48]} />
         </mesh>
-        <mesh position={[0, -0.52, 0]} material={darkEmeraldMetallic} rotation={[Math.PI, 0, 0]}>
-          <sphereGeometry args={[0.82, 48, 24, 0, Math.PI * 2, 0, Math.PI / 4]} />
+        {/* Flat Bottom Cap */}
+        <mesh position={[0, -0.475, 0]} material={darkPlate} rotation={[Math.PI / 2, 0, 0]}>
+          <circleGeometry args={[0.82, 48]} />
         </mesh>
       </group>
 
       {/* ==================== FLOATING CAPSULE ARMS ==================== */}
       {/* Left Arm */}
-      <group ref={leftArmRef} position={[-1.12, 0.08, 0]}>
+      <group ref={leftArmRef} position={[-1.12, 0.1, 0]}>
         <mesh material={darkEmeraldMetallic}>
-          <cylinderGeometry args={[0.17, 0.17, 0.65, 32]} />
+          <cylinderGeometry args={[0.17, 0.17, 0.6, 32]} />
         </mesh>
-        <mesh position={[0, 0.32, 0]} material={darkEmeraldMetallic}>
+        <mesh position={[0, 0.3, 0]} material={darkEmeraldMetallic}>
           <sphereGeometry args={[0.17, 32, 24, 0, Math.PI * 2, 0, Math.PI / 2]} />
         </mesh>
-        <mesh position={[0, -0.32, 0]} material={darkEmeraldMetallic} rotation={[Math.PI, 0, 0]}>
+        <mesh position={[0, -0.3, 0]} material={darkEmeraldMetallic} rotation={[Math.PI, 0, 0]}>
           <sphereGeometry args={[0.17, 32, 24, 0, Math.PI * 2, 0, Math.PI / 2]} />
         </mesh>
       </group>
 
       {/* Right Arm */}
-      <group ref={rightArmRef} position={[1.12, 0.08, 0]}>
+      <group ref={rightArmRef} position={[1.12, 0.1, 0]}>
         <mesh material={darkEmeraldMetallic}>
-          <cylinderGeometry args={[0.17, 0.17, 0.65, 32]} />
+          <cylinderGeometry args={[0.17, 0.17, 0.6, 32]} />
         </mesh>
-        <mesh position={[0, 0.32, 0]} material={darkEmeraldMetallic}>
+        <mesh position={[0, 0.3, 0]} material={darkEmeraldMetallic}>
           <sphereGeometry args={[0.17, 32, 24, 0, Math.PI * 2, 0, Math.PI / 2]} />
         </mesh>
-        <mesh position={[0, -0.32, 0]} material={darkEmeraldMetallic} rotation={[Math.PI, 0, 0]}>
+        <mesh position={[0, -0.3, 0]} material={darkEmeraldMetallic} rotation={[Math.PI, 0, 0]}>
           <sphereGeometry args={[0.17, 32, 24, 0, Math.PI * 2, 0, Math.PI / 2]} />
         </mesh>
       </group>
 
-      {/* ==================== FLOATING CAPSULE LEGS ==================== */}
+      {/* ==================== CLEAN FLOATING CAPSULE LEGS (No platform below) ==================== */}
       {/* Left Leg */}
-      <group position={[-0.36, -0.82, 0]}>
+      <group position={[-0.36, -0.65, 0]}>
         <mesh material={darkEmeraldMetallic}>
-          <cylinderGeometry args={[0.17, 0.17, 0.42, 32]} />
+          <cylinderGeometry args={[0.16, 0.16, 0.45, 32]} />
         </mesh>
-        <mesh position={[0, -0.21, 0]} material={darkEmeraldMetallic} rotation={[Math.PI, 0, 0]}>
-          <sphereGeometry args={[0.17, 32, 24, 0, Math.PI * 2, 0, Math.PI / 2]} />
+        <mesh position={[0, 0.225, 0]} material={darkEmeraldMetallic}>
+          <sphereGeometry args={[0.16, 32, 24, 0, Math.PI * 2, 0, Math.PI / 2]} />
+        </mesh>
+        <mesh position={[0, -0.225, 0]} material={darkEmeraldMetallic} rotation={[Math.PI, 0, 0]}>
+          <sphereGeometry args={[0.16, 32, 24, 0, Math.PI * 2, 0, Math.PI / 2]} />
         </mesh>
       </group>
 
       {/* Right Leg */}
-      <group position={[0.36, -0.82, 0]}>
+      <group position={[0.36, -0.65, 0]}>
         <mesh material={darkEmeraldMetallic}>
-          <cylinderGeometry args={[0.17, 0.17, 0.42, 32]} />
+          <cylinderGeometry args={[0.16, 0.16, 0.45, 32]} />
         </mesh>
-        <mesh position={[0, -0.21, 0]} material={darkEmeraldMetallic} rotation={[Math.PI, 0, 0]}>
-          <sphereGeometry args={[0.17, 32, 24, 0, Math.PI * 2, 0, Math.PI / 2]} />
+        <mesh position={[0, 0.225, 0]} material={darkEmeraldMetallic}>
+          <sphereGeometry args={[0.16, 32, 24, 0, Math.PI * 2, 0, Math.PI / 2]} />
+        </mesh>
+        <mesh position={[0, -0.225, 0]} material={darkEmeraldMetallic} rotation={[Math.PI, 0, 0]}>
+          <sphereGeometry args={[0.16, 32, 24, 0, Math.PI * 2, 0, Math.PI / 2]} />
         </mesh>
       </group>
 
