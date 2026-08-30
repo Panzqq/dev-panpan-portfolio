@@ -11,7 +11,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Dev Panpan | Full Stack Developer",
   description:
-    "Building Practical Digital Solutions. Full Stack Developer based in Purbalingga, Indonesia with 3+ years of coding experience. Specializing in Node.js, Web Automation, and Modern UI.",
+    "Welcome to my website. Full Stack Developer based in Purbalingga, Indonesia with 3+ years of coding experience. Specializing in Node.js, Web Automation, and Modern UI.",
   keywords: [
     "Dev Panpan",
     "Panpan",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Dev Panpan", url: "https://github.com/Panzqq" }],
   openGraph: {
     title: "Dev Panpan | Full Stack Developer",
-    description: "Building Practical Digital Solutions.",
+    description: "Welcome to my website. Building Practical Digital Solutions.",
     type: "website",
     url: "https://github.com/Panzqq",
   },

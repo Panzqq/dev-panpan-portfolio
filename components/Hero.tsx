@@ -34,10 +34,12 @@ export default function Hero() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="md:col-span-7 flex flex-col items-start text-left"
         >
-          {/* Main Tagline */}
+          {/* Main Tagline: Welcome to My Website */}
           <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white leading-[1.08] mb-6">
-            Building Practical <br />
-            Digital Solutions.
+            Welcome to <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-100 to-emerald-400">
+              My Website.
+            </span>
           </h1>
 
           {/* Subtitle with Authentic Background */}
