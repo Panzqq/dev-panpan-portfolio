@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Pause, Volume2, VolumeX, Terminal as TerminalIcon } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX, Terminal as TerminalIcon, Eye, Monitor } from "lucide-react";
 
 interface LyricLine {
   time: number;
@@ -38,22 +38,23 @@ interface TerminalAudioPlayerProps {
 }
 
 export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPlayerProps) {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const mediaRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [isVideoMode, setIsVideoMode] = useState<boolean>(false);
 
-  // Synchronize audio playback state
-  const handleTimeUpdate = (e: React.SyntheticEvent<HTMLAudioElement>) => {
-    const audio = e.currentTarget;
-    setCurrentTime(audio.currentTime);
-    if (audio.duration && !isNaN(audio.duration) && duration === 0) {
-      setDuration(audio.duration);
+  // Synchronize media playback state
+  const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+    const media = e.currentTarget;
+    setCurrentTime(media.currentTime);
+    if (media.duration && !isNaN(media.duration) && duration === 0) {
+      setDuration(media.duration);
     }
   };
 
-  const handleLoadedMetadata = (e: React.SyntheticEvent<HTMLAudioElement>) => {
+  const handleLoadedMetadata = (e: React.SyntheticEvent<HTMLVideoElement>) => {
     const dur = e.currentTarget.duration;
     if (dur && !isNaN(dur)) {
       setDuration(dur);
@@ -62,44 +63,44 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
 
   const handleEnded = () => {
     setIsPlaying(false);
-    if (audioRef.current && duration > 0) {
+    if (mediaRef.current && duration > 0) {
       setCurrentTime(duration);
     }
   };
 
   const togglePlay = useCallback(() => {
-    if (!audioRef.current) return;
+    if (!mediaRef.current) return;
     if (isPlaying) {
-      audioRef.current.pause();
+      mediaRef.current.pause();
       setIsPlaying(false);
     } else {
-      // If song finished, restart from 0
+      // If media finished, restart from 0
       if (duration > 0 && currentTime >= duration - 0.5) {
-        audioRef.current.currentTime = 0;
+        mediaRef.current.currentTime = 0;
         setCurrentTime(0);
       }
-      audioRef.current
+      mediaRef.current
         .play()
         .then(() => setIsPlaying(true))
         .catch((err) => {
-          console.warn("Audio play was interrupted or blocked:", err);
+          console.warn("Media play was interrupted or blocked:", err);
           setIsPlaying(false);
         });
     }
   }, [isPlaying, currentTime, duration]);
 
   const toggleMute = () => {
-    if (!audioRef.current) return;
+    if (!mediaRef.current) return;
     const newMuted = !isMuted;
-    audioRef.current.muted = newMuted;
+    mediaRef.current.muted = newMuted;
     setIsMuted(newMuted);
   };
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const seekTime = parseFloat(e.target.value);
     setCurrentTime(seekTime);
-    if (audioRef.current) {
-      audioRef.current.currentTime = seekTime;
+    if (mediaRef.current) {
+      mediaRef.current.currentTime = seekTime;
     }
   };
 
@@ -144,26 +145,12 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
       whileHover={{ y: -4 }}
       className={`glass-card bg-[#0A0A0A] rounded-3xl p-5 md:p-6 border border-white/10 hover:border-emerald-500/30 transition-all duration-300 relative font-mono flex flex-col justify-between w-full h-auto min-h-[320px] shadow-2xl group ${className}`}
     >
-      {/* Hidden HTML5 Audio Element with .mpeg source */}
-      <audio
-        ref={audioRef}
-        src="/pan.mpeg"
-        preload="metadata"
-        onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={handleLoadedMetadata}
-        onDurationChange={handleLoadedMetadata}
-        onEnded={handleEnded}
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-        className="hidden"
-      />
-
       {/* Ambient background glow effect */}
       <div className="absolute -top-12 -right-12 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-[#00FFA3]/5 rounded-full blur-2xl pointer-events-none" />
 
-      {/* 1. Terminal Window Header (macOS style dots + title) */}
-      <div className="flex items-center justify-between pb-3 mb-2 border-b border-white/[0.08] relative z-10 shrink-0">
+      {/* 1. Terminal Window Header (macOS style dots + title + Mode Switcher) */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 mb-2 border-b border-white/[0.08] relative z-20 shrink-0">
         <div className="flex items-center gap-3">
           {/* macOS Traffic Light Buttons */}
           <div className="flex items-center gap-1.5">
@@ -172,17 +159,40 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
             <span className="w-3 h-3 rounded-full bg-[#27C93F] border border-[#1AAB29]/60 shadow-[0_0_6px_rgba(39,201,63,0.4)] inline-block" />
           </div>
 
-          <div className="flex items-center gap-2 pl-2 text-xs text-gray-400 font-mono">
+          <div className="flex items-center gap-2 pl-1 text-xs text-gray-400 font-mono">
             <TerminalIcon size={14} className="text-emerald-400" />
-            <span className="text-gray-300 font-semibold tracking-tight">
+            <span className="text-gray-300 font-semibold tracking-tight hidden sm:inline">
               dev-panpan@terminal:
             </span>
-            <span className="text-emerald-400/80">~/music_player.sh</span>
+            <span className="text-emerald-400/80">
+              {isVideoMode ? "~/video_stream.mp4" : "~/music_player.sh"}
+            </span>
           </div>
         </div>
 
-        {/* Live Status Badge & Volume Mute */}
-        <div className="flex items-center gap-3">
+        {/* Header Right Actions: Mode Switcher & Volume Mute */}
+        <div className="flex items-center gap-2.5">
+          {/* Transparent Switch Mode Button */}
+          <button
+            type="button"
+            onClick={() => setIsVideoMode(!isVideoMode)}
+            className="px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 hover:text-white border border-emerald-500/30 transition-all font-mono text-[11px] font-semibold flex items-center gap-1.5 active:scale-95 shadow-[0_0_10px_rgba(0,255,163,0.1)] cursor-pointer"
+            title="Switch between Terminal Lyrics and Video Player"
+          >
+            {isVideoMode ? (
+              <>
+                <TerminalIcon size={13} className="text-emerald-400" />
+                <span>[ TERMINAL VIEW ]</span>
+              </>
+            ) : (
+              <>
+                <Monitor size={13} className="text-emerald-400" />
+                <span>[ SWITCH TO VIDEO ]</span>
+              </>
+            )}
+          </button>
+
+          {/* Volume Mute */}
           <button
             type="button"
             onClick={toggleMute}
@@ -191,7 +201,9 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
           >
             {isMuted ? <VolumeX size={13} /> : <Volume2 size={13} />}
           </button>
-          <div className="flex items-center gap-1.5">
+
+          {/* Live Status Badge */}
+          <div className="hidden sm:flex items-center gap-1.5 pl-1">
             <span
               className={`w-2 h-2 rounded-full ${
                 isPlaying
@@ -200,141 +212,184 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
               }`}
             />
             <span className="text-[11px] font-mono text-emerald-400/90 font-medium tracking-wide uppercase">
-              {isPlaying ? "SYNC ACTIVE" : "STANDBY"}
+              {isPlaying ? "LIVE" : "STANDBY"}
             </span>
           </div>
         </div>
       </div>
 
-      {/* 2. Terminal Screen & Isolated Scrolling Lyrics Display */}
-      <div className="bg-black/70 rounded-2xl p-3.5 md:p-4 border border-white/[0.06] relative flex flex-col justify-between my-2 shadow-inner">
+      {/* 2. Central Screen: Dual Mode (Continuous Video & Terminal Lyrics Crossfade) */}
+      <div className="bg-black/80 rounded-2xl border border-white/[0.06] relative overflow-hidden flex flex-col justify-between my-2 h-[150px] shadow-inner">
+        {/* Continuous HTML5 Video Element (Always Mounted in DOM to ensure zero playback interruption) */}
+        <video
+          ref={mediaRef}
+          src="/pan-video.mp4"
+          playsInline
+          preload="metadata"
+          onTimeUpdate={handleTimeUpdate}
+          onLoadedMetadata={handleLoadedMetadata}
+          onDurationChange={handleLoadedMetadata}
+          onEnded={handleEnded}
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          className={`absolute inset-0 w-full h-full object-cover rounded-2xl transition-opacity duration-500 ${
+            isVideoMode ? "opacity-90 z-10 pointer-events-auto" : "opacity-0 pointer-events-none -z-10"
+          }`}
+        />
+
+        {/* Video Dark Emerald Blend Overlay */}
+        {isVideoMode && (
+          <div className="absolute inset-0 bg-emerald-950/30 mix-blend-overlay pointer-events-none z-10 rounded-2xl" />
+        )}
+
         {/* Terminal subtle scanline grid overlay */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,0.4)_51%)] bg-[length:100%_4px] pointer-events-none opacity-30 rounded-2xl" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,0.4)_51%)] bg-[length:100%_4px] pointer-events-none opacity-25 rounded-2xl z-10" />
 
-        {/* Isolated Lyrics Window (overflow-hidden strictly isolated here) */}
-        <div className="relative w-full h-[130px] overflow-hidden flex flex-col justify-start mt-2 mb-2 gap-2">
-          <AnimatePresence mode="popLayout" initial={false}>
-            {visibleLyrics.map((lyric, idx) => {
-              const originalIndex = startIdx + idx;
-              const isActive = originalIndex === activeIndex;
+        {/* Mode A: Terminal Lyrics View */}
+        <div
+          className={`relative z-20 w-full h-full p-3 md:p-3.5 flex flex-col justify-between transition-opacity duration-300 ${
+            isVideoMode ? "opacity-0 pointer-events-none invisible" : "opacity-100 visible"
+          }`}
+        >
+          {/* Isolated Lyrics Window */}
+          <div className="relative w-full h-[90px] overflow-hidden flex flex-col justify-start gap-1.5">
+            <AnimatePresence mode="popLayout" initial={false}>
+              {visibleLyrics.map((lyric, idx) => {
+                const originalIndex = startIdx + idx;
+                const isActive = originalIndex === activeIndex;
 
-              return (
-                <motion.div
-                  key={`${lyric.text}-${originalIndex}`}
-                  layout
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.25, ease: "easeOut" }}
-                  className={`w-full flex items-start gap-2.5 text-xs md:text-sm font-mono transition-colors duration-200 shrink-0 ${
-                    isActive
-                      ? "text-emerald-400 font-semibold drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]"
-                      : "text-emerald-900/40 select-none"
-                  }`}
-                >
-                  {/* Pure SVG Terminal Prompt Chevron (Immune to Android Emoji replacement) */}
-                  {isActive ? (
-                    <svg
-                      className="w-3.5 h-3.5 text-emerald-400 inline-block shrink-0 mt-0.5 animate-pulse"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={3}
-                      aria-hidden="true"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                  ) : (
-                    <span className="w-3.5 inline-block text-center font-mono text-[11px] text-emerald-900/40 shrink-0 select-none">
-                      $
-                    </span>
-                  )}
-
-                  {/* Lyric text */}
-                  <div className="flex-1 leading-relaxed break-words">
-                    <span>{lyric.text}</span>
-                    {isActive && (
-                      <motion.span
-                        animate={{ opacity: [1, 0, 1] }}
-                        transition={{
-                          repeat: Infinity,
-                          duration: 0.8,
-                          ease: "easeInOut",
-                        }}
-                        className="inline-block text-emerald-400 font-bold ml-1 drop-shadow-[0_0_6px_#00FFA3]"
-                      >
-                        _
-                      </motion.span>
-                    )}
-                  </div>
-
-                  {/* Timestamp tag */}
-                  <span
-                    className={`shrink-0 text-[10px] font-mono px-1.5 py-0.5 rounded select-none ${
+                return (
+                  <motion.div
+                    key={`${lyric.text}-${originalIndex}`}
+                    layout
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.22, ease: "easeOut" }}
+                    className={`w-full flex items-start gap-2.5 text-xs md:text-sm font-mono transition-colors duration-200 shrink-0 ${
                       isActive
-                        ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                        : "text-emerald-950/60"
+                        ? "text-emerald-400 font-semibold drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]"
+                        : "text-emerald-900/40 select-none"
                     }`}
                   >
-                    {formatTime(lyric.time)}
-                  </span>
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
-        </div>
+                    {/* SVG Terminal Prompt Chevron */}
+                    {isActive ? (
+                      <svg
+                        className="w-3.5 h-3.5 text-emerald-400 inline-block shrink-0 mt-0.5 animate-pulse"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={3}
+                        aria-hidden="true"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
+                    ) : (
+                      <span className="w-3.5 inline-block text-center font-mono text-[11px] text-emerald-900/40 shrink-0 select-none">
+                        $
+                      </span>
+                    )}
 
-        {/* Audio Equalizer Visualizer Bars & Time (Fixed Height & items-end prevents jitter completely) */}
-        <div className="relative z-10 pt-2.5 mt-1 border-t border-white/[0.04] flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-2">
-            {/* Visualizer container strictly locked with h-6 items-end */}
-            <div className="h-6 flex items-end gap-1 overflow-hidden">
-              {[40, 75, 55, 90, 65, 30, 80, 50, 95, 60, 45, 70].map((height, i) => (
-                <motion.span
-                  key={i}
-                  animate={
-                    isPlaying
-                      ? {
-                          height: [
-                            `${Math.max(4, height * 0.16)}px`,
-                            `${Math.min(22, height * 0.24)}px`,
-                            `${Math.max(4, height * 0.12)}px`,
-                            `${Math.min(22, height * 0.24)}px`,
-                          ],
-                        }
-                      : { height: "4px" }
-                  }
-                  transition={
-                    isPlaying
-                      ? {
-                          repeat: Infinity,
-                          duration: 0.6 + (i % 4) * 0.15,
-                          ease: "easeInOut",
-                        }
-                      : { duration: 0.3 }
-                  }
-                  className={`w-1 rounded-full transition-colors ${
-                    isPlaying
-                      ? "bg-emerald-400 shadow-[0_0_6px_rgba(0,255,163,0.5)]"
-                      : "bg-emerald-900/40"
-                  }`}
-                />
-              ))}
+                    {/* Lyric text */}
+                    <div className="flex-1 leading-relaxed break-words">
+                      <span>{lyric.text}</span>
+                      {isActive && (
+                        <motion.span
+                          animate={{ opacity: [1, 0, 1] }}
+                          transition={{
+                            repeat: Infinity,
+                            duration: 0.8,
+                            ease: "easeInOut",
+                          }}
+                          className="inline-block text-emerald-400 font-bold ml-1 drop-shadow-[0_0_6px_#00FFA3]"
+                        >
+                          _
+                        </motion.span>
+                      )}
+                    </div>
+
+                    {/* Timestamp tag */}
+                    <span
+                      className={`shrink-0 text-[10px] font-mono px-1.5 py-0.5 rounded select-none ${
+                        isActive
+                          ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                          : "text-emerald-950/60"
+                      }`}
+                    >
+                      {formatTime(lyric.time)}
+                    </span>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </div>
+
+          {/* Audio Equalizer Visualizer Bars & Time in Terminal Mode */}
+          <div className="relative z-10 pt-2 border-t border-white/[0.04] flex items-center justify-between shrink-0">
+            <div className="flex items-center gap-2">
+              <div className="h-5 flex items-end gap-1 overflow-hidden">
+                {[40, 75, 55, 90, 65, 30, 80, 50, 95, 60, 45, 70].map((height, i) => (
+                  <motion.span
+                    key={i}
+                    animate={
+                      isPlaying
+                        ? {
+                            height: [
+                              `${Math.max(3, height * 0.14)}px`,
+                              `${Math.min(18, height * 0.2)}px`,
+                              `${Math.max(3, height * 0.1)}px`,
+                              `${Math.min(18, height * 0.2)}px`,
+                            ],
+                          }
+                        : { height: "3px" }
+                    }
+                    transition={
+                      isPlaying
+                        ? {
+                            repeat: Infinity,
+                            duration: 0.6 + (i % 4) * 0.15,
+                            ease: "easeInOut",
+                          }
+                        : { duration: 0.3 }
+                    }
+                    className={`w-1 rounded-full transition-colors ${
+                      isPlaying
+                        ? "bg-emerald-400 shadow-[0_0_6px_rgba(0,255,163,0.5)]"
+                        : "bg-emerald-900/40"
+                    }`}
+                  />
+                ))}
+              </div>
+              <span className="text-[10px] text-gray-500 font-mono hidden sm:inline select-none">
+                44.1kHz • stereo
+              </span>
             </div>
-            <span className="text-[10px] text-gray-500 font-mono hidden sm:inline select-none">
-              44.1kHz • stereo
-            </span>
-          </div>
 
-          <div className="text-[11px] font-mono text-gray-400 select-none flex items-center gap-1">
-            <span className="text-emerald-400 font-semibold">{formatTime(currentTime)}</span>
-            <span className="text-gray-600">/</span>
-            <span>{formatTime(duration)}</span>
+            <div className="text-[11px] font-mono text-gray-400 select-none flex items-center gap-1">
+              <span className="text-emerald-400 font-semibold">{formatTime(currentTime)}</span>
+              <span className="text-gray-600">/</span>
+              <span>{formatTime(duration)}</span>
+            </div>
           </div>
         </div>
+
+        {/* Mode B: Video Overlay Info Banner */}
+        {isVideoMode && (
+          <div className="absolute bottom-2 left-3 right-3 z-20 flex items-center justify-between bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/[0.08] text-[11px] font-mono shadow-md">
+            <div className="flex items-center gap-1.5 text-emerald-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="font-semibold truncate">Merry Christmas, Please Don't Call</span>
+            </div>
+            <div className="text-gray-400 shrink-0 ml-2">
+              <span className="text-emerald-400 font-semibold">{formatTime(currentTime)}</span>
+              <span className="text-gray-600 mx-0.5">/</span>
+              <span>{formatTime(duration)}</span>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* 3. Audio Progress Bar & Interactive Click/Drag Scrubber */}
+      {/* 3. Audio / Video Progress Bar & Interactive Click/Drag Scrubber */}
       <div className="py-2 relative z-10 shrink-0">
         <div className="relative w-full h-2 bg-black/80 rounded-full overflow-hidden border border-white/[0.08] p-0.5">
           <div
@@ -352,12 +407,12 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
           step="0.05"
           value={currentTime}
           onChange={handleSeek}
-          aria-label="Audio scrubber"
+          aria-label="Media scrubber"
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
         />
       </div>
 
-      {/* 4. Clickable Play / Pause Button (Clean SVG icons, no emoji triggers) */}
+      {/* 4. Clickable Play / Pause Button (Dynamic text for Audio vs Video Mode) */}
       <button
         onClick={togglePlay}
         type="button"
@@ -366,12 +421,12 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
         {isPlaying ? (
           <>
             <Pause size={15} className="fill-emerald-400 text-emerald-400" />
-            <span>[ PAUSE STREAM ]</span>
+            <span>{isVideoMode ? "[ PAUSE VIDEO ]" : "[ PAUSE STREAM ]"}</span>
           </>
         ) : (
           <>
             <Play size={15} className="fill-emerald-400 text-emerald-400 ml-0.5" />
-            <span>[ PLAY AUDIO ]</span>
+            <span>{isVideoMode ? "[ PLAY VIDEO ]" : "[ PLAY AUDIO ]"}</span>
           </>
         )}
       </button>
