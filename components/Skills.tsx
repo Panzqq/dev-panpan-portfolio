@@ -2,8 +2,9 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Code2, Server, GitCommit, Zap, Sparkles, Database, CheckCircle2 } from "lucide-react";
+import { Code2, Server, GitCommit, Sparkles, Database, CheckCircle2 } from "lucide-react";
 import TerminalAudioPlayer from "@/components/TerminalAudioPlayer";
+import TerminalGuestbook from "@/components/TerminalGuestbook";
 
 interface SkillProgress {
   name: string;
@@ -176,7 +177,7 @@ export default function Skills() {
             </h2>
           </div>
           <p className="text-gray-400 text-sm max-w-md font-normal leading-relaxed">
-            Berfokus pada ekosistem JavaScript modern, otomatisasi backend yang efisien, dan antarmuka web yang intuitif.
+            Focused on the modern JavaScript ecosystem, high-efficiency backend automation, and intuitive user interfaces.
           </p>
         </div>
 
@@ -291,7 +292,7 @@ export default function Skills() {
                       <span className="inline-block w-2 h-2 rounded-full bg-[#00FFA3] animate-pulse" />
                     </h3>
                     <span className="text-xs text-gray-400 font-mono">
-                      3+ Tahun Pengalaman Coding Aktif
+                      3+ Years Active Coding Experience
                     </span>
                   </div>
                 </div>
@@ -380,8 +381,11 @@ export default function Skills() {
             </div>
           </motion.div>
 
-          {/* BENTO 5: Interactive Terminal Music Player */}
+          {/* BENTO 5: Interactive Terminal Music & Video Player (Span 12) */}
           <TerminalAudioPlayer className="lg:col-span-12" />
+
+          {/* BENTO 6: Terminal Guestbook (Supabase Integration) (Span 12) */}
+          <TerminalGuestbook className="lg:col-span-12" />
         </div>
 
         {/* Infinite Tech Marquee Strip */}

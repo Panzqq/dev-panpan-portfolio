@@ -27,14 +27,14 @@ export default function Navbar() {
           }}
           className="text-sm md:text-base font-semibold tracking-tight text-white hover:opacity-80 transition-opacity"
         >
-          Dev Panpan <span className="text-gray-400 font-normal">| Full Stack Developer</span>
+          Revan <span className="text-gray-400 font-normal">| Full Stack Developer</span>
         </a>
 
         {/* Minimalist Hamburger Menu Button */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle Navigation Menu"
-          className="p-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-white/[0.05] transition-colors"
+          className="p-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-white/[0.05] transition-colors cursor-pointer"
         >
           {mobileOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
@@ -54,25 +54,25 @@ export default function Navbar() {
               <div className="flex flex-col md:flex-row gap-4 md:gap-8 text-gray-300">
                 <button
                   onClick={() => handleNavClick("about")}
-                  className="text-left hover:text-[#00FFA3] transition-colors"
+                  className="text-left hover:text-[#00FFA3] transition-colors cursor-pointer"
                 >
                   About
                 </button>
                 <button
                   onClick={() => handleNavClick("skills")}
-                  className="text-left hover:text-[#00FFA3] transition-colors"
+                  className="text-left hover:text-[#00FFA3] transition-colors cursor-pointer"
                 >
                   Skills
                 </button>
                 <button
                   onClick={() => handleNavClick("projects")}
-                  className="text-left hover:text-[#00FFA3] transition-colors"
+                  className="text-left hover:text-[#00FFA3] transition-colors cursor-pointer"
                 >
                   Projects
                 </button>
                 <button
                   onClick={() => handleNavClick("contact")}
-                  className="text-left hover:text-[#00FFA3] transition-colors"
+                  className="text-left hover:text-[#00FFA3] transition-colors cursor-pointer"
                 >
                   Contact
                 </button>
@@ -80,7 +80,7 @@ export default function Navbar() {
 
               <button
                 onClick={() => handleNavClick("contact")}
-                className="btn-emerald-pill px-5 py-2 rounded-full text-xs font-semibold"
+                className="btn-emerald-pill px-5 py-2 rounded-full text-xs font-semibold cursor-pointer"
               >
                 Get In Touch
               </button>

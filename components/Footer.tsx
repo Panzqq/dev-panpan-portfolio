@@ -1,6 +1,6 @@
 "use client";
 
-import { Github, Globe, Mail } from "lucide-react";
+import { Github, Mail } from "lucide-react";
 
 export default function Footer() {
   const scrollTo = (id: string) => {
@@ -16,31 +16,31 @@ export default function Footer() {
           <nav className="flex flex-wrap items-center gap-6 text-sm text-gray-400 font-medium">
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="hover:text-white transition-colors"
+              className="hover:text-white transition-colors cursor-pointer"
             >
               Home
             </button>
             <button
               onClick={() => scrollTo("about")}
-              className="hover:text-white transition-colors"
+              className="hover:text-white transition-colors cursor-pointer"
             >
               About
             </button>
             <button
               onClick={() => scrollTo("skills")}
-              className="hover:text-white transition-colors"
+              className="hover:text-white transition-colors cursor-pointer"
             >
               Skills
             </button>
             <button
               onClick={() => scrollTo("projects")}
-              className="hover:text-white transition-colors"
+              className="hover:text-white transition-colors cursor-pointer"
             >
               Projects
             </button>
             <button
               onClick={() => scrollTo("contact")}
-              className="hover:text-white transition-colors"
+              className="hover:text-white transition-colors cursor-pointer"
             >
               Contact
             </button>
@@ -67,10 +67,10 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom Row: Strict minimal text without emojis */}
+        {/* Bottom Row: Minimal hacker aesthetic without emojis */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-white/[0.04] text-xs font-mono text-gray-500">
           <div className="text-gray-300 font-medium">
-            Crafted by Panpan | Purbalingga, Central Java.
+            Crafted by Revan (Dev Panpan) | Purbalingga, Central Java, Indonesia.
           </div>
 
           <div className="flex items-center gap-2">

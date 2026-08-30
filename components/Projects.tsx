@@ -6,25 +6,25 @@ import { ArrowUpRight } from "lucide-react";
 const PROJECTS_DATA = [
   {
     num: "01",
-    title: "WhatsApp Bot & Automation",
+    title: "WhatsApp Bot & Automation Engine",
     description:
-      "Membangun arsitektur bot WhatsApp berbasis Node.js yang dilengkapi fitur web scraping dan integrasi API eksternal untuk otomatisasi tugas kompleks.",
+      "Engineered an event-driven WhatsApp bot architecture using Node.js, featuring automated web scraping modules and external REST API integrations for high-speed workflow execution.",
     tags: ["Node.js", "Web Scraping", "API Integration", "Automation"],
     link: "https://github.com/Panzqq",
   },
   {
     num: "02",
-    title: "Modern Point of Sales (POS) System",
+    title: "Beku-Beku Frozen Food POS & Management",
     description:
-      "Eksplorasi dan perancangan alur sistem kasir digital yang mencakup manajemen master data, inventaris ritel, dan alur pelaporan transaksi.",
+      "Architected a comprehensive digital point-of-sale and transaction platform for the Beku-Beku Frozen Food business project, integrating inventory control, master data, and financial reporting.",
     tags: ["React", "Next.js", "Tailwind CSS", "Database Management"],
     link: "https://github.com/Panzqq",
   },
   {
     num: "03",
-    title: "Scalable Web Architecture",
+    title: "KIR IT Division Infrastructure & Web Platform",
     description:
-      "Mengonfigurasi dan men-deploy aplikasi web modern menggunakan Vercel, terintegrasi langsung dengan ekosistem Supabase untuk manajemen database dan penyimpanan cloud.",
+      "Configured robust web infrastructure and interactive tools for the KIR IT Division, utilizing Supabase cloud databases and high-performance Vercel edge deployment.",
     tags: ["Next.js", "Supabase", "Vercel", "PostgreSQL"],
     link: "https://github.com/Panzqq",
   },
