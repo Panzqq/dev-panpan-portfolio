@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { motion } from "framer-motion";
-import { Terminal as TerminalIcon, Send, Sparkles, RefreshCw, User, MessageSquare } from "lucide-react";
+import { Terminal as TerminalIcon, Send, RefreshCw } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 interface GuestbookEntry {
@@ -57,17 +56,20 @@ export default function TerminalGuestbook({ className = "" }: TerminalGuestbookP
     fetchEntries();
   }, [fetchEntries]);
 
-  // Submit new entry to Supabase guestbook
+  // Submit new entry to Supabase guestbook with anonymous fallback
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !message.trim() || isSubmitting) return;
+    if (!message.trim() || isSubmitting) return;
 
     setIsSubmitting(true);
     setStatusNotice("POSTING_TO_DATABASE...");
 
+    // Fallback: If name is empty, automatically assign 'anonymous'
+    const finalName = name.trim() === "" ? "anonymous" : name.trim();
+
     try {
       const newEntry = {
-        name: name.trim(),
+        name: finalName,
         message: message.trim(),
       };
 
@@ -82,7 +84,6 @@ export default function TerminalGuestbook({ className = "" }: TerminalGuestbookP
 
       setStatusNotice("MESSAGE_RECORDED_SUCCESSFULLY");
       setMessage("");
-      // Refresh list
       if (data && data.length > 0) {
         setEntries((prev) => [data[0], ...prev]);
       } else {
@@ -91,10 +92,10 @@ export default function TerminalGuestbook({ className = "" }: TerminalGuestbookP
       setTimeout(() => setStatusNotice(null), 3000);
     } catch (err: unknown) {
       console.error("Supabase insert error:", err);
-      // Optimistic local push if table is freshly created
+      // Optimistic local push fallback
       const optimisticEntry: GuestbookEntry = {
         id: Date.now(),
-        name: name.trim(),
+        name: finalName,
         message: message.trim(),
         created_at: new Date().toISOString(),
       };
@@ -178,27 +179,36 @@ export default function TerminalGuestbook({ className = "" }: TerminalGuestbookP
               &gt; No visitor messages recorded yet. Be the first to sign.
             </div>
           ) : (
-            entries.map((entry, idx) => (
-              <div
-                key={entry.id || idx}
-                className="flex items-start gap-2 leading-relaxed break-words hover:bg-white/[0.02] p-1 rounded transition-colors"
-              >
-                {/* Timestamp */}
-                <span className="text-gray-600 shrink-0 text-[10px] select-none font-mono">
-                  [{formatTimestamp(entry.created_at)}]
-                </span>
+            entries.map((entry, idx) => {
+              const isAnonymous =
+                entry.name.toLowerCase() === "anonymous" || entry.name.toLowerCase() === "guest_user";
 
-                {/* Prefix & Author */}
-                <span className="text-emerald-400 font-semibold shrink-0 select-none">
-                  ~ {entry.name}:
-                </span>
+              return (
+                <div
+                  key={entry.id || idx}
+                  className="flex items-start gap-2 leading-relaxed break-words hover:bg-white/[0.02] p-1 rounded transition-colors"
+                >
+                  {/* Timestamp */}
+                  <span className="text-gray-600 shrink-0 text-[10px] select-none font-mono">
+                    [{formatTimestamp(entry.created_at)}]
+                  </span>
 
-                {/* Message Content */}
-                <span className="text-gray-200 flex-1 font-mono">
-                  {entry.message}
-                </span>
-              </div>
-            ))
+                  {/* Prefix & Author */}
+                  <span
+                    className={`font-semibold shrink-0 select-none ${
+                      isAnonymous ? "text-emerald-600/80 italic font-normal" : "text-emerald-400"
+                    }`}
+                  >
+                    ~ {entry.name}:
+                  </span>
+
+                  {/* Message Content */}
+                  <span className="text-gray-200 flex-1 font-mono">
+                    {entry.message}
+                  </span>
+                </div>
+              );
+            })
           )}
         </div>
       </div>
@@ -210,26 +220,25 @@ export default function TerminalGuestbook({ className = "" }: TerminalGuestbookP
         </div>
       )}
 
-      {/* 3. Input Form Area (Dual transparent CLI Prompts) */}
+      {/* 3. Input Form Area (Optional Name + Required Message Prompts) */}
       <form onSubmit={handleSubmit} className="relative z-20 pt-1 shrink-0 space-y-1.5">
         <div className="grid grid-cols-1 sm:grid-cols-12 gap-2">
-          {/* Visitor Name Input */}
+          {/* Visitor Name Input (Optional) */}
           <div className="sm:col-span-4 flex items-center gap-1.5 bg-black/80 border border-white/[0.08] focus-within:border-cyan-400/50 rounded-xl px-3 py-2 transition-all">
             <span className="text-cyan-400 font-mono font-bold text-xs select-none shrink-0">
               ~ $
             </span>
             <input
               type="text"
-              required
               maxLength={30}
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="visitor_name"
+              placeholder="Name / Username (Optional)..."
               className="w-full bg-transparent text-xs font-mono text-emerald-300 placeholder-gray-600 outline-none border-none p-0"
             />
           </div>
 
-          {/* Visitor Message Input */}
+          {/* Visitor Message Input (Required) */}
           <div className="sm:col-span-8 flex items-center gap-1.5 bg-black/80 border border-white/[0.08] focus-within:border-emerald-400/50 rounded-xl px-3 py-2 transition-all">
             <span className="text-emerald-400 font-mono font-bold text-xs select-none shrink-0">
               &gt;
@@ -245,7 +254,7 @@ export default function TerminalGuestbook({ className = "" }: TerminalGuestbookP
             />
             <button
               type="submit"
-              disabled={isSubmitting || !name.trim() || !message.trim()}
+              disabled={isSubmitting || !message.trim()}
               className="px-2.5 py-1 rounded-lg bg-emerald-950/60 border border-emerald-800/60 text-emerald-400 hover:text-white hover:bg-emerald-800/80 transition-all font-mono text-[11px] font-bold flex items-center gap-1 shrink-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <Send size={11} />
