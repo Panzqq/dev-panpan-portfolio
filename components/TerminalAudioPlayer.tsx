@@ -135,7 +135,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.6 }}
       whileHover={{ y: -4 }}
-      className={`glass-card bg-[#0A0A0A] rounded-3xl p-6 md:p-7 border border-white/10 hover:border-emerald-500/30 transition-all duration-300 relative overflow-hidden font-mono flex flex-col justify-between shadow-2xl group ${className}`}
+      className={`glass-card bg-[#0A0A0A] rounded-3xl p-5 md:p-6 border border-white/10 hover:border-emerald-500/30 transition-all duration-300 relative overflow-hidden font-mono flex flex-col justify-between h-[300px] w-full shadow-2xl group ${className}`}
     >
       {/* Hidden HTML5 Audio Element with .mpeg source */}
       <audio
@@ -155,7 +155,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
       <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-[#00FFA3]/5 rounded-full blur-2xl pointer-events-none" />
 
       {/* 1. Terminal Window Header (macOS style dots + title) */}
-      <div className="flex items-center justify-between pb-4 mb-3 border-b border-white/[0.08] relative z-10 shrink-0">
+      <div className="flex items-center justify-between pb-3 mb-1 border-b border-white/[0.08] relative z-10 shrink-0">
         <div className="flex items-center gap-3">
           {/* macOS Traffic Light Buttons */}
           <div className="flex items-center gap-1.5">
@@ -188,13 +188,13 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
         </div>
       </div>
 
-      {/* 2. Terminal Screen & Fixed-Height Synced Lyrics Display */}
-      <div className="bg-black/70 rounded-2xl p-4 md:p-5 border border-white/[0.06] relative overflow-hidden flex flex-col justify-between my-2 shadow-inner">
+      {/* 2. Terminal Screen & Locked Height Synced Lyrics Display */}
+      <div className="bg-black/70 rounded-2xl p-3.5 md:p-4 border border-white/[0.06] relative overflow-hidden flex flex-col justify-between shrink-0 my-1 shadow-inner">
         {/* Terminal subtle scanline grid overlay */}
         <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,0.4)_51%)] bg-[length:100%_4px] pointer-events-none opacity-30" />
 
-        {/* Fixed Height Lyrics Window (Prevents layout shift / jumping) */}
-        <div className="relative z-10 h-40 md:h-44 overflow-hidden flex flex-col justify-start gap-2.5">
+        {/* Locked Height Lyrics Window (Strict h-[140px] prevents layout shift completely) */}
+        <div className="relative z-10 w-full h-[140px] overflow-hidden flex flex-col justify-end gap-2">
           <AnimatePresence mode="popLayout" initial={false}>
             {visibleLyrics.map((lyric, idx) => {
               const originalIndex = startIdx + idx;
@@ -203,11 +203,12 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
               return (
                 <motion.div
                   key={`${lyric.text}-${originalIndex}`}
+                  layout
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.28, ease: "easeOut" }}
-                  className={`flex items-start gap-2.5 text-xs md:text-sm font-mono transition-colors duration-200 shrink-0 ${
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+                  className={`w-full flex items-start gap-2.5 text-xs md:text-sm font-mono transition-colors duration-200 shrink-0 ${
                     isActive
                       ? "text-emerald-400 font-semibold drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]"
                       : "text-emerald-900/40 select-none"
@@ -215,14 +216,14 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
                 >
                   {/* Terminal Prompt Indicator */}
                   <span
-                    className={`shrink-0 font-mono text-[11px] ${
+                    className={`shrink-0 font-mono text-[11px] select-none ${
                       isActive ? "text-emerald-300 font-bold" : "text-emerald-900/40"
                     }`}
                   >
                     {isActive ? "▶" : "$"}
                   </span>
 
-                  {/* Lyric text */}
+                  {/* Lyric text with robust wrap handling */}
                   <div className="flex-1 leading-relaxed break-words">
                     <span>{lyric.text}</span>
                     {isActive && (
@@ -242,7 +243,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
 
                   {/* Timestamp tag */}
                   <span
-                    className={`shrink-0 text-[10px] font-mono px-1.5 py-0.5 rounded ${
+                    className={`shrink-0 text-[10px] font-mono px-1.5 py-0.5 rounded select-none ${
                       isActive
                         ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
                         : "text-emerald-950/60"
@@ -257,7 +258,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
         </div>
 
         {/* Audio Equalizer Visualizer Bars (Fixed footer in terminal screen) */}
-        <div className="relative z-10 pt-3 mt-2 border-t border-white/[0.04] flex items-center justify-between shrink-0">
+        <div className="relative z-10 pt-2.5 mt-2 border-t border-white/[0.04] flex items-center justify-between shrink-0">
           <div className="flex items-center gap-1">
             {[40, 75, 55, 90, 65, 30, 80, 50, 95, 60, 45, 70].map((height, i) => (
               <motion.span
@@ -290,12 +291,12 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
                 }`}
               />
             ))}
-            <span className="text-[10px] text-gray-500 font-mono ml-2 hidden sm:inline">
+            <span className="text-[10px] text-gray-500 font-mono ml-2 hidden sm:inline select-none">
               44.1kHz • stereo
             </span>
           </div>
 
-          <div className="text-[11px] font-mono text-gray-400">
+          <div className="text-[11px] font-mono text-gray-400 select-none">
             <span className="text-emerald-400">{formatTime(currentTime)}</span>
             <span className="text-gray-600 mx-1">/</span>
             <span>{formatTime(duration)}</span>
@@ -304,7 +305,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
       </div>
 
       {/* 3. Audio Progress Scrub Bar */}
-      <div className="py-2 relative z-10 shrink-0">
+      <div className="py-1.5 relative z-10 shrink-0">
         <input
           type="range"
           min="0"
@@ -327,12 +328,12 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
       </div>
 
       {/* 4. Terminal Interactive Controls Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-white/[0.08] relative z-10 shrink-0">
+      <div className="flex flex-wrap items-center justify-between gap-3 pt-2.5 border-t border-white/[0.08] relative z-10 shrink-0">
         {/* Interactive Play/Pause Text Button */}
         <button
           type="button"
           onClick={togglePlay}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 active:scale-95 text-emerald-400 hover:text-[#00FFA3] border border-emerald-500/30 hover:border-[#00FFA3]/60 transition-all font-mono font-bold text-xs shadow-[0_0_15px_rgba(0,255,163,0.15)] group/btn"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 active:scale-95 text-emerald-400 hover:text-[#00FFA3] border border-emerald-500/30 hover:border-[#00FFA3]/60 transition-all font-mono font-bold text-xs shadow-[0_0_15px_rgba(0,255,163,0.15)] group/btn select-none"
         >
           {isPlaying ? (
             <Pause size={14} className="fill-emerald-400 text-emerald-400" />
@@ -352,7 +353,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
           >
             {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
           </button>
-          <span className="text-[11px] text-gray-500 hidden sm:inline">
+          <span className="text-[11px] text-gray-500 hidden sm:inline select-none">
             Press <kbd className="px-1.5 py-0.5 rounded bg-white/[0.06] border border-white/10 text-emerald-400 text-[10px]">P</kbd> to toggle
           </span>
         </div>
