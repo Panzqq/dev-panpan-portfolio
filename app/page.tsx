@@ -5,6 +5,7 @@ import Preloader from "@/components/Preloader";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
+import TerminalQuote from "@/components/TerminalQuote";
 import Skills from "@/components/Skills";
 import Projects from "@/components/Projects";
 import Contact from "@/components/Contact";
@@ -25,6 +26,7 @@ export default function Home() {
           <Navbar />
           <Hero />
           <About />
+          <TerminalQuote />
           <Skills />
           <Projects />
           <Contact />
