@@ -14,6 +14,7 @@ export const metadata: Metadata = {
     "Building Practical Digital Solutions. Full Stack Developer based in Purbalingga, Indonesia with 3+ years of coding experience. Specializing in Node.js, Web Automation, and Modern UI.",
   keywords: [
     "Dev Panpan",
+    "Panpan",
     "Full Stack Developer",
     "Purbalingga Developer",
     "Node.js Automation",
@@ -37,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className="scroll-smooth dark">
+    <html lang="en" className="scroll-smooth dark">
       <body className={`${inter.variable} font-sans bg-[#050C0A] text-white antialiased`}>
         {children}
       </body>

@@ -70,7 +70,7 @@ export default function Footer() {
         {/* Bottom Row: Minimal hacker aesthetic without emojis */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-white/[0.04] text-xs font-mono text-gray-500">
           <div className="text-gray-300 font-medium">
-            Crafted by Revan (Dev Panpan) | Purbalingga, Central Java, Indonesia.
+            Crafted by Dev Panpan | Purbalingga, Central Java, Indonesia.
           </div>
 
           <div className="flex items-center gap-2">

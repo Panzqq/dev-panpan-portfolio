@@ -27,9 +27,9 @@ export default function About() {
             About Me
           </h2>
 
-          {/* Authentic Bio Text in English */}
+          {/* Authentic Bio Text in English with Panpan name */}
           <p className="text-gray-300 text-base md:text-lg leading-relaxed max-w-4xl font-normal mb-8">
-            I am Revan, an 11th-grade high school student and dedicated Full Stack Developer based in Purbalingga, Indonesia with over 3 years of active coding experience. My core passion lies in software engineering, with a focus on modern web applications (React, Next.js, Node.js), API automations, and resilient database architectures. In parallel with software development, I am proactively preparing for comprehensive future academic studies in Finance and Accounting.
+            I am Panpan (Dev Panpan), an 11th-grade high school student and dedicated Full Stack Developer based in Purbalingga, Indonesia with over 3 years of active coding experience. My core passion lies in software engineering, with a focus on modern web applications (React, Next.js, Node.js), API automations, and resilient database architectures. In parallel with software development, I am proactively preparing for comprehensive future academic studies in Finance and Accounting.
           </p>
 
           {/* Highlights Grid */}

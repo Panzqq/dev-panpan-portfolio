@@ -27,7 +27,7 @@ export default function Navbar() {
           }}
           className="text-sm md:text-base font-semibold tracking-tight text-white hover:opacity-80 transition-opacity"
         >
-          Revan <span className="text-gray-400 font-normal">| Full Stack Developer</span>
+          Dev Panpan <span className="text-gray-400 font-normal">| Full Stack Developer</span>
         </a>
 
         {/* Minimalist Hamburger Menu Button */}
