@@ -11,11 +11,23 @@ interface LyricLine {
 
 const lyricsData: LyricLine[] = [
   { time: 0.0, text: "> initializing audio_stream..." },
-  { time: 2.0, text: "> loading track: Merry Christmas, Please Don't Call" },
-  { time: 10.0, text: "And the toughest part is that we both know" },
-  { time: 13.0, text: "what happened to you" },
-  { time: 15.0, text: "why you're out on your own" },
-  { time: 18.5, text: "Merry Christmas, please don't call" },
+  { time: 1.5, text: "And the toughest part is that we both know" },
+  { time: 4.5, text: "what happened to you, why you're out on your own" },
+  { time: 8.5, text: "Merry Christmas, please don't call" },
+  { time: 12.0, text: "> system_pause: instrumental_break..." },
+  { time: 23.5, text: "You're in debt and you're online kid" },
+  { time: 26.5, text: "moaning 'bout your baggage" },
+  { time: 29.0, text: "You know I'm not your father" },
+  { time: 31.5, text: "So welcome to your rough time" },
+  { time: 34.0, text: "lone wolf cause I guess you like the image" },
+  { time: 37.0, text: "Oh golden boy, shine a light on your own" },
+  { time: 42.0, text: "And at your best, you're magic I suppose" },
+  { time: 46.5, text: "Don't tell 'em what you told me" },
+  { time: 48.5, text: "Don't even tell 'em that you told me" },
+  { time: 51.5, text: "I would rather..." },
+  { time: 54.0, text: "You should know that I passed out" },
+  { time: 56.5, text: "running through the halls of your haunted house" },
+  { time: 59.0, text: "> track_complete. connection_terminated." }
 ];
 
 function formatTime(seconds: number): string {

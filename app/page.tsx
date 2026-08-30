@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import Preloader from "@/components/Preloader";
-import CustomCursor from "@/components/CustomCursor";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -18,9 +17,6 @@ export default function Home() {
     <>
       {/* 3D Preloader Screen */}
       <Preloader onComplete={() => setLoaded(true)} />
-
-      {/* Custom Animated Follower Cursor */}
-      <CustomCursor />
 
       {/* Main Portfolio Page with Subtle Dark Emerald Radial Ambient Glow */}
       <main className="relative min-h-screen bg-[#050C0A] bg-emerald-radial text-white overflow-x-hidden">
