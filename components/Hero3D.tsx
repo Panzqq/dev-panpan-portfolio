@@ -5,14 +5,14 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Float, Html, Sparkles } from "@react-three/drei";
 import * as THREE from "three";
 
-// 4 High-Resolution Tech Stack items orbiting the Android Bugdroid with calibrated radius
+// 4 High-Resolution Tech Stack items orbiting the Android Bugdroid
 const ORBITING_TECHS = [
   {
     id: "js",
     label: "JS",
     color: "#FFE600",
     border: "rgba(255, 230, 0, 0.45)",
-    radius: 1.9,
+    radius: 2.1,
     speed: 0.35,
     offset: 0,
     iconSvg: (
@@ -26,7 +26,7 @@ const ORBITING_TECHS = [
     label: "Node",
     color: "#22C55E",
     border: "rgba(34, 197, 94, 0.45)",
-    radius: 2.0,
+    radius: 2.2,
     speed: 0.35,
     offset: Math.PI * 0.5,
     iconSvg: (
@@ -40,7 +40,7 @@ const ORBITING_TECHS = [
     label: "⚡",
     color: "#00FFA3",
     border: "rgba(0, 255, 163, 0.45)",
-    radius: 1.9,
+    radius: 2.1,
     speed: 0.35,
     offset: Math.PI * 1.0,
     iconSvg: (
@@ -58,7 +58,7 @@ const ORBITING_TECHS = [
     label: "▲",
     color: "#FFFFFF",
     border: "rgba(255, 255, 255, 0.4)",
-    radius: 2.0,
+    radius: 2.2,
     speed: 0.35,
     offset: Math.PI * 1.5,
     iconSvg: (
@@ -240,7 +240,7 @@ function DarkEmeraldBugdroid() {
       {/* Orbital Plane Ring */}
       <group ref={orbitRingRef} position={[0, 0.05, 0]}>
         <mesh material={ringMaterial} rotation={[Math.PI / 2.3, 0, 0]}>
-          <torusGeometry args={[1.95, 0.012, 16, 64]} />
+          <torusGeometry args={[2.15, 0.012, 16, 64]} />
         </mesh>
       </group>
 
@@ -365,7 +365,7 @@ function DarkEmeraldBugdroid() {
   );
 }
 
-// Main 3D Canvas Scene with Expanded Camera FOV and Wide Seamless Mask
+// Main 3D Canvas Scene - Borderless with Extended Width (No Mask Image Clipping)
 export default function Hero3D() {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -379,10 +379,10 @@ export default function Hero3D() {
   }, []);
 
   return (
-    <div className="relative w-full h-[400px] sm:h-[480px] md:h-[540px] select-none flex items-center justify-center overflow-visible [mask-image:radial-gradient(ellipse_at_center,black_75%,transparent_100%)] md:[mask-image:radial-gradient(ellipse_at_center,black_82%,transparent_100%)] [-webkit-mask-image:radial-gradient(ellipse_at_center,black_75%,transparent_100%)] md:[-webkit-mask-image:radial-gradient(ellipse_at_center,black_82%,transparent_100%)] bg-transparent">
-      {/* 3D Canvas Container with Extended Camera Distance & Wide FOV to eliminate clipping */}
+    <div className="relative w-[110%] -ml-[5%] md:w-[130%] md:-ml-[15%] h-[400px] sm:h-[480px] md:h-[520px] select-none flex items-center justify-center overflow-visible bg-transparent">
+      {/* 3D Canvas Container - 100% borderless, transparent, no mask-image clipping */}
       <Canvas
-        camera={{ position: [0, 0, 5.4], fov: isMobile ? 50 : 44 }}
+        camera={{ position: [0, 0, 4.8], fov: isMobile ? 50 : 42 }}
         dpr={[1, 2]}
         gl={{
           powerPreference: "high-performance",
