@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Code2, Server, GitCommit, Zap, Sparkles, Database, CheckCircle2 } from "lucide-react";
+import TerminalAudioPlayer from "@/components/TerminalAudioPlayer";
 
 interface SkillProgress {
   name: string;
@@ -378,6 +379,9 @@ export default function Skills() {
               Supabase, Vercel & API integrations ready.
             </div>
           </motion.div>
+
+          {/* BENTO 5: Interactive Terminal Music Player */}
+          <TerminalAudioPlayer className="lg:col-span-12" />
         </div>
 
         {/* Infinite Tech Marquee Strip */}
