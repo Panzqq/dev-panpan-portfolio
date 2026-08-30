@@ -15,6 +15,7 @@ import Footer from "@/components/Footer";
 export default function Home() {
   const [isBooting, setIsBooting] = useState<boolean>(true);
 
+  // Boot timer: 2.5 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsBooting(false);
@@ -22,6 +23,19 @@ export default function Home() {
 
     return () => clearTimeout(timer);
   }, []);
+
+  // Lock page scrolling while RadarLoader is active
+  useEffect(() => {
+    if (isBooting) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isBooting]);
 
   return (
     <>
