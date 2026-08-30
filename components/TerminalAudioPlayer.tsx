@@ -10,7 +10,7 @@ interface LyricLine {
 }
 
 const lyricsData: LyricLine[] = [
-  { time: 0.0, text: "> initializing audio_stream..." },
+  { time: 0.0, text: "initializing audio_stream..." },
   { time: 0.8, text: "Oh, golden boy, you shined a light on your home" },
   { time: 5.5, text: "And at your best, you were magic, we were sold" },
   { time: 8.5, text: "But don't tell 'em what you told me" },
@@ -18,12 +18,12 @@ const lyricsData: LyricLine[] = [
   { time: 13.5, text: "I would rather burn forever" },
   { time: 16.5, text: "But you should know that I died slow" },
   { time: 19.0, text: "Running through the halls of your haunted home" },
-  { time: 22.0, text: "> system_pause: instrumental_break..." },
+  { time: 22.0, text: "system_pause: instrumental_break..." },
   { time: 24.5, text: "And the toughest part is that we both know" },
   { time: 29.0, text: "What happened to you" },
   { time: 31.0, text: "Why you're out on your own" },
   { time: 34.0, text: "Merry Christmas, please don't call." },
-  { time: 38.0, text: "> track_complete. connection_terminated." }
+  { time: 38.0, text: "track_complete. connection_terminated." }
 ];
 
 function formatTime(seconds: number): string {
@@ -232,14 +232,23 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
                       : "text-emerald-900/40 select-none"
                   }`}
                 >
-                  {/* Terminal Prompt Indicator */}
-                  <span
-                    className={`shrink-0 font-mono text-[11px] select-none ${
-                      isActive ? "text-emerald-300 font-bold" : "text-emerald-900/40"
-                    }`}
-                  >
-                    {isActive ? "▶" : "$"}
-                  </span>
+                  {/* Pure SVG Terminal Prompt Chevron (Immune to Android Emoji replacement) */}
+                  {isActive ? (
+                    <svg
+                      className="w-3.5 h-3.5 text-emerald-400 inline-block shrink-0 mt-0.5 animate-pulse"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={3}
+                      aria-hidden="true"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  ) : (
+                    <span className="w-3.5 inline-block text-center font-mono text-[11px] text-emerald-900/40 shrink-0 select-none">
+                      $
+                    </span>
+                  )}
 
                   {/* Lyric text */}
                   <div className="flex-1 leading-relaxed break-words">
@@ -348,7 +357,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
         />
       </div>
 
-      {/* 4. Restored Clickable Play / Pause Button */}
+      {/* 4. Clickable Play / Pause Button (Clean SVG icons, no emoji triggers) */}
       <button
         onClick={togglePlay}
         type="button"
@@ -357,12 +366,12 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
         {isPlaying ? (
           <>
             <Pause size={15} className="fill-emerald-400 text-emerald-400" />
-            <span>[ || ] PAUSE STREAM</span>
+            <span>[ PAUSE STREAM ]</span>
           </>
         ) : (
           <>
             <Play size={15} className="fill-emerald-400 text-emerald-400 ml-0.5" />
-            <span>[ &gt; ] PLAY AUDIO</span>
+            <span>[ PLAY AUDIO ]</span>
           </>
         )}
       </button>
