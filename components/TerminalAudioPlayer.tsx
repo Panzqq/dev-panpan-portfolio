@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Pause, Volume2, VolumeX, Sparkles, Music, Terminal as TerminalIcon } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX, Terminal as TerminalIcon } from "lucide-react";
 
 interface LyricLine {
   time: number;
@@ -135,7 +135,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.6 }}
       whileHover={{ y: -4 }}
-      className={`glass-card bg-[#0A0A0A] rounded-3xl p-5 md:p-6 border border-white/10 hover:border-emerald-500/30 transition-all duration-300 relative overflow-hidden font-mono flex flex-col justify-between h-[300px] w-full shadow-2xl group ${className}`}
+      className={`glass-card bg-[#0A0A0A] rounded-3xl p-5 md:p-6 border border-white/10 hover:border-emerald-500/30 transition-all duration-300 relative font-mono flex flex-col justify-between w-full h-auto min-h-[320px] shadow-2xl group ${className}`}
     >
       {/* Hidden HTML5 Audio Element with .mpeg source */}
       <audio
@@ -155,7 +155,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
       <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-[#00FFA3]/5 rounded-full blur-2xl pointer-events-none" />
 
       {/* 1. Terminal Window Header (macOS style dots + title) */}
-      <div className="flex items-center justify-between pb-3 mb-1 border-b border-white/[0.08] relative z-10 shrink-0">
+      <div className="flex items-center justify-between pb-3 mb-2 border-b border-white/[0.08] relative z-10 shrink-0">
         <div className="flex items-center gap-3">
           {/* macOS Traffic Light Buttons */}
           <div className="flex items-center gap-1.5">
@@ -173,28 +173,38 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
           </div>
         </div>
 
-        {/* Live Status Badge */}
-        <div className="flex items-center gap-2">
-          <span
-            className={`w-2 h-2 rounded-full ${
-              isPlaying
-                ? "bg-emerald-400 shadow-[0_0_8px_#00FFA3] animate-pulse"
-                : "bg-gray-600"
-            }`}
-          />
-          <span className="text-[11px] font-mono text-emerald-400/90 font-medium tracking-wide uppercase">
-            {isPlaying ? "SYNC ACTIVE" : "STANDBY"}
-          </span>
+        {/* Live Status Badge & Volume Mute */}
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={toggleMute}
+            className="p-1 rounded-md bg-white/[0.04] hover:bg-white/[0.08] text-gray-400 hover:text-emerald-400 transition-colors border border-white/[0.06]"
+            title={isMuted ? "Unmute" : "Mute"}
+          >
+            {isMuted ? <VolumeX size={13} /> : <Volume2 size={13} />}
+          </button>
+          <div className="flex items-center gap-1.5">
+            <span
+              className={`w-2 h-2 rounded-full ${
+                isPlaying
+                  ? "bg-emerald-400 shadow-[0_0_8px_#00FFA3] animate-pulse"
+                  : "bg-gray-600"
+              }`}
+            />
+            <span className="text-[11px] font-mono text-emerald-400/90 font-medium tracking-wide uppercase">
+              {isPlaying ? "SYNC ACTIVE" : "STANDBY"}
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* 2. Terminal Screen & Locked Height Synced Lyrics Display */}
-      <div className="bg-black/70 rounded-2xl p-3.5 md:p-4 border border-white/[0.06] relative overflow-hidden flex flex-col justify-between shrink-0 my-1 shadow-inner">
+      {/* 2. Terminal Screen & Isolated Scrolling Lyrics Display */}
+      <div className="bg-black/70 rounded-2xl p-3.5 md:p-4 border border-white/[0.06] relative flex flex-col justify-between my-2 shadow-inner">
         {/* Terminal subtle scanline grid overlay */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,0.4)_51%)] bg-[length:100%_4px] pointer-events-none opacity-30" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,0.4)_51%)] bg-[length:100%_4px] pointer-events-none opacity-30 rounded-2xl" />
 
-        {/* Locked Height Lyrics Window (Strict h-[140px] prevents layout shift completely) */}
-        <div className="relative z-10 w-full h-[140px] overflow-hidden flex flex-col justify-end gap-2">
+        {/* Isolated Lyrics Window (overflow-hidden strictly isolated here) */}
+        <div className="relative w-full h-[130px] overflow-hidden flex flex-col justify-start mt-2 mb-2 gap-2">
           <AnimatePresence mode="popLayout" initial={false}>
             {visibleLyrics.map((lyric, idx) => {
               const originalIndex = startIdx + idx;
@@ -223,7 +233,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
                     {isActive ? "▶" : "$"}
                   </span>
 
-                  {/* Lyric text with robust wrap handling */}
+                  {/* Lyric text */}
                   <div className="flex-1 leading-relaxed break-words">
                     <span>{lyric.text}</span>
                     {isActive && (
@@ -257,8 +267,8 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
           </AnimatePresence>
         </div>
 
-        {/* Audio Equalizer Visualizer Bars (Fixed footer in terminal screen) */}
-        <div className="relative z-10 pt-2.5 mt-2 border-t border-white/[0.04] flex items-center justify-between shrink-0">
+        {/* Audio Equalizer Visualizer Bars & Time */}
+        <div className="relative z-10 pt-2.5 mt-1 border-t border-white/[0.04] flex items-center justify-between shrink-0">
           <div className="flex items-center gap-1">
             {[40, 75, 55, 90, 65, 30, 80, 50, 95, 60, 45, 70].map((height, i) => (
               <motion.span
@@ -297,7 +307,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
           </div>
 
           <div className="text-[11px] font-mono text-gray-400 select-none">
-            <span className="text-emerald-400">{formatTime(currentTime)}</span>
+            <span className="text-emerald-400 font-semibold">{formatTime(currentTime)}</span>
             <span className="text-gray-600 mx-1">/</span>
             <span>{formatTime(duration)}</span>
           </div>
@@ -305,7 +315,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
       </div>
 
       {/* 3. Audio Progress Scrub Bar */}
-      <div className="py-1.5 relative z-10 shrink-0">
+      <div className="py-2 relative z-10 shrink-0">
         <input
           type="range"
           min="0"
@@ -327,37 +337,24 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
         />
       </div>
 
-      {/* 4. Terminal Interactive Controls Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-2.5 border-t border-white/[0.08] relative z-10 shrink-0">
-        {/* Interactive Play/Pause Text Button */}
-        <button
-          type="button"
-          onClick={togglePlay}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 active:scale-95 text-emerald-400 hover:text-[#00FFA3] border border-emerald-500/30 hover:border-[#00FFA3]/60 transition-all font-mono font-bold text-xs shadow-[0_0_15px_rgba(0,255,163,0.15)] group/btn select-none"
-        >
-          {isPlaying ? (
-            <Pause size={14} className="fill-emerald-400 text-emerald-400" />
-          ) : (
-            <Play size={14} className="fill-emerald-400 text-emerald-400" />
-          )}
-          <span>[ P ] {isPlaying ? "PAUSE" : "PLAY"}</span>
-        </button>
-
-        {/* Extra info & Mute control */}
-        <div className="flex items-center gap-3 text-xs font-mono">
-          <button
-            type="button"
-            onClick={toggleMute}
-            className="p-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-gray-400 hover:text-emerald-400 transition-colors border border-white/[0.06]"
-            title={isMuted ? "Unmute" : "Mute"}
-          >
-            {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
-          </button>
-          <span className="text-[11px] text-gray-500 hidden sm:inline select-none">
-            Press <kbd className="px-1.5 py-0.5 rounded bg-white/[0.06] border border-white/10 text-emerald-400 text-[10px]">P</kbd> to toggle
-          </span>
-        </div>
-      </div>
+      {/* 4. Restored Clickable Play / Pause Button */}
+      <button
+        onClick={togglePlay}
+        type="button"
+        className="w-full mt-auto py-3 bg-emerald-950/40 border border-emerald-800/50 rounded-xl text-emerald-400 font-mono font-bold hover:bg-emerald-900/60 hover:border-emerald-500/50 hover:text-[#00FFA3] transition-all cursor-pointer relative z-10 flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,255,163,0.1)] active:scale-[0.99] select-none"
+      >
+        {isPlaying ? (
+          <>
+            <Pause size={15} className="fill-emerald-400 text-emerald-400" />
+            <span>[ || ] PAUSE STREAM</span>
+          </>
+        ) : (
+          <>
+            <Play size={15} className="fill-emerald-400 text-emerald-400 ml-0.5" />
+            <span>[ &gt; ] PLAY AUDIO</span>
+          </>
+        )}
+      </button>
     </motion.div>
   );
 }
