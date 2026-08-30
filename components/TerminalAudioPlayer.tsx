@@ -378,7 +378,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
           <div className="absolute bottom-2 left-3 right-3 z-20 flex items-center justify-between bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/[0.08] text-[11px] font-mono shadow-md">
             <div className="flex items-center gap-1.5 text-emerald-400">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="font-semibold truncate">Merry Christmas, Please Don't Call</span>
+              <span className="font-semibold truncate">Merry Christmas, Please Don&apos;t Call</span>
             </div>
             <div className="text-gray-400 shrink-0 ml-2">
               <span className="text-emerald-400 font-semibold">{formatTime(currentTime)}</span>
