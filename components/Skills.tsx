@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Code2, Server, GitCommit, Sparkles, Database, CheckCircle2 } from "lucide-react";
 import TerminalAudioPlayer from "@/components/TerminalAudioPlayer";
 import TerminalGuestbook from "@/components/TerminalGuestbook";
+import SystemTelemetry from "@/components/SystemTelemetry";
 
 interface SkillProgress {
   name: string;
@@ -384,8 +385,11 @@ export default function Skills() {
           {/* BENTO 5: Interactive Terminal Music & Video Player (Span 12) */}
           <TerminalAudioPlayer className="lg:col-span-12" />
 
-          {/* BENTO 6: Terminal Guestbook (Supabase Integration) (Span 12) */}
-          <TerminalGuestbook className="lg:col-span-12" />
+          {/* BENTO 6: Terminal Guestbook (Supabase Integration) (Span 8) */}
+          <TerminalGuestbook className="lg:col-span-8" />
+
+          {/* BENTO 7: Real-time System Telemetry & Server Load (Span 4) */}
+          <SystemTelemetry className="lg:col-span-4" />
         </div>
 
         {/* Infinite Tech Marquee Strip */}
