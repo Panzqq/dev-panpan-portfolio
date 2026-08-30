@@ -11,22 +11,22 @@ interface LyricLine {
 
 const lyricsData: LyricLine[] = [
   { time: 0.0, text: "> initializing audio_stream..." },
-  { time: 1.5, text: "And the toughest part is that we both know" },
-  { time: 4.5, text: "what happened to you, why you're out on your own" },
-  { time: 8.5, text: "Merry Christmas, please don't call" },
-  { time: 12.0, text: "> system_pause: instrumental_break..." },
-  { time: 23.5, text: "You're in debt and you're online kid" },
-  { time: 26.5, text: "moaning 'bout your baggage" },
-  { time: 29.0, text: "You know I'm not your father" },
-  { time: 31.5, text: "So welcome to your rough time" },
-  { time: 34.0, text: "lone wolf cause I guess you like the image" },
-  { time: 37.0, text: "Oh golden boy, shine a light on your own" },
-  { time: 42.0, text: "And at your best, you're magic I suppose" },
-  { time: 46.5, text: "Don't tell 'em what you told me" },
-  { time: 48.5, text: "Don't even tell 'em that you told me" },
-  { time: 51.5, text: "I would rather..." },
-  { time: 54.0, text: "You should know that I passed out" },
-  { time: 56.5, text: "running through the halls of your haunted house" },
+  { time: 0.8, text: "And the toughest part is that we both know" },
+  { time: 3.8, text: "what happened to you, why you're out on your own" },
+  { time: 7.8, text: "Merry Christmas, please don't call" },
+  { time: 11.5, text: "> system_pause: instrumental_break..." },
+  { time: 22.8, text: "You're in debt and you're online kid" },
+  { time: 25.8, text: "moaning 'bout your baggage" },
+  { time: 28.5, text: "You know I'm not your father" },
+  { time: 31.0, text: "So welcome to your rough time" },
+  { time: 33.5, text: "lone wolf cause I guess you like the image" },
+  { time: 36.5, text: "Oh golden boy, shine a light on your own" },
+  { time: 41.5, text: "And at your best, you're magic I suppose" },
+  { time: 45.8, text: "Don't tell 'em what you told me" },
+  { time: 48.0, text: "Don't even tell 'em that you told me" },
+  { time: 50.8, text: "I would rather..." },
+  { time: 53.5, text: "You should know that I passed out" },
+  { time: 56.0, text: "running through the halls of your haunted house" },
   { time: 59.0, text: "> track_complete. connection_terminated." }
 ];
 
@@ -159,7 +159,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
       <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-[#00FFA3]/5 rounded-full blur-2xl pointer-events-none" />
 
       {/* 1. Terminal Window Header (macOS style dots + title) */}
-      <div className="flex items-center justify-between pb-4 mb-4 border-b border-white/[0.08] relative z-10">
+      <div className="flex items-center justify-between pb-4 mb-3 border-b border-white/[0.08] relative z-10 shrink-0">
         <div className="flex items-center gap-3">
           {/* macOS Traffic Light Buttons */}
           <div className="flex items-center gap-1.5">
@@ -192,14 +192,14 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
         </div>
       </div>
 
-      {/* 2. Terminal Screen & Synced Lyrics Display */}
-      <div className="bg-black/70 rounded-2xl p-4 md:p-5 border border-white/[0.06] relative overflow-hidden flex flex-col justify-between my-2 min-h-[170px] shadow-inner">
+      {/* 2. Terminal Screen & Fixed-Height Synced Lyrics Display */}
+      <div className="bg-black/70 rounded-2xl p-4 md:p-5 border border-white/[0.06] relative overflow-hidden flex flex-col justify-between my-2 shadow-inner">
         {/* Terminal subtle scanline grid overlay */}
         <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,0.4)_51%)] bg-[length:100%_4px] pointer-events-none opacity-30" />
 
-        {/* Lyrics Window with Framer Motion */}
-        <div className="relative z-10 space-y-2.5 overflow-hidden">
-          <AnimatePresence mode="popLayout">
+        {/* Fixed Height Lyrics Window (Prevents layout shift / jumping) */}
+        <div className="relative z-10 h-36 md:h-40 overflow-hidden flex flex-col justify-start gap-2.5">
+          <AnimatePresence mode="popLayout" initial={false}>
             {visibleLyrics.map((lyric, idx) => {
               const originalIndex = startIdx + idx;
               const isActive = originalIndex === activeIndex;
@@ -207,14 +207,14 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
               return (
                 <motion.div
                   key={`${lyric.text}-${originalIndex}`}
-                  initial={{ opacity: 0, y: 12 }}
+                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: 0.35, ease: "easeOut" }}
-                  className={`flex items-start gap-2.5 text-xs md:text-sm font-mono transition-all duration-300 ${
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.28, ease: "easeOut" }}
+                  className={`flex items-start gap-2.5 text-xs md:text-sm font-mono transition-colors duration-200 shrink-0 ${
                     isActive
-                      ? "text-emerald-400 font-semibold drop-shadow-[0_0_10px_rgba(0,255,163,0.7)]"
-                      : "text-emerald-900/50 select-none"
+                      ? "text-emerald-400 font-semibold drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]"
+                      : "text-emerald-900/40 select-none"
                   }`}
                 >
                   {/* Terminal Prompt Indicator */}
@@ -260,8 +260,8 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
           </AnimatePresence>
         </div>
 
-        {/* Audio Equalizer Visualizer Bars */}
-        <div className="relative z-10 pt-4 mt-3 border-t border-white/[0.04] flex items-center justify-between">
+        {/* Audio Equalizer Visualizer Bars (Fixed footer in terminal screen) */}
+        <div className="relative z-10 pt-3 mt-2 border-t border-white/[0.04] flex items-center justify-between shrink-0">
           <div className="flex items-center gap-1">
             {[40, 75, 55, 90, 65, 30, 80, 50, 95, 60, 45, 70].map((height, i) => (
               <motion.span
@@ -308,7 +308,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
       </div>
 
       {/* 3. Audio Progress Scrub Bar */}
-      <div className="py-2 relative z-10">
+      <div className="py-2 relative z-10 shrink-0">
         <input
           type="range"
           min="0"
@@ -331,7 +331,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
       </div>
 
       {/* 4. Terminal Interactive Controls Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-white/[0.08] relative z-10">
+      <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-white/[0.08] relative z-10 shrink-0">
         {/* Interactive Play/Pause Text Button */}
         <button
           type="button"
