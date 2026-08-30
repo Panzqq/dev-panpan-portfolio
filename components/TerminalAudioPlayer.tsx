@@ -56,7 +56,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
 
   const [isMuted, setIsMuted] = useState<boolean>(false);
 
-  // Step 2: Anti-Clash Mode Toggle Logic
+  // Anti-Clash Mode Toggle Logic
   const handleToggleMode = () => {
     if (isVideoMode) {
       videoRef.current?.pause();
@@ -69,7 +69,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
     }
   };
 
-  // Step 3: Dynamic Play/Pause Logic for Active Media
+  // Dynamic Play/Pause Logic for Active Media
   const togglePlay = useCallback(() => {
     if (isVideoMode) {
       if (!videoRef.current) return;
@@ -271,13 +271,15 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
         </div>
       </div>
 
-      {/* Langkah 2: Pure CSS Aspect Ratio Dynamic Media Area */}
+      {/* Langkah 2: Cinematic Shape-Shifting Media Container (Apple-like easing curve) */}
       <div
-        className={`relative w-full overflow-hidden flex flex-col justify-end mt-4 mb-4 rounded-xl transition-all duration-700 ease-in-out border border-white/[0.06] shadow-inner ${
-          isVideoMode ? "aspect-video h-auto bg-black" : "h-[140px] bg-black/40"
+        className={`relative w-full overflow-hidden flex flex-col justify-end mt-4 mb-4 rounded-xl transition-all duration-[800ms] ease-[cubic-bezier(0.23,1,0.32,1)] bg-black border border-white/[0.06] ${
+          isVideoMode
+            ? "aspect-video h-auto shadow-[0_0_30px_rgba(16,185,129,0.15)]"
+            : "h-[140px] shadow-none"
         }`}
       >
-        {/* Step 1 & 3: Permanently Mounted HTML5 Video Element with CSS Opacity Crossfade */}
+        {/* Step 1: Cinematic Video Tag with Smooth Zoom, Blur & Opacity Crossfade */}
         <video
           ref={videoRef}
           src="/pan-video.mp4"
@@ -302,14 +304,16 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
           }}
           onPlay={() => setIsVideoPlaying(true)}
           onPause={() => setIsVideoPlaying(false)}
-          className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700 ${
-            isVideoMode ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
+          className={`absolute top-0 left-0 w-full h-full object-cover transition-all duration-[800ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
+            isVideoMode
+              ? "opacity-100 scale-100 blur-none z-10"
+              : "opacity-0 scale-95 blur-md z-0 pointer-events-none"
           }`}
         />
 
         {/* Video Dark Emerald Theme Filter Overlay */}
         <div
-          className={`absolute inset-0 bg-emerald-950/20 mix-blend-overlay pointer-events-none z-10 rounded-xl transition-opacity duration-700 ${
+          className={`absolute inset-0 bg-emerald-950/20 mix-blend-overlay pointer-events-none z-10 rounded-xl transition-opacity duration-[800ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
             isVideoMode ? "opacity-100" : "opacity-0"
           }`}
         />
@@ -317,10 +321,12 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
         {/* Terminal subtle scanline grid overlay */}
         <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,0.4)_51%)] bg-[length:100%_4px] pointer-events-none opacity-20 rounded-xl z-10" />
 
-        {/* Step 3: Permanently Mounted Terminal Lyrics View with CSS Opacity Crossfade */}
+        {/* Step 1: Cinematic Lyrics Wrapper with Slide, Blur & Opacity Crossfade */}
         <div
-          className={`absolute bottom-0 left-0 w-full p-4 flex flex-col justify-end transition-opacity duration-700 ${
-            !isVideoMode ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
+          className={`absolute bottom-0 left-0 w-full p-4 flex flex-col justify-end transition-all duration-[800ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
+            !isVideoMode
+              ? "opacity-100 translate-y-0 blur-none z-10"
+              : "opacity-0 translate-y-4 blur-sm z-0 pointer-events-none"
           }`}
         >
           {/* Terminal Lyrics Container */}
@@ -445,10 +451,12 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
           </div>
         </div>
 
-        {/* Video Floating Info Banner with CSS Opacity Transition */}
+        {/* Video Floating Info Banner with Smooth Slide-Up Transition */}
         <div
-          className={`absolute bottom-3 left-3.5 right-3.5 z-20 flex items-center justify-between bg-black/70 backdrop-blur-md px-3.5 py-2 rounded-xl border border-white/[0.08] text-[11px] font-mono shadow-lg transition-opacity duration-700 ${
-            isVideoMode ? "opacity-100" : "opacity-0 pointer-events-none"
+          className={`absolute bottom-3 left-3.5 right-3.5 z-20 flex items-center justify-between bg-black/70 backdrop-blur-md px-3.5 py-2 rounded-xl border border-white/[0.08] text-[11px] font-mono shadow-lg transition-all duration-[800ms] ease-[cubic-bezier(0.23,1,0.32,1)] ${
+            isVideoMode
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-2 pointer-events-none"
           }`}
         >
           <div className="flex items-center gap-2 text-emerald-400">
