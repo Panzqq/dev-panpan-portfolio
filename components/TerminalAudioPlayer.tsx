@@ -44,19 +44,8 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
 
   // Active mode state
   const [isVideoMode, setIsVideoMode] = useState<boolean>(false);
-  const [isDesktop, setIsDesktop] = useState<boolean>(false);
 
-  // Responsive screen listener for smooth layout expand
-  useEffect(() => {
-    const handleResize = () => {
-      setIsDesktop(window.innerWidth > 768);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  // Step 1: Isolated time and playback states
+  // Isolated time and playback states
   const [audioTime, setAudioTime] = useState<number>(0);
   const [audioDuration, setAudioDuration] = useState<number>(0);
   const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
@@ -70,12 +59,10 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
   // Step 2: Anti-Clash Mode Toggle Logic
   const handleToggleMode = () => {
     if (isVideoMode) {
-      // Switching from Video to Terminal: Pause video
       videoRef.current?.pause();
       setIsVideoPlaying(false);
       setIsVideoMode(false);
     } else {
-      // Switching from Terminal to Video: Pause audio
       audioRef.current?.pause();
       setIsAudioPlaying(false);
       setIsVideoMode(true);
@@ -161,7 +148,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [togglePlay]);
 
-  // Step 1: Lyrics in terminal ONLY read from audioTime
+  // Terminal lyrics strictly track audioTime
   let activeIndex = 0;
   for (let i = 0; i < lyricsData.length; i++) {
     if (audioTime >= lyricsData[i].time) {
@@ -181,20 +168,14 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
   const visibleLyrics = lyricsData.slice(startIdx, startIdx + maxLines);
 
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.6 }}
-      whileHover={{ y: -4 }}
+    <div
       className={`glass-card bg-[#0A0A0A] rounded-3xl p-5 md:p-6 border border-white/10 hover:border-emerald-500/30 transition-all duration-300 relative font-mono flex flex-col justify-between w-full h-auto min-h-[320px] shadow-2xl group ${className}`}
     >
       {/* Isolated Hidden HTML5 Audio Element (/pan.mp3) */}
       <audio
         ref={audioRef}
         src="/pan.mp3"
-        preload="metadata"
+        preload="auto"
         onTimeUpdate={(e) => setAudioTime(e.currentTarget.currentTime)}
         onLoadedMetadata={(e) => {
           if (e.currentTarget.duration && !isNaN(e.currentTarget.duration)) {
@@ -290,20 +271,18 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
         </div>
       </div>
 
-      {/* Langkah 2 & 3: Dynamic Expanding Media Area (140px in Terminal Mode, 400px/250px in Video Mode) */}
-      <motion.div
-        layout
-        initial={false}
-        animate={{ height: isVideoMode ? (isDesktop ? 400 : 250) : 140 }}
-        transition={{ type: "spring", bounce: 0.25, duration: 0.6 }}
-        className="relative w-full overflow-hidden flex flex-col justify-end mt-4 mb-4 rounded-xl bg-black/40 border border-white/[0.06] shadow-inner"
+      {/* Langkah 2: Pure CSS Aspect Ratio Dynamic Media Area */}
+      <div
+        className={`relative w-full overflow-hidden flex flex-col justify-end mt-4 mb-4 rounded-xl transition-all duration-700 ease-in-out border border-white/[0.06] shadow-inner ${
+          isVideoMode ? "aspect-video h-auto bg-black" : "h-[140px] bg-black/40"
+        }`}
       >
-        {/* Continuous HTML5 Video Element (/pan-video.mp4) with object-contain to prevent cropping */}
+        {/* Step 1 & 3: Permanently Mounted HTML5 Video Element with CSS Opacity Crossfade */}
         <video
           ref={videoRef}
           src="/pan-video.mp4"
           playsInline
-          preload="metadata"
+          preload="auto"
           onTimeUpdate={(e) => setVideoTime(e.currentTarget.currentTime)}
           onLoadedMetadata={(e) => {
             if (e.currentTarget.duration && !isNaN(e.currentTarget.duration)) {
@@ -323,175 +302,166 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
           }}
           onPlay={() => setIsVideoPlaying(true)}
           onPause={() => setIsVideoPlaying(false)}
-          className={`w-full h-full object-contain object-center rounded-xl absolute inset-0 pointer-events-none transition-opacity duration-500 ${
-            isVideoMode ? "opacity-95 z-10" : "opacity-0 -z-10"
+          className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700 ${
+            isVideoMode ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
           }`}
         />
 
         {/* Video Dark Emerald Theme Filter Overlay */}
-        {isVideoMode && (
-          <div className="absolute inset-0 bg-emerald-950/20 mix-blend-overlay pointer-events-none z-10 rounded-xl" />
-        )}
+        <div
+          className={`absolute inset-0 bg-emerald-950/20 mix-blend-overlay pointer-events-none z-10 rounded-xl transition-opacity duration-700 ${
+            isVideoMode ? "opacity-100" : "opacity-0"
+          }`}
+        />
 
         {/* Terminal subtle scanline grid overlay */}
         <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_50%,rgba(0,0,0,0.4)_51%)] bg-[length:100%_4px] pointer-events-none opacity-20 rounded-xl z-10" />
 
-        {/* Mode Switching Animation with AnimatePresence mode="popLayout" */}
-        <AnimatePresence mode="popLayout">
-          {!isVideoMode ? (
-            /* Mode A: Terminal Lyrics View */
-            <motion.div
-              key="terminal-lyrics-mode"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="relative z-20 w-full h-full p-3.5 md:p-4 flex flex-col justify-between"
-            >
-              {/* Terminal Lyrics Container */}
-              <div className="relative w-full h-[85px] overflow-hidden flex flex-col justify-start gap-2">
-                <AnimatePresence mode="popLayout" initial={false}>
-                  {visibleLyrics.map((lyric, idx) => {
-                    const originalIndex = startIdx + idx;
-                    const isActive = originalIndex === activeIndex;
+        {/* Step 3: Permanently Mounted Terminal Lyrics View with CSS Opacity Crossfade */}
+        <div
+          className={`absolute bottom-0 left-0 w-full p-4 flex flex-col justify-end transition-opacity duration-700 ${
+            !isVideoMode ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
+          }`}
+        >
+          {/* Terminal Lyrics Container */}
+          <div className="relative w-full h-[85px] overflow-hidden flex flex-col justify-start gap-2">
+            <AnimatePresence mode="popLayout" initial={false}>
+              {visibleLyrics.map((lyric, idx) => {
+                const originalIndex = startIdx + idx;
+                const isActive = originalIndex === activeIndex;
 
-                    return (
-                      <motion.div
-                        key={`${lyric.text}-${originalIndex}`}
-                        layout
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -8 }}
-                        transition={{ duration: 0.22, ease: "easeOut" }}
-                        className={`w-full flex items-start gap-2.5 text-xs md:text-sm font-mono transition-colors duration-200 shrink-0 ${
-                          isActive
-                            ? "text-emerald-400 font-semibold drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]"
-                            : "text-emerald-900/40 select-none"
-                        }`}
+                return (
+                  <motion.div
+                    key={`${lyric.text}-${originalIndex}`}
+                    layout
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.22, ease: "easeOut" }}
+                    className={`w-full flex items-start gap-2.5 text-xs md:text-sm font-mono transition-colors duration-200 shrink-0 ${
+                      isActive
+                        ? "text-emerald-400 font-semibold drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]"
+                        : "text-emerald-900/40 select-none"
+                    }`}
+                  >
+                    {/* SVG Terminal Prompt Chevron */}
+                    {isActive ? (
+                      <svg
+                        className="w-3.5 h-3.5 text-emerald-400 inline-block shrink-0 mt-0.5 animate-pulse"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={3}
+                        aria-hidden="true"
                       >
-                        {/* SVG Terminal Prompt Chevron */}
-                        {isActive ? (
-                          <svg
-                            className="w-3.5 h-3.5 text-emerald-400 inline-block shrink-0 mt-0.5 animate-pulse"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={3}
-                            aria-hidden="true"
-                          >
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                          </svg>
-                        ) : (
-                          <span className="w-3.5 inline-block text-center font-mono text-[11px] text-emerald-900/40 shrink-0 select-none">
-                            $
-                          </span>
-                        )}
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
+                    ) : (
+                      <span className="w-3.5 inline-block text-center font-mono text-[11px] text-emerald-900/40 shrink-0 select-none">
+                        $
+                      </span>
+                    )}
 
-                        {/* Lyric text */}
-                        <div className="flex-1 leading-relaxed break-words">
-                          <span>{lyric.text}</span>
-                          {isActive && (
-                            <motion.span
-                              animate={{ opacity: [1, 0, 1] }}
-                              transition={{
-                                repeat: Infinity,
-                                duration: 0.8,
-                                ease: "easeInOut",
-                              }}
-                              className="inline-block text-emerald-400 font-bold ml-1 drop-shadow-[0_0_6px_#00FFA3]"
-                            >
-                              _
-                            </motion.span>
-                          )}
-                        </div>
-
-                        {/* Timestamp tag */}
-                        <span
-                          className={`shrink-0 text-[10px] font-mono px-1.5 py-0.5 rounded select-none ${
-                            isActive
-                              ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                              : "text-emerald-950/60"
-                          }`}
+                    {/* Lyric text */}
+                    <div className="flex-1 leading-relaxed break-words">
+                      <span>{lyric.text}</span>
+                      {isActive && (
+                        <motion.span
+                          animate={{ opacity: [1, 0, 1] }}
+                          transition={{
+                            repeat: Infinity,
+                            duration: 0.8,
+                            ease: "easeInOut",
+                          }}
+                          className="inline-block text-emerald-400 font-bold ml-1 drop-shadow-[0_0_6px_#00FFA3]"
                         >
-                          {formatTime(lyric.time)}
-                        </span>
-                      </motion.div>
-                    );
-                  })}
-                </AnimatePresence>
-              </div>
+                          _
+                        </motion.span>
+                      )}
+                    </div>
 
-              {/* Audio Equalizer Visualizer Bars & Time in Terminal Mode */}
-              <div className="relative z-10 pt-2 border-t border-white/[0.04] flex items-center justify-between shrink-0">
-                <div className="flex items-center gap-2">
-                  <div className="h-5 flex items-end gap-1 overflow-hidden">
-                    {[40, 75, 55, 90, 65, 30, 80, 50, 95, 60, 45, 70].map((height, i) => (
-                      <motion.span
-                        key={i}
-                        animate={
-                          isAudioPlaying
-                            ? {
-                                height: [
-                                  `${Math.max(3, height * 0.14)}px`,
-                                  `${Math.min(18, height * 0.2)}px`,
-                                  `${Math.max(3, height * 0.1)}px`,
-                                  `${Math.min(18, height * 0.2)}px`,
-                                ],
-                              }
-                            : { height: "3px" }
-                        }
-                        transition={
-                          isAudioPlaying
-                            ? {
-                                repeat: Infinity,
-                                duration: 0.6 + (i % 4) * 0.15,
-                                ease: "easeInOut",
-                              }
-                            : { duration: 0.3 }
-                        }
-                        className={`w-1 rounded-full transition-colors ${
-                          isAudioPlaying
-                            ? "bg-emerald-400 shadow-[0_0_6px_rgba(0,255,163,0.5)]"
-                            : "bg-emerald-900/40"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <span className="text-[10px] text-gray-500 font-mono hidden sm:inline select-none">
-                    44.1kHz • stereo
-                  </span>
-                </div>
+                    {/* Timestamp tag */}
+                    <span
+                      className={`shrink-0 text-[10px] font-mono px-1.5 py-0.5 rounded select-none ${
+                        isActive
+                          ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                          : "text-emerald-950/60"
+                      }`}
+                    >
+                      {formatTime(lyric.time)}
+                    </span>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </div>
 
-                <div className="text-[11px] font-mono text-gray-400 select-none flex items-center gap-1">
-                  <span className="text-emerald-400 font-semibold">{formatTime(audioTime)}</span>
-                  <span className="text-gray-600">/</span>
-                  <span>{formatTime(audioDuration)}</span>
-                </div>
+          {/* Audio Equalizer Visualizer Bars & Time in Terminal Mode */}
+          <div className="relative z-10 pt-2 border-t border-white/[0.04] flex items-center justify-between shrink-0 mt-1">
+            <div className="flex items-center gap-2">
+              <div className="h-5 flex items-end gap-1 overflow-hidden">
+                {[40, 75, 55, 90, 65, 30, 80, 50, 95, 60, 45, 70].map((height, i) => (
+                  <motion.span
+                    key={i}
+                    animate={
+                      isAudioPlaying
+                        ? {
+                            height: [
+                              `${Math.max(3, height * 0.14)}px`,
+                              `${Math.min(18, height * 0.2)}px`,
+                              `${Math.max(3, height * 0.1)}px`,
+                              `${Math.min(18, height * 0.2)}px`,
+                            ],
+                          }
+                        : { height: "3px" }
+                    }
+                    transition={
+                      isAudioPlaying
+                        ? {
+                            repeat: Infinity,
+                            duration: 0.6 + (i % 4) * 0.15,
+                            ease: "easeInOut",
+                          }
+                        : { duration: 0.3 }
+                    }
+                    className={`w-1 rounded-full transition-colors ${
+                      isAudioPlaying
+                        ? "bg-emerald-400 shadow-[0_0_6px_rgba(0,255,163,0.5)]"
+                        : "bg-emerald-900/40"
+                    }`}
+                  />
+                ))}
               </div>
-            </motion.div>
-          ) : (
-            /* Mode B: Video Floating Info Banner */
-            <motion.div
-              key="video-floating-banner"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.25 }}
-              className="absolute bottom-3 left-3.5 right-3.5 z-20 flex items-center justify-between bg-black/70 backdrop-blur-md px-3.5 py-2 rounded-xl border border-white/[0.08] text-[11px] font-mono shadow-lg"
-            >
-              <div className="flex items-center gap-2 text-emerald-400">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="font-semibold truncate">Merry Christmas, Please Don&apos;t Call</span>
-              </div>
-              <div className="text-gray-400 shrink-0 ml-2">
-                <span className="text-emerald-400 font-semibold">{formatTime(videoTime)}</span>
-                <span className="text-gray-600 mx-0.5">/</span>
-                <span>{formatTime(videoDuration)}</span>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
+              <span className="text-[10px] text-gray-500 font-mono hidden sm:inline select-none">
+                44.1kHz • stereo
+              </span>
+            </div>
+
+            <div className="text-[11px] font-mono text-gray-400 select-none flex items-center gap-1">
+              <span className="text-emerald-400 font-semibold">{formatTime(audioTime)}</span>
+              <span className="text-gray-600">/</span>
+              <span>{formatTime(audioDuration)}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Video Floating Info Banner with CSS Opacity Transition */}
+        <div
+          className={`absolute bottom-3 left-3.5 right-3.5 z-20 flex items-center justify-between bg-black/70 backdrop-blur-md px-3.5 py-2 rounded-xl border border-white/[0.08] text-[11px] font-mono shadow-lg transition-opacity duration-700 ${
+            isVideoMode ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
+        >
+          <div className="flex items-center gap-2 text-emerald-400">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="font-semibold truncate">Merry Christmas, Please Don&apos;t Call</span>
+          </div>
+          <div className="text-gray-400 shrink-0 ml-2">
+            <span className="text-emerald-400 font-semibold">{formatTime(videoTime)}</span>
+            <span className="text-gray-600 mx-0.5">/</span>
+            <span>{formatTime(videoDuration)}</span>
+          </div>
+        </div>
+      </div>
 
       {/* 3. Media Progress Bar & Interactive Scrubber for Active Mode */}
       <div className="py-2 relative z-10 shrink-0">
@@ -534,6 +504,6 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
           </>
         )}
       </button>
-    </motion.div>
+    </div>
   );
 }
