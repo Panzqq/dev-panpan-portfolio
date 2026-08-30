@@ -5,53 +5,76 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Float, Html, Sparkles } from "@react-three/drei";
 import * as THREE from "three";
 
-// 4 Tech Stack items orbiting the Android Bugdroid matching visual reference
+// 4 High-Resolution Tech Stack items orbiting the Android Bugdroid
 const ORBITING_TECHS = [
   {
     id: "js",
     label: "JS",
     color: "#FFE600",
-    bg: "rgba(255, 230, 0, 0.12)",
-    border: "rgba(255, 230, 0, 0.3)",
+    border: "rgba(255, 230, 0, 0.45)",
     radius: 2.2,
     speed: 0.35,
     offset: 0,
+    iconSvg: (
+      <span className="font-mono font-black text-sm tracking-tight text-[#FFE600] drop-shadow-[0_0_8px_rgba(255,230,0,0.6)]">
+        JS
+      </span>
+    ),
   },
   {
     id: "node",
     label: "Node",
-    icon: "🟩",
-    color: "#A3E635",
-    bg: "rgba(163, 230, 53, 0.12)",
-    border: "rgba(163, 230, 53, 0.3)",
+    color: "#22C55E",
+    border: "rgba(34, 197, 94, 0.45)",
     radius: 2.4,
     speed: 0.35,
     offset: Math.PI * 0.5,
+    iconSvg: (
+      <span className="font-mono font-bold text-xs text-[#4ADE80] drop-shadow-[0_0_8px_rgba(74,222,128,0.6)]">
+        Node
+      </span>
+    ),
   },
   {
     id: "supabase",
     label: "⚡",
     color: "#00FFA3",
-    bg: "rgba(0, 255, 163, 0.12)",
-    border: "rgba(0, 255, 163, 0.3)",
+    border: "rgba(0, 255, 163, 0.45)",
     radius: 2.3,
     speed: 0.35,
     offset: Math.PI * 1.0,
+    iconSvg: (
+      <svg
+        className="w-5 h-5 text-[#00FFA3] drop-shadow-[0_0_8px_rgba(0,255,163,0.8)]"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+      >
+        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+      </svg>
+    ),
   },
   {
     id: "vercel",
     label: "▲",
     color: "#FFFFFF",
-    bg: "rgba(255, 255, 255, 0.12)",
-    border: "rgba(255, 255, 255, 0.3)",
+    border: "rgba(255, 255, 255, 0.4)",
     radius: 2.5,
     speed: 0.35,
     offset: Math.PI * 1.5,
+    iconSvg: (
+      <svg
+        className="w-4 h-4 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+      >
+        <path d="M12 2L2 20h20L12 2z" />
+      </svg>
+    ),
   },
 ];
 
-// Single Orbiting Badge Component with glassmorphism style
-function OrbitingBadge({ tech }: { tech: typeof ORBITING_TECHS[0] }) {
+// Single HD Orbiting Badge Component with crisp vector render
+function OrbitingBadge({ tech }: { tech: (typeof ORBITING_TECHS)[0] }) {
   const ref = useRef<THREE.Group>(null);
 
   useFrame((state) => {
@@ -65,25 +88,24 @@ function OrbitingBadge({ tech }: { tech: typeof ORBITING_TECHS[0] }) {
 
   return (
     <group ref={ref}>
-      <Html center distanceFactor={7} transform position={[0, 0, 0]}>
+      <Html center distanceFactor={4.8} transform position={[0, 0, 0]}>
         <div
           style={{
             borderColor: tech.border,
             color: tech.color,
-            backgroundColor: "rgba(5, 12, 10, 0.75)",
-            backdropFilter: "blur(12px)",
-            boxShadow: `0 0 16px ${tech.color}25`,
+            backgroundColor: "rgba(5, 14, 11, 0.88)",
+            boxShadow: `0 0 22px ${tech.color}35`,
           }}
-          className="w-9 h-9 rounded-xl flex items-center justify-center font-mono font-bold text-xs border shadow-lg transition-transform hover:scale-125 select-none"
+          className="w-14 h-14 rounded-2xl flex items-center justify-center border-2 shadow-2xl backdrop-blur-xl transition-transform hover:scale-115 select-none cursor-default"
         >
-          {tech.label}
+          {tech.iconSvg}
         </div>
       </Html>
     </group>
   );
 }
 
-// Refined Metallic Dark Emerald Android Bugdroid Model
+// Metallic Dark Emerald Android Bugdroid Model
 function DarkEmeraldBugdroid() {
   const robotRef = useRef<THREE.Group>(null);
   const headRef = useRef<THREE.Group>(null);
@@ -98,8 +120,8 @@ function DarkEmeraldBugdroid() {
     () =>
       new THREE.MeshStandardMaterial({
         color: "#0A382C",
-        roughness: 0.22,
-        metalness: 0.88,
+        roughness: 0.2,
+        metalness: 0.9,
       }),
     []
   );
@@ -108,7 +130,7 @@ function DarkEmeraldBugdroid() {
     () =>
       new THREE.MeshStandardMaterial({
         color: "#051A14",
-        roughness: 0.35,
+        roughness: 0.3,
         metalness: 0.92,
       }),
     []
@@ -120,8 +142,8 @@ function DarkEmeraldBugdroid() {
       new THREE.MeshStandardMaterial({
         color: "#00FFA3",
         emissive: "#00FFA3",
-        emissiveIntensity: 2.8,
-        roughness: 0.1,
+        emissiveIntensity: 3.2,
+        roughness: 0.08,
       }),
     []
   );
@@ -132,8 +154,8 @@ function DarkEmeraldBugdroid() {
       new THREE.MeshStandardMaterial({
         color: "#22D3EE",
         emissive: "#22D3EE",
-        emissiveIntensity: 2.2,
-        roughness: 0.1,
+        emissiveIntensity: 2.5,
+        roughness: 0.08,
       }),
     []
   );
@@ -143,7 +165,7 @@ function DarkEmeraldBugdroid() {
       new THREE.MeshBasicMaterial({
         color: "#00FFA3",
         transparent: true,
-        opacity: 0.2,
+        opacity: 0.22,
       }),
     []
   );
@@ -152,11 +174,10 @@ function DarkEmeraldBugdroid() {
     const t = state.clock.elapsedTime;
     const { x, y } = state.pointer; // Mouse tracking
 
-    // Ultra-smooth floating breathing animation
+    // Floating breathing animation
     if (robotRef.current) {
       robotRef.current.position.y = Math.sin(t * 1.2) * 0.08;
 
-      // Body subtle follow with smooth dampening
       robotRef.current.rotation.y = THREE.MathUtils.damp(
         robotRef.current.rotation.y,
         x * 0.25,
@@ -171,7 +192,7 @@ function DarkEmeraldBugdroid() {
       );
     }
 
-    // Head follows mouse cursor smoothly with MathUtils.damp
+    // Head follows mouse cursor smoothly
     if (headRef.current) {
       headRef.current.rotation.y = THREE.MathUtils.damp(
         headRef.current.rotation.y,
@@ -187,7 +208,7 @@ function DarkEmeraldBugdroid() {
       );
     }
 
-    // Antennas organic gentle sway
+    // Antennas gentle sway
     if (leftAntennaRef.current) {
       leftAntennaRef.current.rotation.z = -0.42 + Math.sin(t * 2.2) * 0.05;
       leftAntennaRef.current.rotation.x = Math.cos(t * 1.8) * 0.04;
@@ -216,10 +237,10 @@ function DarkEmeraldBugdroid() {
 
   return (
     <group ref={robotRef} position={[0, -0.15, 0]}>
-      {/* Subtle Orbital Plane Ring */}
+      {/* Orbital Plane Ring */}
       <group ref={orbitRingRef} position={[0, 0.05, 0]}>
         <mesh material={ringMaterial} rotation={[Math.PI / 2.3, 0, 0]}>
-          <torusGeometry args={[2.3, 0.01, 16, 64]} />
+          <torusGeometry args={[2.3, 0.012, 16, 64]} />
         </mesh>
       </group>
 
@@ -227,64 +248,57 @@ function DarkEmeraldBugdroid() {
       <group ref={headRef} position={[0, 0.72, 0]}>
         {/* Android Dome Head (Hemisphere) */}
         <mesh material={darkEmeraldMetallic}>
-          <sphereGeometry args={[0.82, 32, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
+          <sphereGeometry args={[0.82, 48, 48, 0, Math.PI * 2, 0, Math.PI / 2]} />
         </mesh>
 
         {/* Head Bottom Plate */}
         <mesh position={[0, 0.01, 0]} material={darkPlate} rotation={[Math.PI / 2, 0, 0]}>
-          <circleGeometry args={[0.82, 32]} />
+          <circleGeometry args={[0.82, 48]} />
         </mesh>
 
-        {/* ---------------- Eyes ---------------- */}
         {/* Left Glowing Neon Eye */}
         <mesh position={[-0.3, 0.36, 0.66]} material={neonEmeraldEmissive}>
-          <sphereGeometry args={[0.085, 24, 24]} />
+          <sphereGeometry args={[0.085, 32, 32]} />
         </mesh>
 
         {/* Right Glowing Neon Eye */}
         <mesh position={[0.3, 0.36, 0.66]} material={neonEmeraldEmissive}>
-          <sphereGeometry args={[0.085, 24, 24]} />
+          <sphereGeometry args={[0.085, 32, 32]} />
         </mesh>
 
-        {/* ---------------- Antennas ---------------- */}
         {/* Left Antenna */}
         <group ref={leftAntennaRef} position={[-0.4, 0.7, 0]}>
           <mesh position={[0, 0.2, 0]} material={darkEmeraldMetallic}>
-            <cylinderGeometry args={[0.028, 0.032, 0.4, 16]} />
+            <cylinderGeometry args={[0.028, 0.032, 0.4, 24]} />
           </mesh>
-          {/* Glowing Antenna Tip */}
           <mesh position={[0, 0.42, 0]} material={neonEmeraldEmissive}>
-            <sphereGeometry args={[0.05, 16, 16]} />
+            <sphereGeometry args={[0.05, 24, 24]} />
           </mesh>
         </group>
 
         {/* Right Antenna */}
         <group ref={rightAntennaRef} position={[0.4, 0.7, 0]}>
           <mesh position={[0, 0.2, 0]} material={darkEmeraldMetallic}>
-            <cylinderGeometry args={[0.028, 0.032, 0.4, 16]} />
+            <cylinderGeometry args={[0.028, 0.032, 0.4, 24]} />
           </mesh>
-          {/* Glowing Antenna Tip */}
           <mesh position={[0, 0.42, 0]} material={neonEmeraldEmissive}>
-            <sphereGeometry args={[0.05, 16, 16]} />
+            <sphereGeometry args={[0.05, 24, 24]} />
           </mesh>
         </group>
       </group>
 
       {/* Head-Body Gap Glowing Neon Ring */}
       <mesh position={[0, 0.66, 0]} material={cyanEmissive}>
-        <torusGeometry args={[0.45, 0.025, 16, 48]} />
+        <torusGeometry args={[0.45, 0.025, 24, 64]} />
       </mesh>
 
       {/* ==================== BUGDROID TORSO ==================== */}
       <group position={[0, 0.05, 0]}>
-        {/* Main Body Cylinder */}
         <mesh material={darkEmeraldMetallic}>
-          <cylinderGeometry args={[0.82, 0.82, 1.05, 32]} />
+          <cylinderGeometry args={[0.82, 0.82, 1.05, 48]} />
         </mesh>
-
-        {/* Rounded Bottom Base */}
         <mesh position={[0, -0.52, 0]} material={darkEmeraldMetallic} rotation={[Math.PI, 0, 0]}>
-          <sphereGeometry args={[0.82, 32, 16, 0, Math.PI * 2, 0, Math.PI / 4]} />
+          <sphereGeometry args={[0.82, 48, 24, 0, Math.PI * 2, 0, Math.PI / 4]} />
         </mesh>
       </group>
 
@@ -292,26 +306,26 @@ function DarkEmeraldBugdroid() {
       {/* Left Arm */}
       <group ref={leftArmRef} position={[-1.12, 0.08, 0]}>
         <mesh material={darkEmeraldMetallic}>
-          <cylinderGeometry args={[0.17, 0.17, 0.65, 24]} />
+          <cylinderGeometry args={[0.17, 0.17, 0.65, 32]} />
         </mesh>
         <mesh position={[0, 0.32, 0]} material={darkEmeraldMetallic}>
-          <sphereGeometry args={[0.17, 24, 16, 0, Math.PI * 2, 0, Math.PI / 2]} />
+          <sphereGeometry args={[0.17, 32, 24, 0, Math.PI * 2, 0, Math.PI / 2]} />
         </mesh>
         <mesh position={[0, -0.32, 0]} material={darkEmeraldMetallic} rotation={[Math.PI, 0, 0]}>
-          <sphereGeometry args={[0.17, 24, 16, 0, Math.PI * 2, 0, Math.PI / 2]} />
+          <sphereGeometry args={[0.17, 32, 24, 0, Math.PI * 2, 0, Math.PI / 2]} />
         </mesh>
       </group>
 
       {/* Right Arm */}
       <group ref={rightArmRef} position={[1.12, 0.08, 0]}>
         <mesh material={darkEmeraldMetallic}>
-          <cylinderGeometry args={[0.17, 0.17, 0.65, 24]} />
+          <cylinderGeometry args={[0.17, 0.17, 0.65, 32]} />
         </mesh>
         <mesh position={[0, 0.32, 0]} material={darkEmeraldMetallic}>
-          <sphereGeometry args={[0.17, 24, 16, 0, Math.PI * 2, 0, Math.PI / 2]} />
+          <sphereGeometry args={[0.17, 32, 24, 0, Math.PI * 2, 0, Math.PI / 2]} />
         </mesh>
         <mesh position={[0, -0.32, 0]} material={darkEmeraldMetallic} rotation={[Math.PI, 0, 0]}>
-          <sphereGeometry args={[0.17, 24, 16, 0, Math.PI * 2, 0, Math.PI / 2]} />
+          <sphereGeometry args={[0.17, 32, 24, 0, Math.PI * 2, 0, Math.PI / 2]} />
         </mesh>
       </group>
 
@@ -319,24 +333,24 @@ function DarkEmeraldBugdroid() {
       {/* Left Leg */}
       <group position={[-0.36, -0.82, 0]}>
         <mesh material={darkEmeraldMetallic}>
-          <cylinderGeometry args={[0.17, 0.17, 0.42, 24]} />
+          <cylinderGeometry args={[0.17, 0.17, 0.42, 32]} />
         </mesh>
         <mesh position={[0, -0.21, 0]} material={darkEmeraldMetallic} rotation={[Math.PI, 0, 0]}>
-          <sphereGeometry args={[0.17, 24, 16, 0, Math.PI * 2, 0, Math.PI / 2]} />
+          <sphereGeometry args={[0.17, 32, 24, 0, Math.PI * 2, 0, Math.PI / 2]} />
         </mesh>
       </group>
 
       {/* Right Leg */}
       <group position={[0.36, -0.82, 0]}>
         <mesh material={darkEmeraldMetallic}>
-          <cylinderGeometry args={[0.17, 0.17, 0.42, 24]} />
+          <cylinderGeometry args={[0.17, 0.17, 0.42, 32]} />
         </mesh>
         <mesh position={[0, -0.21, 0]} material={darkEmeraldMetallic} rotation={[Math.PI, 0, 0]}>
-          <sphereGeometry args={[0.17, 24, 16, 0, Math.PI * 2, 0, Math.PI / 2]} />
+          <sphereGeometry args={[0.17, 32, 24, 0, Math.PI * 2, 0, Math.PI / 2]} />
         </mesh>
       </group>
 
-      {/* ==================== 4 ORBITING TECH BADGES ==================== */}
+      {/* 4 Orbiting Badges */}
       {ORBITING_TECHS.map((tech) => (
         <OrbitingBadge key={tech.id} tech={tech} />
       ))}
@@ -344,7 +358,7 @@ function DarkEmeraldBugdroid() {
   );
 }
 
-// Main 3D Canvas Scene
+// Main 3D Canvas Scene with Seamless Blending and HD Resolution
 export default function Hero3D() {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -358,38 +372,39 @@ export default function Hero3D() {
   }, []);
 
   return (
-    <div className="relative w-full h-[380px] sm:h-[460px] md:h-[520px] select-none flex items-center justify-center">
-      {/* 3D Canvas Container */}
+    <div className="relative w-full h-[380px] sm:h-[460px] md:h-[520px] select-none flex items-center justify-center [mask-image:radial-gradient(ellipse_at_center,black_50%,transparent_100%)] md:[mask-image:radial-gradient(ellipse_at_center,black_60%,transparent_90%)] [-webkit-mask-image:radial-gradient(ellipse_at_center,black_50%,transparent_100%)] md:[-webkit-mask-image:radial-gradient(ellipse_at_center,black_60%,transparent_90%)] bg-transparent">
+      {/* 3D Canvas Container with HD dpr=[1, 2] */}
       <Canvas
         camera={{ position: [0, 0, 4.8], fov: isMobile ? 52 : 42 }}
-        dpr={[1, isMobile ? 1.5 : 2]}
+        dpr={[1, 2]}
         gl={{
           powerPreference: "high-performance",
           antialias: true,
           alpha: true,
         }}
-        className="w-full h-full"
+        style={{ background: "transparent" }}
+        className="w-full h-full bg-transparent"
       >
-        {/* Soft Dark Emerald & Cyan Lighting */}
-        <ambientLight intensity={0.55} />
+        {/* Focused Lighting */}
+        <ambientLight intensity={0.65} />
 
         {/* Key Emerald Directional Light */}
-        <directionalLight position={[4, 5, 4]} intensity={2.6} color="#00FFA3" />
+        <directionalLight position={[4, 5, 4]} intensity={2.8} color="#00FFA3" />
 
         {/* Cyan Soft Fill Light */}
-        <directionalLight position={[-4, 3, 3]} intensity={1.8} color="#22D3EE" />
+        <directionalLight position={[-4, 3, 3]} intensity={2.0} color="#22D3EE" />
 
-        {/* Soft Depth Rim Light */}
-        <pointLight position={[0, -3, -3]} intensity={2.0} color="#064E3B" />
+        {/* Depth Rim Light */}
+        <pointLight position={[0, -3, -3]} intensity={2.2} color="#064E3B" />
 
         {/* Subtle Ambient Emerald Sparkles */}
         <Sparkles
           count={isMobile ? 25 : 45}
-          scale={6}
+          scale={5.5}
           size={isMobile ? 2.5 : 3.5}
           speed={0.4}
           color="#00FFA3"
-          opacity={0.5}
+          opacity={0.6}
         />
 
         {/* Float Wrapper with gentle damping */}
