@@ -5,18 +5,18 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Float, Html, Sparkles } from "@react-three/drei";
 import * as THREE from "three";
 
-// 4 High-Resolution Tech Stack items orbiting the Android Bugdroid
+// 4 High-Resolution Tech Stack items orbiting the Android Bugdroid with calibrated radius
 const ORBITING_TECHS = [
   {
     id: "js",
     label: "JS",
     color: "#FFE600",
     border: "rgba(255, 230, 0, 0.45)",
-    radius: 2.2,
+    radius: 1.9,
     speed: 0.35,
     offset: 0,
     iconSvg: (
-      <span className="font-mono font-black text-sm tracking-tight text-[#FFE600] drop-shadow-[0_0_8px_rgba(255,230,0,0.6)]">
+      <span className="font-mono font-black text-xs md:text-sm tracking-tight text-[#FFE600] drop-shadow-[0_0_8px_rgba(255,230,0,0.6)]">
         JS
       </span>
     ),
@@ -26,11 +26,11 @@ const ORBITING_TECHS = [
     label: "Node",
     color: "#22C55E",
     border: "rgba(34, 197, 94, 0.45)",
-    radius: 2.4,
+    radius: 2.0,
     speed: 0.35,
     offset: Math.PI * 0.5,
     iconSvg: (
-      <span className="font-mono font-bold text-xs text-[#4ADE80] drop-shadow-[0_0_8px_rgba(74,222,128,0.6)]">
+      <span className="font-mono font-bold text-[11px] md:text-xs text-[#4ADE80] drop-shadow-[0_0_8px_rgba(74,222,128,0.6)]">
         Node
       </span>
     ),
@@ -40,12 +40,12 @@ const ORBITING_TECHS = [
     label: "⚡",
     color: "#00FFA3",
     border: "rgba(0, 255, 163, 0.45)",
-    radius: 2.3,
+    radius: 1.9,
     speed: 0.35,
     offset: Math.PI * 1.0,
     iconSvg: (
       <svg
-        className="w-5 h-5 text-[#00FFA3] drop-shadow-[0_0_8px_rgba(0,255,163,0.8)]"
+        className="w-4 h-4 md:w-5 md:h-5 text-[#00FFA3] drop-shadow-[0_0_8px_rgba(0,255,163,0.8)]"
         viewBox="0 0 24 24"
         fill="currentColor"
       >
@@ -58,12 +58,12 @@ const ORBITING_TECHS = [
     label: "▲",
     color: "#FFFFFF",
     border: "rgba(255, 255, 255, 0.4)",
-    radius: 2.5,
+    radius: 2.0,
     speed: 0.35,
     offset: Math.PI * 1.5,
     iconSvg: (
       <svg
-        className="w-4 h-4 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+        className="w-3.5 h-3.5 md:w-4 md:h-4 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
         viewBox="0 0 24 24"
         fill="currentColor"
       >
@@ -88,15 +88,15 @@ function OrbitingBadge({ tech }: { tech: (typeof ORBITING_TECHS)[0] }) {
 
   return (
     <group ref={ref}>
-      <Html center distanceFactor={4.8} transform position={[0, 0, 0]}>
+      <Html center distanceFactor={5.0} transform position={[0, 0, 0]}>
         <div
           style={{
             borderColor: tech.border,
             color: tech.color,
-            backgroundColor: "rgba(5, 14, 11, 0.88)",
+            backgroundColor: "rgba(5, 14, 11, 0.9)",
             boxShadow: `0 0 22px ${tech.color}35`,
           }}
-          className="w-14 h-14 rounded-2xl flex items-center justify-center border-2 shadow-2xl backdrop-blur-xl transition-transform hover:scale-115 select-none cursor-default"
+          className="w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center border-2 shadow-2xl backdrop-blur-xl transition-transform hover:scale-115 select-none cursor-default"
         >
           {tech.iconSvg}
         </div>
@@ -176,7 +176,7 @@ function DarkEmeraldBugdroid() {
 
     // Floating breathing animation
     if (robotRef.current) {
-      robotRef.current.position.y = 0.1 + Math.sin(t * 1.2) * 0.08;
+      robotRef.current.position.y = 0.08 + Math.sin(t * 1.2) * 0.08;
 
       robotRef.current.rotation.y = THREE.MathUtils.damp(
         robotRef.current.rotation.y,
@@ -236,11 +236,11 @@ function DarkEmeraldBugdroid() {
   });
 
   return (
-    <group ref={robotRef} position={[0, 0.1, 0]}>
+    <group ref={robotRef} position={[0, 0.08, 0]}>
       {/* Orbital Plane Ring */}
       <group ref={orbitRingRef} position={[0, 0.05, 0]}>
         <mesh material={ringMaterial} rotation={[Math.PI / 2.3, 0, 0]}>
-          <torusGeometry args={[2.3, 0.012, 16, 64]} />
+          <torusGeometry args={[1.95, 0.012, 16, 64]} />
         </mesh>
       </group>
 
@@ -365,7 +365,7 @@ function DarkEmeraldBugdroid() {
   );
 }
 
-// Main 3D Canvas Scene with Seamless Blending and HD Resolution
+// Main 3D Canvas Scene with Expanded Camera FOV and Wide Seamless Mask
 export default function Hero3D() {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -379,10 +379,10 @@ export default function Hero3D() {
   }, []);
 
   return (
-    <div className="relative w-full h-[380px] sm:h-[460px] md:h-[520px] select-none flex items-center justify-center [mask-image:radial-gradient(ellipse_at_center,black_50%,transparent_100%)] md:[mask-image:radial-gradient(ellipse_at_center,black_60%,transparent_90%)] [-webkit-mask-image:radial-gradient(ellipse_at_center,black_50%,transparent_100%)] md:[-webkit-mask-image:radial-gradient(ellipse_at_center,black_60%,transparent_90%)] bg-transparent">
-      {/* 3D Canvas Container with HD dpr=[1, 2] */}
+    <div className="relative w-full h-[400px] sm:h-[480px] md:h-[540px] select-none flex items-center justify-center overflow-visible [mask-image:radial-gradient(ellipse_at_center,black_75%,transparent_100%)] md:[mask-image:radial-gradient(ellipse_at_center,black_82%,transparent_100%)] [-webkit-mask-image:radial-gradient(ellipse_at_center,black_75%,transparent_100%)] md:[-webkit-mask-image:radial-gradient(ellipse_at_center,black_82%,transparent_100%)] bg-transparent">
+      {/* 3D Canvas Container with Extended Camera Distance & Wide FOV to eliminate clipping */}
       <Canvas
-        camera={{ position: [0, 0, 4.8], fov: isMobile ? 52 : 42 }}
+        camera={{ position: [0, 0, 5.4], fov: isMobile ? 50 : 44 }}
         dpr={[1, 2]}
         gl={{
           powerPreference: "high-performance",
@@ -390,7 +390,7 @@ export default function Hero3D() {
           alpha: true,
         }}
         style={{ background: "transparent" }}
-        className="w-full h-full bg-transparent"
+        className="w-full h-full bg-transparent overflow-visible"
       >
         {/* Focused Lighting */}
         <ambientLight intensity={0.65} />

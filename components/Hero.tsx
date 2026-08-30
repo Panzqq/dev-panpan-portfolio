@@ -9,7 +9,7 @@ import { ChevronDown } from "lucide-react";
 const Hero3D = dynamic(() => import("@/components/Hero3D"), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-[380px] sm:h-[460px] md:h-[520px] flex items-center justify-center">
+    <div className="w-full h-[400px] sm:h-[480px] md:h-[540px] flex items-center justify-center">
       <div className="w-8 h-8 rounded-full border-2 border-[#00FFA3] border-t-transparent animate-spin" />
     </div>
   ),
@@ -48,7 +48,7 @@ export default function Hero() {
           {/* Pill CTA Button */}
           <motion.button
             onClick={handleScrollToProjects}
-            className="btn-emerald-pill rounded-full px-8 py-3.5 text-sm font-semibold tracking-wide"
+            className="btn-emerald-pill rounded-full px-8 py-3.5 text-sm font-semibold tracking-wide cursor-pointer"
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.98 }}
           >
@@ -56,12 +56,12 @@ export default function Hero() {
           </motion.button>
         </motion.div>
 
-        {/* Right Column: 3D Android Bugdroid Canvas */}
+        {/* Right Column: 3D Android Bugdroid Canvas with overflow-visible */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
-          className="md:col-span-5 flex items-center justify-center relative"
+          className="md:col-span-5 flex items-center justify-center relative overflow-visible"
         >
           <Hero3D />
         </motion.div>
@@ -73,7 +73,7 @@ export default function Hero() {
         aria-label="Scroll down to About"
         animate={{ y: [0, 6, 0] }}
         transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-        className="mt-8 text-gray-500 hover:text-[#00FFA3] transition-colors p-2"
+        className="mt-8 text-gray-500 hover:text-[#00FFA3] transition-colors p-2 cursor-pointer"
       >
         <ChevronDown size={22} />
       </motion.button>
