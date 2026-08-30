@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
-import Preloader from "@/components/Preloader";
+import React, { useState, useEffect } from "react";
+import { AnimatePresence } from "framer-motion";
+import RadarLoader from "@/components/RadarLoader";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -12,12 +13,22 @@ import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
 export default function Home() {
-  const [loaded, setLoaded] = useState(false);
+  const [isBooting, setIsBooting] = useState<boolean>(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsBooting(false);
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <>
-      {/* 3D Preloader Screen */}
-      <Preloader onComplete={() => setLoaded(true)} />
+      {/* Minimalist Radar Pulse Boot Loader */}
+      <AnimatePresence mode="wait">
+        {isBooting && <RadarLoader key="loader" />}
+      </AnimatePresence>
 
       {/* Main Portfolio Page with Subtle Dark Emerald Radial Ambient Glow */}
       <main className="relative min-h-screen bg-[#050C0A] bg-emerald-radial text-white overflow-x-hidden">
