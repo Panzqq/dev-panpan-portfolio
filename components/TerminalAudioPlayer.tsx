@@ -27,7 +27,7 @@ const lyricsData: LyricLine[] = [
 ];
 
 function formatTime(seconds: number): string {
-  if (isNaN(seconds)) return "00:00";
+  if (isNaN(seconds) || seconds < 0) return "00:00";
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60);
   return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
@@ -44,24 +44,26 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
   const [duration, setDuration] = useState<number>(0);
   const [isMuted, setIsMuted] = useState<boolean>(false);
 
-  // Synchronize audio state
-  const handleTimeUpdate = () => {
-    if (audioRef.current) {
-      setCurrentTime(audioRef.current.currentTime);
+  // Synchronize audio playback state
+  const handleTimeUpdate = (e: React.SyntheticEvent<HTMLAudioElement>) => {
+    const audio = e.currentTarget;
+    setCurrentTime(audio.currentTime);
+    if (audio.duration && !isNaN(audio.duration) && duration === 0) {
+      setDuration(audio.duration);
     }
   };
 
-  const handleLoadedMetadata = () => {
-    if (audioRef.current) {
-      setDuration(audioRef.current.duration || 0);
+  const handleLoadedMetadata = (e: React.SyntheticEvent<HTMLAudioElement>) => {
+    const dur = e.currentTarget.duration;
+    if (dur && !isNaN(dur)) {
+      setDuration(dur);
     }
   };
 
   const handleEnded = () => {
     setIsPlaying(false);
-    setCurrentTime(0);
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
+    if (audioRef.current && duration > 0) {
+      setCurrentTime(duration);
     }
   };
 
@@ -71,6 +73,11 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
+      // If song finished, restart from 0
+      if (duration > 0 && currentTime >= duration - 0.5) {
+        audioRef.current.currentTime = 0;
+        setCurrentTime(0);
+      }
       audioRef.current
         .play()
         .then(() => setIsPlaying(true))
@@ -79,7 +86,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
           setIsPlaying(false);
         });
     }
-  }, [isPlaying]);
+  }, [isPlaying, currentTime, duration]);
 
   const toggleMute = () => {
     if (!audioRef.current) return;
@@ -144,6 +151,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
         preload="metadata"
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
+        onDurationChange={handleLoadedMetadata}
         onEnded={handleEnded}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
@@ -267,73 +275,76 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
           </AnimatePresence>
         </div>
 
-        {/* Audio Equalizer Visualizer Bars & Time */}
+        {/* Audio Equalizer Visualizer Bars & Time (Fixed Height & items-end prevents jitter completely) */}
         <div className="relative z-10 pt-2.5 mt-1 border-t border-white/[0.04] flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-1">
-            {[40, 75, 55, 90, 65, 30, 80, 50, 95, 60, 45, 70].map((height, i) => (
-              <motion.span
-                key={i}
-                animate={
-                  isPlaying
-                    ? {
-                        height: [
-                          `${Math.max(4, height * 0.2)}px`,
-                          `${height * 0.24}px`,
-                          `${Math.max(4, height * 0.15)}px`,
-                          `${height * 0.28}px`,
-                        ],
-                      }
-                    : { height: "4px" }
-                }
-                transition={
-                  isPlaying
-                    ? {
-                        repeat: Infinity,
-                        duration: 0.6 + (i % 4) * 0.15,
-                        ease: "easeInOut",
-                      }
-                    : { duration: 0.3 }
-                }
-                className={`w-1 rounded-full transition-colors ${
-                  isPlaying
-                    ? "bg-emerald-400 shadow-[0_0_6px_rgba(0,255,163,0.5)]"
-                    : "bg-emerald-900/40"
-                }`}
-              />
-            ))}
-            <span className="text-[10px] text-gray-500 font-mono ml-2 hidden sm:inline select-none">
+          <div className="flex items-center gap-2">
+            {/* Visualizer container strictly locked with h-6 items-end */}
+            <div className="h-6 flex items-end gap-1 overflow-hidden">
+              {[40, 75, 55, 90, 65, 30, 80, 50, 95, 60, 45, 70].map((height, i) => (
+                <motion.span
+                  key={i}
+                  animate={
+                    isPlaying
+                      ? {
+                          height: [
+                            `${Math.max(4, height * 0.16)}px`,
+                            `${Math.min(22, height * 0.24)}px`,
+                            `${Math.max(4, height * 0.12)}px`,
+                            `${Math.min(22, height * 0.24)}px`,
+                          ],
+                        }
+                      : { height: "4px" }
+                  }
+                  transition={
+                    isPlaying
+                      ? {
+                          repeat: Infinity,
+                          duration: 0.6 + (i % 4) * 0.15,
+                          ease: "easeInOut",
+                        }
+                      : { duration: 0.3 }
+                  }
+                  className={`w-1 rounded-full transition-colors ${
+                    isPlaying
+                      ? "bg-emerald-400 shadow-[0_0_6px_rgba(0,255,163,0.5)]"
+                      : "bg-emerald-900/40"
+                  }`}
+                />
+              ))}
+            </div>
+            <span className="text-[10px] text-gray-500 font-mono hidden sm:inline select-none">
               44.1kHz • stereo
             </span>
           </div>
 
-          <div className="text-[11px] font-mono text-gray-400 select-none">
+          <div className="text-[11px] font-mono text-gray-400 select-none flex items-center gap-1">
             <span className="text-emerald-400 font-semibold">{formatTime(currentTime)}</span>
-            <span className="text-gray-600 mx-1">/</span>
+            <span className="text-gray-600">/</span>
             <span>{formatTime(duration)}</span>
           </div>
         </div>
       </div>
 
-      {/* 3. Audio Progress Scrub Bar */}
+      {/* 3. Audio Progress Bar & Interactive Click/Drag Scrubber */}
       <div className="py-2 relative z-10 shrink-0">
+        <div className="relative w-full h-2 bg-black/80 rounded-full overflow-hidden border border-white/[0.08] p-0.5">
+          <div
+            className="h-full bg-gradient-to-r from-emerald-500 via-[#00FFA3] to-[#00FFA3] rounded-full shadow-[0_0_10px_#00FFA3] transition-[width] duration-100 ease-linear"
+            style={{
+              width: duration > 0 ? `${Math.min(100, (currentTime / duration) * 100)}%` : "0%",
+            }}
+          />
+        </div>
+        {/* Transparent range slider on top for precise scrubbing */}
         <input
           type="range"
           min="0"
-          max={duration || 100}
-          step="0.1"
+          max={duration > 0 ? duration : 100}
+          step="0.05"
           value={currentTime}
           onChange={handleSeek}
           aria-label="Audio scrubber"
-          className="w-full h-1.5 bg-black/80 rounded-lg appearance-none cursor-pointer accent-emerald-400 hover:accent-[#00FFA3] transition-all"
-          style={{
-            background: `linear-gradient(to right, #00FFA3 ${(
-              (currentTime / (duration || 1)) *
-              100
-            ).toFixed(1)}%, rgba(255,255,255,0.08) ${(
-              (currentTime / (duration || 1)) *
-              100
-            ).toFixed(1)}%)`,
-          }}
+          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
         />
       </div>
 
