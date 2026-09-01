@@ -32,10 +32,10 @@ export default function Footer() {
 
   return (
     <motion.footer
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.7 }}
+      initial={{ opacity: 0, y: 25 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.2, margin: "-40px 0px -40px 0px" }}
+      transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
       className="mt-20 border-t border-white/[0.06] bg-[#050C0A]/60 py-12 px-6"
     >
       <div className="max-w-6xl mx-auto space-y-8">
@@ -46,7 +46,7 @@ export default function Footer() {
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }}
+            viewport={{ once: false }}
             className="flex flex-wrap items-center gap-6 text-sm text-gray-400 font-medium"
           >
             {NAV_LINKS.map((item) => (
@@ -70,8 +70,8 @@ export default function Footer() {
           <motion.div
             initial={{ opacity: 0, x: 15 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.55, delay: 0.3 }}
+            viewport={{ once: false }}
+            transition={{ duration: 0.5, delay: 0.15 }}
             className="flex items-center gap-4 text-gray-400"
           >
             <motion.a
@@ -103,8 +103,8 @@ export default function Footer() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.35 }}
+          viewport={{ once: false }}
+          transition={{ duration: 0.5, delay: 0.2 }}
           className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-white/[0.04] text-xs font-mono text-gray-500"
         >
           <div className="text-gray-300 font-medium">

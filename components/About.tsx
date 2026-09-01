@@ -28,21 +28,23 @@ const HIGHLIGHT_CARDS = [
 ];
 
 const containerVariants = {
-  hidden: {},
+  hidden: { opacity: 0 },
   visible: {
+    opacity: 1,
     transition: {
       staggerChildren: 0.12,
+      delayChildren: 0.1,
     },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 18, scale: 0.97 },
+  hidden: { opacity: 0, y: 20, scale: 0.96 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.55, ease: [0.23, 1, 0.32, 1] },
+    transition: { duration: 0.5, ease: [0.23, 1, 0.32, 1] },
   },
 };
 
@@ -51,18 +53,18 @@ export default function About() {
     <section id="about" className="py-20 px-6 relative">
       <div className="max-w-6xl mx-auto space-y-6">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 35 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
+          viewport={{ once: false, amount: 0.2, margin: "-40px 0px -40px 0px" }}
+          transition={{ duration: 0.65, ease: [0.23, 1, 0.32, 1] }}
           className="glass-card rounded-3xl p-8 md:p-10 border border-white/[0.08] relative overflow-hidden"
         >
           {/* Ambient Background Glow */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.2 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.8 }}
             className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none"
           />
 
@@ -70,8 +72,8 @@ export default function About() {
           <motion.div
             initial={{ opacity: 0, x: -15 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.45 }}
             className="flex items-center gap-2.5 text-xs font-mono text-emerald-400 uppercase tracking-widest mb-3"
           >
             <User size={14} />
@@ -80,10 +82,10 @@ export default function About() {
 
           {/* Heading */}
           <motion.h2
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.55, delay: 0.18 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.08 }}
             className="text-2xl md:text-4xl font-bold text-white tracking-tight mb-6"
           >
             About Me
@@ -91,10 +93,10 @@ export default function About() {
 
           {/* Bio Text */}
           <motion.p
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.26 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.55, delay: 0.15 }}
             className="text-gray-300 text-base md:text-lg leading-relaxed max-w-4xl font-normal mb-8"
           >
             I am Panpan (Dev Panpan), an 11th-grade high school student and dedicated Full Stack
@@ -105,12 +107,12 @@ export default function About() {
             academic studies in Finance and Accounting.
           </motion.p>
 
-          {/* Highlights Grid — staggered reveal */}
+          {/* Highlights Grid — bidirectional staggered reveal */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-40px" }}
+            viewport={{ once: false, amount: 0.2, margin: "-30px 0px -30px 0px" }}
             className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-6 border-t border-white/[0.06]"
           >
             {HIGHLIGHT_CARDS.map((card) => (

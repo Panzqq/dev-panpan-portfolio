@@ -39,8 +39,8 @@ export default function Contact() {
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.65, ease: [0.23, 1, 0.32, 1] }}
+          viewport={{ once: false, amount: 0.2, margin: "-40px 0px -40px 0px" }}
+          transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
           className="mb-8"
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-[#00FFA3]/30 text-[#00FFA3] text-xs font-mono mb-3 shadow-[0_0_15px_rgba(0,255,163,0.15)]">
@@ -57,8 +57,8 @@ export default function Contact() {
           <motion.div
             initial={{ opacity: 0, x: -25 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
+            viewport={{ once: false, amount: 0.2, margin: "-40px 0px -40px 0px" }}
+            transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
             className="md:col-span-5 space-y-4"
           >
             <motion.div
@@ -91,8 +91,8 @@ export default function Contact() {
           <motion.div
             initial={{ opacity: 0, x: 25 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
+            viewport={{ once: false, amount: 0.2, margin: "-40px 0px -40px 0px" }}
+            transition={{ duration: 0.6, delay: 0.08, ease: [0.23, 1, 0.32, 1] }}
             className="md:col-span-7"
           >
             <motion.form
@@ -100,7 +100,7 @@ export default function Contact() {
               variants={containerVariants}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: "-40px" }}
+              viewport={{ once: false, amount: 0.2, margin: "-30px 0px -30px 0px" }}
               className="glass-card rounded-2xl p-6 md:p-8 space-y-4 border border-white/[0.08]"
             >
               <motion.div variants={fieldVariants}>
