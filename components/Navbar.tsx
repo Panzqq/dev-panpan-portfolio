@@ -16,10 +16,19 @@ export default function Navbar() {
 
   const handleNavClick = (id: string) => {
     setMobileOpen(false);
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
+    // Small delay to let menu close animation start before scroll
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 80);
+  };
+
+  const handleHomeClick = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
+    setMobileOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -27,36 +36,33 @@ export default function Navbar() {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-50 bg-[#050C0A]/80 backdrop-blur-md border-b border-white/[0.05] transition-all duration-300"
+      className="fixed top-0 left-0 right-0 z-50 bg-[#050C0A]/80 backdrop-blur-md border-b border-white/[0.05]"
     >
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Brand Name */}
         <motion.a
           href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
+          onClick={handleHomeClick}
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-sm md:text-base font-semibold tracking-tight text-white hover:opacity-80 transition-opacity"
         >
-          Dev Panpan <span className="text-gray-400 font-normal">| Full Stack Developer</span>
+          Dev Panpan{" "}
+          <span className="text-gray-400 font-normal">| Full Stack Developer</span>
         </motion.a>
 
-        {/* Hamburger Button */}
+        {/* Hamburger Button — touch-manipulation for Android */}
         <motion.button
           initial={{ opacity: 0, x: 10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          onClick={() => setMobileOpen(!mobileOpen)}
+          onClick={() => setMobileOpen((prev) => !prev)}
           aria-label="Toggle Navigation Menu"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="p-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-white/[0.05] transition-colors cursor-pointer"
+          className="p-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/[0.05] transition-colors cursor-pointer touch-manipulation select-none"
+          style={{ touchAction: "manipulation" }}
         >
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" initial={false}>
             {mobileOpen ? (
               <motion.div
                 key="close"
@@ -82,41 +88,43 @@ export default function Navbar() {
         </motion.button>
       </div>
 
-      {/* Slide-out / Dropdown Menu with staggered links */}
+      {/* Dropdown Menu — NO overflow-hidden so touch events work on Android */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-            className="absolute top-full left-0 right-0 bg-[#050C0A]/95 backdrop-blur-xl border-b border-white/[0.08] overflow-hidden shadow-2xl"
+            key="mobile-menu"
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.28, ease: [0.23, 1, 0.32, 1] }}
+            className="absolute top-full left-0 right-0 bg-[#050C0A]/95 backdrop-blur-xl border-b border-white/[0.08] shadow-2xl"
           >
             <div className="max-w-6xl mx-auto px-6 py-6 flex flex-col md:flex-row gap-4 justify-between items-start md:items-center font-medium text-sm">
-              <div className="flex flex-col md:flex-row gap-4 md:gap-8 text-gray-300">
+              {/* Nav Links */}
+              <div className="flex flex-col md:flex-row gap-4 md:gap-8 text-gray-300 w-full md:w-auto">
                 {NAV_ITEMS.map((item, idx) => (
                   <motion.button
                     key={item.id}
-                    onClick={() => handleNavClick(item.id)}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.25, delay: idx * 0.06 }}
-                    whileHover={{ color: "#00FFA3", x: 4 }}
-                    className="text-left hover:text-[#00FFA3] transition-colors cursor-pointer"
+                    transition={{ duration: 0.22, delay: idx * 0.05 }}
+                    onClick={() => handleNavClick(item.id)}
+                    className="text-left py-2 md:py-0 text-gray-300 hover:text-[#00FFA3] active:text-[#00FFA3] transition-colors cursor-pointer touch-manipulation select-none w-full md:w-auto"
+                    style={{ touchAction: "manipulation" }}
                   >
                     {item.label}
                   </motion.button>
                 ))}
               </div>
 
+              {/* CTA Button */}
               <motion.button
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.92 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, delay: 0.3 }}
+                transition={{ duration: 0.25, delay: 0.22 }}
                 onClick={() => handleNavClick("contact")}
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
-                className="btn-emerald-pill px-5 py-2 rounded-full text-xs font-semibold cursor-pointer"
+                className="btn-emerald-pill px-5 py-2.5 rounded-full text-xs font-semibold cursor-pointer touch-manipulation select-none w-full md:w-auto text-center"
+                style={{ touchAction: "manipulation" }}
               >
                 Get In Touch
               </motion.button>
