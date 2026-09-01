@@ -37,25 +37,44 @@ const projects: ProjectItem[] = [
   },
 ];
 
+const sectionVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.1 } },
+};
+
+const headVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.23, 1, 0.32, 1] } },
+};
+
 export default function ProjectShowcase() {
   return (
     <section id="projects" className="py-20 px-6 relative">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <motion.div
+          variants={sectionVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-80px" }}
+          className="flex flex-col sm:flex-row sm:items-end justify-between gap-4"
+        >
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-[#00FFA3]/30 text-[#00FFA3] text-xs font-mono mb-3 shadow-[0_0_15px_rgba(0,255,163,0.15)]">
+            <motion.div
+              variants={headVariants}
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-[#00FFA3]/30 text-[#00FFA3] text-xs font-mono mb-3 shadow-[0_0_15px_rgba(0,255,163,0.15)]"
+            >
               <FolderGit2 size={13} />
               <span>PROJECT_SHOWCASE</span>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
+            </motion.div>
+            <motion.h2 variants={headVariants} className="text-3xl md:text-4xl font-bold text-white tracking-tight">
               Featured Projects
-            </h2>
+            </motion.h2>
           </div>
-          <p className="text-gray-400 text-sm max-w-md font-normal leading-relaxed">
+          <motion.p variants={headVariants} className="text-gray-400 text-sm max-w-md font-normal leading-relaxed">
             Production-ready bots, APIs, and scalable automation engines engineered with modern web technologies.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         {/* Bento Grid: 2 Columns */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -96,28 +115,35 @@ export default function ProjectShowcase() {
                 {project.description}
               </p>
 
-              {/* Tech Stack Tags */}
+              {/* Tech Stack Tags — stagger on card enter */}
               <div className="flex flex-wrap gap-2 pt-1">
-                {project.tags.map((tag) => (
-                  <span
+                {project.tags.map((tag, tIdx) => (
+                  <motion.span
                     key={tag}
+                    initial={{ opacity: 0, scale: 0.85 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.35, delay: 0.1 + tIdx * 0.06 }}
                     className="px-3 py-1 text-[11px] font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-800/50 rounded-full select-none"
                   >
                     {tag}
-                  </span>
+                  </motion.span>
                 ))}
               </div>
 
               {/* Action Button */}
-              <a
+              <motion.a
                 href={project.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-3 rounded-lg border border-emerald-500 text-emerald-400 font-mono font-bold hover:bg-emerald-500 hover:text-[#0A0A0A] transition-all flex justify-center items-center gap-2 cursor-pointer mt-auto shadow-[0_0_15px_rgba(0,255,163,0.1)] active:scale-[0.99] select-none"
+                whileHover={{ scale: 1.02, boxShadow: "0 0 22px rgba(0,255,163,0.35)" }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 350, damping: 20 }}
+                className="w-full py-3 rounded-lg border border-emerald-500 text-emerald-400 font-mono font-bold hover:bg-emerald-500 hover:text-[#0A0A0A] transition-all flex justify-center items-center gap-2 cursor-pointer mt-auto shadow-[0_0_15px_rgba(0,255,163,0.1)] select-none"
               >
                 <span>{project.buttonText}</span>
                 <ArrowUpRight size={16} />
-              </a>
+              </motion.a>
             </motion.div>
           ))}
         </div>
