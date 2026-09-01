@@ -220,8 +220,11 @@ export default function TerminalGuestbook({ className = "" }: TerminalGuestbookP
                 entry.name.toLowerCase() === "anonymous" || entry.name.toLowerCase() === "guest_user";
 
               return (
-                <div
+                <motion.div
                   key={entry.id || idx}
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.25 }}
                   className="flex items-start gap-2 leading-relaxed break-words hover:bg-white/[0.02] p-1 rounded transition-colors"
                 >
                   {/* Timestamp */}
@@ -242,7 +245,7 @@ export default function TerminalGuestbook({ className = "" }: TerminalGuestbookP
                   <span className="text-gray-200 flex-1 font-mono">
                     {entry.message}
                   </span>
-                </div>
+                </motion.div>
               );
             })
           )}
@@ -296,14 +299,16 @@ export default function TerminalGuestbook({ className = "" }: TerminalGuestbookP
                 cooldown > 0 ? "opacity-60 cursor-not-allowed text-yellow-400/90" : ""
               }`}
             />
-            <button
+            <motion.button
               type="submit"
               disabled={isSubmitting || !message.trim() || cooldown > 0}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               className="px-2.5 py-1 rounded-lg bg-emerald-950/60 border border-emerald-800/60 text-emerald-400 hover:text-white hover:bg-emerald-800/80 transition-all font-mono text-[11px] font-bold flex items-center gap-1 shrink-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <Send size={11} />
               <span>{cooldown > 0 ? `WAIT ${cooldown}s` : "POST"}</span>
-            </button>
+            </motion.button>
           </div>
         </div>
       </form>

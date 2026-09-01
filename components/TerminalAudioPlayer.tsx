@@ -255,15 +255,34 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
             {isMuted ? <VolumeX size={13} /> : <Volume2 size={13} />}
           </button>
 
-          {/* Live Status Badge */}
-          <div className="hidden sm:flex items-center gap-1.5 pl-1">
-            <span
-              className={`w-2 h-2 rounded-full ${
-                activeIsPlaying
-                  ? "bg-emerald-400 shadow-[0_0_8px_#00FFA3] animate-pulse"
-                  : "bg-gray-600"
-              }`}
-            />
+          {/* Live Status Badge with Animated Equalizer Waveform */}
+          <div className="hidden sm:flex items-center gap-2 pl-1 bg-white/[0.02] px-2.5 py-1 rounded-lg border border-white/[0.05]">
+            {activeIsPlaying ? (
+              <div className="flex items-end gap-0.5 h-3">
+                <motion.span
+                  animate={{ height: ["30%", "100%", "50%", "80%", "30%"] }}
+                  transition={{ repeat: Infinity, duration: 0.8, ease: "easeInOut" }}
+                  className="w-0.5 bg-[#00FFA3] rounded-full inline-block"
+                />
+                <motion.span
+                  animate={{ height: ["70%", "30%", "100%", "40%", "70%"] }}
+                  transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut", delay: 0.1 }}
+                  className="w-0.5 bg-[#00FFA3] rounded-full inline-block"
+                />
+                <motion.span
+                  animate={{ height: ["40%", "90%", "20%", "100%", "40%"] }}
+                  transition={{ repeat: Infinity, duration: 0.7, ease: "easeInOut", delay: 0.2 }}
+                  className="w-0.5 bg-[#00FFA3] rounded-full inline-block"
+                />
+                <motion.span
+                  animate={{ height: ["80%", "40%", "90%", "30%", "80%"] }}
+                  transition={{ repeat: Infinity, duration: 0.9, ease: "easeInOut", delay: 0.15 }}
+                  className="w-0.5 bg-[#00FFA3] rounded-full inline-block"
+                />
+              </div>
+            ) : (
+              <span className="w-2 h-2 rounded-full bg-gray-600 inline-block" />
+            )}
             <span className="text-[11px] font-mono text-emerald-400/90 font-medium tracking-wide uppercase">
               {activeIsPlaying ? "PLAYING" : "STANDBY"}
             </span>
@@ -494,11 +513,14 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
         />
       </div>
 
-      {/* 4. Dynamic Play/Pause Button for Active Mode */}
-      <button
+      {/* 4. Dynamic Play/Pause Button for Active Mode with Spring Hover */}
+      <motion.button
         onClick={togglePlay}
         type="button"
-        className="w-full mt-auto py-3 bg-emerald-950/40 border border-emerald-800/50 rounded-xl text-emerald-400 font-mono font-bold hover:bg-emerald-900/60 hover:border-emerald-500/50 hover:text-[#00FFA3] transition-all cursor-pointer relative z-10 flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,255,163,0.1)] active:scale-[0.99] select-none"
+        whileHover={{ scale: 1.015, boxShadow: "0 0 25px rgba(0,255,163,0.25)" }}
+        whileTap={{ scale: 0.985 }}
+        transition={{ type: "spring", stiffness: 400, damping: 20 }}
+        className="w-full mt-auto py-3 bg-emerald-950/40 border border-emerald-800/50 rounded-xl text-emerald-400 font-mono font-bold hover:bg-emerald-900/60 hover:border-emerald-500/50 hover:text-[#00FFA3] transition-all cursor-pointer relative z-10 flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,255,163,0.1)] select-none"
       >
         {activeIsPlaying ? (
           <>
@@ -511,7 +533,7 @@ export default function TerminalAudioPlayer({ className = "" }: TerminalAudioPla
             <span>{isVideoMode ? "[ PLAY VIDEO ]" : "[ PLAY AUDIO ]"}</span>
           </>
         )}
-      </button>
+      </motion.button>
     </div>
   );
 }
