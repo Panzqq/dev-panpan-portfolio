@@ -39,12 +39,12 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20, scale: 0.96 },
+  hidden: { opacity: 0, y: 20, scale: 0.98 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.5, ease: [0.23, 1, 0.32, 1] },
+    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
   },
 };
 
@@ -53,66 +53,42 @@ export default function About() {
     <section id="about" className="py-20 px-6 relative">
       <div className="max-w-6xl mx-auto space-y-6">
         <motion.div
-          initial={{ opacity: 0, y: 35 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.2, margin: "-40px 0px -40px 0px" }}
-          transition={{ duration: 0.65, ease: [0.23, 1, 0.32, 1] }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="glass-card rounded-3xl p-8 md:p-10 border border-white/[0.08] relative overflow-hidden"
         >
           {/* Ambient Background Glow */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: false, amount: 0.2 }}
-            transition={{ duration: 0.8 }}
-            className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none"
-          />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
 
           {/* Section Label */}
-          <motion.div
-            initial={{ opacity: 0, x: -15 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
-            transition={{ duration: 0.45 }}
-            className="flex items-center gap-2.5 text-xs font-mono text-emerald-400 uppercase tracking-widest mb-3"
-          >
+          <div className="flex items-center gap-2.5 text-xs font-mono text-emerald-400 uppercase tracking-widest mb-3">
             <User size={14} />
             <span>BACKGROUND_&_BIOGRAPHY</span>
-          </motion.div>
+          </div>
 
           {/* Heading */}
-          <motion.h2
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
-            transition={{ duration: 0.5, delay: 0.08 }}
-            className="text-2xl md:text-4xl font-bold text-white tracking-tight mb-6"
-          >
+          <h2 className="text-2xl md:text-4xl font-bold text-white tracking-tight mb-6">
             About Me
-          </motion.h2>
+          </h2>
 
           {/* Bio Text */}
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
-            transition={{ duration: 0.55, delay: 0.15 }}
-            className="text-gray-300 text-base md:text-lg leading-relaxed max-w-4xl font-normal mb-8"
-          >
+          <p className="text-gray-300 text-base md:text-lg leading-relaxed max-w-4xl font-normal mb-8">
             I am Panpan (Dev Panpan), an 11th-grade high school student and dedicated Full Stack
             Developer based in Purbalingga, Indonesia with over 3 years of active coding experience.
             My core passion lies in software engineering, with a focus on modern web applications
             (React, Next.js, Node.js), API automations, and resilient database architectures. In
             parallel with software development, I am proactively preparing for comprehensive future
             academic studies in Finance and Accounting.
-          </motion.p>
+          </p>
 
-          {/* Highlights Grid — bidirectional staggered reveal */}
+          {/* Highlights Grid — smooth staggered reveal once */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: false, amount: 0.2, margin: "-30px 0px -30px 0px" }}
+            viewport={{ once: true, margin: "-40px" }}
             className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-6 border-t border-white/[0.06]"
           >
             {HIGHLIGHT_CARDS.map((card) => (
@@ -120,6 +96,7 @@ export default function About() {
                 key={card.label}
                 variants={itemVariants}
                 whileHover={{ y: -4, scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 350, damping: 25 }}
                 className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-4 cursor-default"
               >
                 <div className={`flex items-center gap-2 text-xs font-mono mb-1.5 ${card.color}`}>

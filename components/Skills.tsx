@@ -144,8 +144,8 @@ function SkillBarItem({ skill, delay }: { skill: SkillProgress; delay: number })
         <motion.div
           initial={{ width: 0 }}
           whileInView={{ width: `${skill.percentage}%` }}
-          viewport={{ once: false, margin: "-20px" }}
-          transition={{ duration: 1.0, delay: delay, ease: [0.22, 1, 0.36, 1] }}
+          viewport={{ once: true, margin: "-30px" }}
+          transition={{ duration: 1.1, delay: delay, ease: [0.16, 1, 0.3, 1] }}
           className={`h-full rounded-full bg-gradient-to-r ${skill.barGradient} relative`}
           style={{
             boxShadow: `0 0 10px ${skill.glowColor}`,
@@ -170,8 +170,8 @@ export default function Skills() {
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.2, margin: "-40px 0px -40px 0px" }}
-          transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-col sm:flex-row sm:items-end justify-between gap-4"
         >
           <div>
@@ -194,8 +194,8 @@ export default function Skills() {
           <motion.div
             initial={{ opacity: 0, y: 25 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.15, margin: "-40px 0px -40px 0px" }}
-            transition={{ duration: 0.55, ease: [0.23, 1, 0.32, 1] }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             whileHover={{ y: -4 }}
             className="lg:col-span-6 glass-card rounded-3xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden group transition-all duration-300 hover:border-[#00F0FF]/30 hover:shadow-[0_0_30px_rgba(0,240,255,0.12)]"
           >
@@ -238,8 +238,8 @@ export default function Skills() {
           <motion.div
             initial={{ opacity: 0, y: 25 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.15, margin: "-40px 0px -40px 0px" }}
-            transition={{ duration: 0.55, delay: 0.08, ease: [0.23, 1, 0.32, 1] }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             whileHover={{ y: -4 }}
             className="lg:col-span-6 glass-card rounded-3xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden group transition-all duration-300 hover:border-[#22C55E]/30 hover:shadow-[0_0_30px_rgba(34,197,94,0.12)]"
           >
@@ -282,8 +282,8 @@ export default function Skills() {
           <motion.div
             initial={{ opacity: 0, y: 25 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.15, margin: "-40px 0px -40px 0px" }}
-            transition={{ duration: 0.55, delay: 0.12, ease: [0.23, 1, 0.32, 1] }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
             whileHover={{ y: -4 }}
             className="lg:col-span-7 glass-card rounded-3xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden group hover:border-[#10B981]/30 hover:shadow-[0_0_30px_rgba(16,185,129,0.1)]"
           >
@@ -345,8 +345,8 @@ export default function Skills() {
           <motion.div
             initial={{ opacity: 0, y: 25 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.15, margin: "-40px 0px -40px 0px" }}
-            transition={{ duration: 0.55, delay: 0.18, ease: [0.23, 1, 0.32, 1] }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             whileHover={{ y: -4 }}
             className="lg:col-span-5 glass-card rounded-3xl p-6 md:p-8 flex flex-col justify-between relative overflow-hidden group hover:border-[#00FFA3]/30 hover:shadow-[0_0_30px_rgba(0,255,163,0.1)]"
           >
@@ -402,8 +402,8 @@ export default function Skills() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true, margin: "-30px" }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="pt-2"
         >
           <div className="relative w-full overflow-hidden py-3 glass-card rounded-2xl border border-white/[0.06]">

@@ -45,8 +45,8 @@ export default function TerminalQuote({ className = "" }: TerminalQuoteProps) {
           ref={containerRef}
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.2, margin: "-40px 0px -40px 0px" }}
-          transition={{ duration: 0.65, ease: [0.23, 1, 0.32, 1] }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className="glass-card bg-[#0A0A0A] rounded-3xl p-6 md:p-8 border border-emerald-900/30 hover:border-emerald-500/30 transition-all duration-300 relative font-mono overflow-hidden shadow-2xl group"
         >
           {/* Subtle Ambient Background Glow */}

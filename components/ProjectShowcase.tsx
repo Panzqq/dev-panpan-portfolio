@@ -56,7 +56,7 @@ export default function ProjectShowcase() {
           variants={sectionVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false, amount: 0.2, margin: "-40px 0px -40px 0px" }}
+          viewport={{ once: true, margin: "-60px" }}
           className="flex flex-col sm:flex-row sm:items-end justify-between gap-4"
         >
           <div>
@@ -83,8 +83,8 @@ export default function ProjectShowcase() {
               key={project.title}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.15, margin: "-40px 0px -40px 0px" }}
-              transition={{ duration: 0.55, delay: idx * 0.12, ease: [0.23, 1, 0.32, 1] }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, delay: idx * 0.15, ease: [0.16, 1, 0.3, 1] }}
               whileHover={{ y: -4 }}
               className="bg-[#0A0A0A] border border-emerald-900/30 rounded-2xl p-5 flex flex-col gap-4 hover:border-emerald-500/50 hover:shadow-[0_0_30px_rgba(16,185,129,0.15)] transition-all duration-300 group relative overflow-hidden glass-card"
             >
@@ -122,7 +122,7 @@ export default function ProjectShowcase() {
                     key={tag}
                     initial={{ opacity: 0, scale: 0.85 }}
                     whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: false }}
+                    viewport={{ once: true }}
                     transition={{ duration: 0.35, delay: 0.1 + tIdx * 0.06 }}
                     className="px-3 py-1 text-[11px] font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-800/50 rounded-full select-none"
                   >
